@@ -330,7 +330,7 @@ export function WatchWindow({ active }: { active: boolean }) {
                         ? L('Άνοιξε η σελίδα του Lichess στον browser σου: πάτα εκεί «Έγκριση». Μετά γύρνα εδώ.', 'The Lichess page opened in your browser: press “Authorize” there, then come back.')
                         : L(
                             'Για τα τουρνουά (το Lichess το ζητά από το 2026). Μία φορά: το token μένει σε αυτόν τον υπολογιστή για περίπου έναν χρόνο. Μόνο ανάγνωση: δεν βλέπει τον κωδικό σου ούτε παίζει για σένα.',
-                            'For the tournaments (Lichess requires it since 2026). Once: the token stays on this computer for about a year. Read-only: it never sees your password or plays for you.',
+                            'Required by Lichess for live tournament broadcasts. Sign in once — the read-only token stays on your computer for about a year and never sees your password.',
                           )}
                     </p>
                   </>

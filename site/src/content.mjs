@@ -25,7 +25,7 @@ export default {
     },
     hero: {
       kicker: 'v{version} · Windows 10 & 11 · Free & Open Source',
-      title: 'A serious chess database,<br>free for everyone.',
+      title: 'Your complete chess workspace,<br>free for everyone.',
       lead: '<strong>Ruru Chess</strong> brings Stockfish analysis, PDF chess book conversion, opponent preparation, friends &amp; teams, and live shared study into one fast Windows app. No subscriptions, no ads, and your games stay on your computer.',
       cta: 'Download for Windows',
       ctaMeta: '{setupMB} MB · Windows 10/11 (64-bit)',
@@ -272,7 +272,7 @@ export default {
             ['Native Windows desktop app', 'Runs in its own standalone window with multi-window support and dark/light themes.'],
             ['English & Greek', 'Figurine (♘f3), English (Nf3) or Greek (Ιf3) notation and real piece sounds.'],
             ['Strict privacy by design', 'No ads, no analytics, no cookies. Online features only send what is documented.'],
-            ['Open source licences', 'GPL-3.0-or-later with AGPL-3.0 components; source code and credits are public.'],
+            ['Open source licenses', 'GPL-3.0-or-later with AGPL-3.0 components; source code and credits are public.'],
           ],
         },
       ],
@@ -342,7 +342,7 @@ export default {
         ],
         [
           'Where do the tactics puzzles come from?',
-          'From an open collection of millions of puzzles from real games (CC0 licence). You can download it once (~300 MB) from inside the app under <b>Improve → Tactics</b>.',
+          'From an open collection of millions of puzzles from real games (CC0 license). You can download it once (~300 MB) from inside the app under <b>Improve → Tactics</b>.',
         ],
         [
           'Where are my games stored, and do I need internet?',
@@ -410,7 +410,7 @@ export default {
     },
     hero: {
       kicker: 'v{version} · Windows 10 & 11 · Δωρεάν & Ανοιχτός Κώδικας',
-      title: 'Μια σοβαρή βάση σκακιού,<br>δωρεάν για όλους.',
+      title: 'Όλα για το σκάκι σου,<br>δωρεάν για όλους.',
       lead: 'Το <strong>Ruru Chess</strong> συνδυάζει ανάλυση με Stockfish, μετατροπή σκακιστικών βιβλίων PDF σε βάσεις, προετοιμασία αντιπάλου, φίλους &amp; ομάδες και ζωντανή κοινή μελέτη σε μία γρήγορη εφαρμογή για Windows. Χωρίς συνδρομές, χωρίς διαφημίσεις — οι παρτίδες σου μένουν στον υπολογιστή σου.',
       cta: 'Κατέβασε για Windows',
       ctaMeta: '{setupMB} MB · Windows 10/11 (64-bit)',

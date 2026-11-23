@@ -188,7 +188,7 @@ export class Library {
 
   private ensureDefaults(): void {
     const dir = this.settings.databasesDir;
-    const want: Array<[DbEntry['kind'], string]> = [['mygames', 'Οι παρτίδες μου']];
+    const want: Array<[DbEntry['kind'], string]> = [['mygames', this.settings.language === 'el' ? 'Οι παρτίδες μου' : 'My Games']];
     for (const [kind, name] of want) {
       if (this.entries.some((e) => e.kind === kind)) continue;
       // παλιό αρχείο .skdb με το ίδιο όνομα: το ίδιο (όχι δεύτερο δίπλα του, με κοινά .pos/.tree)
