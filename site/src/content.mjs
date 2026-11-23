@@ -332,7 +332,7 @@ export default {
         ],
         [
           'Where are my games stored, and do I need internet?',
-          'Your databases stay on your computer in <b>Documents\\Ruru</b> (or <b>Documents\\KnightBase</b> if upgrading from earlier versions) and remain safe even if you uninstall the app. Databases, Stockfish analysis, books and tactics all work offline. Internet is used only for online features (downloads, shared links, Watch Live, Lichess/Chess.com/FIDE lookups, Syzygy and update checks, all configurable in Settings).',
+          'Your databases stay on your computer in <b>Documents\\Ruru</b> and remain safe even if you uninstall the app. Databases, Stockfish analysis, books and tactics all work offline. Internet is used only for online features (downloads, shared links, Watch Live, Lichess/Chess.com/FIDE lookups, Syzygy and update checks, all configurable in Settings).',
         ],
         [
           'Why does Windows show a SmartScreen warning?',
@@ -703,7 +703,7 @@ export default {
         ],
         [
           'Πού αποθηκεύονται οι παρτίδες μου και χρειάζομαι internet;',
-          'Οι βάσεις σου μένουν στον υπολογιστή σου στο <b>Έγγραφα\\Ruru</b> (ή <b>Έγγραφα\\KnightBase</b> σε αναβάθμιση) και διατηρούνται ακόμη κι αν απεγκαταστήσεις το πρόγραμμα. Βάσεις, ανάλυση Stockfish, βιβλία και τακτικά δουλεύουν offline. Το internet χρησιμοποιείται μόνο για online λειτουργίες (λήψεις, links, Ζωντανά, Lichess/Chess.com/FIDE, Syzygy και έλεγχο ενημερώσεων — όλα ρυθμίζονται).',
+          'Οι βάσεις σου μένουν στον υπολογιστή σου στο <b>Έγγραφα\\Ruru</b> και διατηρούνται ακόμη κι αν απεγκαταστήσεις το πρόγραμμα. Βάσεις, ανάλυση Stockfish, βιβλία και τακτικά δουλεύουν offline. Το internet χρησιμοποιείται μόνο για online λειτουργίες (λήψεις, links, Ζωντανά, Lichess/Chess.com/FIDE, Syzygy και έλεγχο ενημερώσεων — όλα ρυθμίζονται).',
         ],
         [
           'Γιατί βγάζουν προειδοποίηση τα Windows στην εγκατάσταση;',
