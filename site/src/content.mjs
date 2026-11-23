@@ -203,32 +203,20 @@ export default {
     ch4: {
       num: '04',
       eyebrow: 'Daily Improvement',
-      title: 'Tactics, classic masterworks, and human-like bots.',
-      lead: 'Train calculation, positional judgment, and endgames in the same app where you keep your games.',
+      title: 'Classic strategy, endgames, bots — plus millions of puzzles.',
+      lead: 'Train positional judgment, endgames, calculation, and offline tactics (millions of puzzles with FSRS spaced repetition & cycles) in the same app where you keep your games.',
       tabs: [
         {
-          id: 'tactics',
-          label: 'Tactics',
-          heading: 'Puzzles that adapt to your level',
-          text: 'Solve puzzles drawn from real games with a Glicko-2 rating that tracks your progress. Missed puzzles come back via spaced repetition, alongside timed rounds, three-strike runs, repeated cycles, and a daily puzzle.',
-          points: [
-            'Adaptive Glicko-2 rating and motif filtering',
-            'Spaced repetition for every puzzle you miss',
-            'Timed rounds, three-strike runs, cycles and daily puzzle',
-          ],
-          alt: 'Ruru Chess rated tactics trainer with step-by-step hints',
-        },
-        {
           id: 'lessons',
-          label: 'Classic lessons',
-          heading: 'Learn strategy & endgames from the masters',
-          text: 'Play through annotated master games interactively: at critical moments Ruru asks for your move before revealing the master’s plan. Endgame lessons guide you from basic mates to Lucena and Philidor.',
+          label: 'Strategy & Endgames',
+          heading: 'Interactive master lessons & structured endgame lab',
+          text: 'Play through 50 annotated games by Capablanca and Tarrasch interactively: at critical moments Ruru asks for your move before revealing the master’s plan. Master 36 structured endgame lessons across 7 levels (from basic mates to Lucena and Philidor), practice them live against Stockfish, and sharpen calculation with millions of offline tactics puzzles.',
           points: [
             '50 interactive strategy lessons with notes by Capablanca & Tarrasch',
-            '36 structured endgame lessons across 7 difficulty levels',
-            'Play out endgame drills against Stockfish to win or hold the draw',
+            '36 structured endgame lessons across 7 levels + live Stockfish drills',
+            'Millions of offline tactics puzzles with Glicko-2, spaced repetition & cycles',
           ],
-          alt: 'Strategy lesson in Ruru Chess on Capablanca vs Teichmann, Berlin 1913',
+          alt: 'Strategy lessons in Ruru Chess showing annotated master games by Capablanca and Tarrasch',
         },
         {
           id: 'bots',
@@ -588,32 +576,20 @@ export default {
     ch4: {
       num: '04',
       eyebrow: 'Καθημερινή Βελτίωση',
-      title: 'Τακτικά, κλασικά μαθήματα και bots που παίζουν σαν άνθρωποι.',
-      lead: 'Προπόνησε τον υπολογισμό, τη στρατηγική και τα φινάλε σου μέσα στην ίδια εφαρμογή όπου κρατάς τις παρτίδες σου.',
+      title: 'Στρατηγική, φινάλε, bots — και εκατομμύρια τακτικά.',
+      lead: 'Προπόνησε τη στρατηγική, τα φινάλε, τον υπολογισμό και εκατομμύρια τακτικά offline (με επανάληψη λαθών FSRS & κύκλους) μέσα στην ίδια εφαρμογή όπου κρατάς τις παρτίδες σου.',
       tabs: [
         {
-          id: 'tactics',
-          label: 'Τακτικά',
-          heading: 'Γρίφοι που προσαρμόζονται στο επίπεδό σου',
-          text: 'Λύσε γρίφους από πραγματικές παρτίδες με βαθμό Glicko-2 που ακολουθεί την πρόοδό σου. Οι γρίφοι που χάνεις επιστρέφουν με επανάληψη σε διαστήματα, μαζί με γύρους χρόνου, 3 λαθών, κύκλους και γρίφο ημέρας.',
-          points: [
-            'Βαθμός Glicko-2 και επιλογή ανά τακτικό μοτίβο',
-            'Επανάληψη σε διαστήματα για κάθε γρίφο που έχασες',
-            'Γύροι με χρόνο, 3 λάθη, κύκλοι επανάληψης & γρίφος της ημέρας',
-          ],
-          alt: 'Εκπαιδευτής τακτικής του Ruru Chess με βοήθειες βήμα-βήμα',
-        },
-        {
           id: 'lessons',
-          label: 'Κλασικά μαθήματα',
-          heading: 'Μάθε στρατηγική & φινάλε από τους δασκάλους',
-          text: 'Παίξε σχολιασμένες παρτίδες μεγάλων δασκάλων διαδραστικά: στις κρίσιμες στιγμές το Ruru ρωτά τι θα έπαιζες πριν δείξει την ιδέα του δασκάλου. Τα μαθήματα φινάλε ξεκινούν από τα βασικά ματ ως Lucena και Philidor.',
+          label: 'Στρατηγική & Φινάλε',
+          heading: 'Διαδραστικά μαθήματα στρατηγικής & εργαστήριο φινάλε',
+          text: 'Παίξε 50 σχολιασμένες παρτίδες των Capablanca και Tarrasch διαδραστικά: στις κρίσιμες στιγμές το Ruru σε ρωτά τι θα έπαιζες πριν δείξει το σχέδιο του δασκάλου. Μάθε 36 δομημένα μαθήματα φινάλε σε 7 επίπεδα (από βασικά ματ ως Lucena και Philidor), εξάσκησέ τα απέναντι στο Stockfish και λύσε εκατομμύρια τακτικά offline.',
           points: [
-            '50 μαθήματα στρατηγικής με σχόλια των Capablanca & Tarrasch',
-            '36 μαθήματα φινάλε οργανωμένα σε 7 επίπεδα',
-            'Παίξε θέσεις φινάλε απέναντι στο Stockfish για νίκη ή ισοπαλία',
+            '50 διαδραστικά μαθήματα στρατηγικής με σχόλια των Capablanca & Tarrasch',
+            '36 δομημένα μαθήματα φινάλε σε 7 επίπεδα + εξάσκηση απέναντι στο Stockfish',
+            'Εκατομμύρια τακτικά offline με Glicko-2, επανάληψη λαθών & κύκλους',
           ],
-          alt: 'Μάθημα στρατηγικής στο Ruru Chess: Capablanca – Teichmann, Βερολίνο 1913',
+          alt: 'Μαθήματα στρατηγικής στο Ruru Chess με σχολιασμένες παρτίδες των Capablanca και Tarrasch',
         },
         {
           id: 'bots',
