@@ -26,7 +26,7 @@ export default {
     hero: {
       kicker: 'v{version} · Windows 10 & 11 · Free & Open Source',
       title: 'A serious chess database,<br>free for everyone.',
-      lead: '<strong>Ruru Chess</strong> brings Stockfish analysis, PDF chess book conversion, opponent preparation, tactics training, and live shared study into one fast Windows app. No subscriptions, no ads, and your games stay on your computer.',
+      lead: '<strong>Ruru Chess</strong> brings Stockfish analysis, PDF chess book conversion, opponent preparation, friends &amp; teams, and live shared study into one fast Windows app. No subscriptions, no ads, and your games stay on your computer.',
       cta: 'Download for Windows',
       ctaMeta: '{setupMB} MB · Windows 10/11 (64-bit)',
       portable: 'Portable ZIP',
@@ -397,7 +397,7 @@ export default {
     hero: {
       kicker: 'v{version} · Windows 10 & 11 · Δωρεάν & Ανοιχτός Κώδικας',
       title: 'Μια σοβαρή βάση σκακιού,<br>δωρεάν για όλους.',
-      lead: 'Το <strong>Ruru Chess</strong> συνδυάζει ανάλυση με Stockfish, μετατροπή σκακιστικών βιβλίων PDF σε βάσεις, προετοιμασία αντιπάλου, τακτική και ζωντανή κοινή μελέτη σε μία γρήγορη εφαρμογή για Windows. Χωρίς συνδρομές, χωρίς διαφημίσεις — οι παρτίδες σου μένουν στον υπολογιστή σου.',
+      lead: 'Το <strong>Ruru Chess</strong> συνδυάζει ανάλυση με Stockfish, μετατροπή σκακιστικών βιβλίων PDF σε βάσεις, προετοιμασία αντιπάλου, φίλους &amp; ομάδες και ζωντανή κοινή μελέτη σε μία γρήγορη εφαρμογή για Windows. Χωρίς συνδρομές, χωρίς διαφημίσεις — οι παρτίδες σου μένουν στον υπολογιστή σου.',
       cta: 'Κατέβασε για Windows',
       ctaMeta: '{setupMB} MB · Windows 10/11 (64-bit)',
       portable: 'Φορητό ZIP',
