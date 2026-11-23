@@ -1,0 +1,476 @@
+/* Watch Live: η καρτέλα στο νέο σχέδιο (προδιαγραφή: mockups/watch.html· tokens και .kb-* στο styles.css)
+ * και η live μπάρα του παραθύρου παρτίδας. */
+.watch-page .faint {
+  color: var(--muted);
+}
+.watch-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+}
+.watch-main {
+  display: grid;
+  gap: 28px;
+  min-width: 0;
+}
+.watch-sh {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+}
+.watch-cap {
+  margin: 0 0 12px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.watch-sh2 {
+  margin: 20px 0 8px;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+}
+.watch-page .watch-err,
+.tx .watch-err {
+  color: var(--danger);
+  margin: 6px 0;
+}
+.live-badge {
+  display: inline-block;
+  flex: none;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+}
+.watch-off {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  padding: 24px;
+}
+.watch-off p {
+  margin: 0;
+}
+
+/* «Φίλοι live» (FriendsLive.tsx): εικόνα · όνομα και παρτίδα · κουμπιά */
+.fl-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.fl-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 14px;
+  padding: 14px 16px;
+}
+.fl-card.is-live {
+  border-color: color-mix(in srgb, var(--danger) 40%, var(--border));
+}
+.fl-head {
+  display: contents;
+}
+.fl-head > .fr-av {
+  grid-row: 1 / span 2;
+}
+.fl-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+}
+.fl-body {
+  grid-column: 2;
+  min-width: 0;
+  margin-top: 2px;
+  color: var(--text-2);
+}
+.fl-actions {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.fl-actions:empty {
+  display: none;
+}
+
+/* τουρνουά: κάρτα που ανοίγει με τις παρτίδες του γύρου σε μικρές σκακιέρες */
+.watch-tours {
+  display: grid;
+  gap: 10px;
+}
+.watch-sh + .watch-tours {
+  margin-top: 8px;
+}
+.watch-tour {
+  overflow: hidden;
+}
+.watch-tour-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 12px;
+}
+.watch-tour-head {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 4px 14px 16px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.watch-tour-head:disabled {
+  cursor: default;
+}
+/* hover σε όλη τη σειρά (μαζί με το κουμπί αναζήτησης), όχι μόνο στο κουμπί */
+.watch-tour-top:has(.watch-tour-head:hover:not(:disabled)) {
+  background: var(--panel-2);
+}
+.watch-tour-head:hover:not(:disabled) {
+  background: none;
+}
+.watch-tour-head > svg {
+  flex: none;
+  color: var(--muted);
+}
+.watch-tour-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  min-width: 0;
+}
+/* τα κουμπιά δεν αλλάζουν γραμμή (styles.css): το μακρύ κείμενο κόβεται με «…», ολόκληρο στο title */
+.watch-ell {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.watch-tour-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: var(--fw-semibold);
+}
+.watch-tour-meta {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.watch-games {
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--panel-2);
+}
+.watch-search {
+  position: relative;
+  max-width: 320px;
+}
+.watch-search > svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+.watch-search > .kb-input {
+  width: 100%;
+  padding-left: 36px;
+}
+.watch-boards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.watch-pick-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--accent);
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+}
+.watch-pick-bar > svg {
+  flex: none;
+  color: var(--accent);
+}
+.watch-pick-bar > span {
+  flex: 1;
+  min-width: 0;
+  font-weight: var(--fw-medium);
+}
+.watch-game-card {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--panel);
+  overflow: hidden;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 290px;
+}
+.watch-game-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.watch-game {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 10px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.watch-game-share {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text-2);
+  font: inherit;
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+}
+.watch-game-share:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.watch-gp {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: var(--fs-sm);
+}
+.watch-gp > b {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--fw-semibold);
+}
+.watch-no {
+  flex: none;
+  width: 16px;
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.watch-rt {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.watch-res {
+  margin-left: auto;
+  white-space: nowrap;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+/* η σκακιέρα μόνο δείχνει: το κλικ πάει στο κουμπί της κάρτας */
+.watch-mini {
+  display: block;
+  pointer-events: none;
+}
+.watch-upcoming {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.watch-upcoming li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.watch-upcoming svg {
+  flex: none;
+  color: var(--muted);
+}
+
+/* δεξιά: Lichess και usernames */
+.watch-side {
+  display: grid;
+  gap: 16px;
+}
+.watch-acct {
+  display: grid;
+  gap: 10px;
+  padding: 18px 20px;
+}
+.watch-acct h2 {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+}
+.watch-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.watch-note {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.watch-users {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.watch-users li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--panel-2);
+}
+.watch-users li > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--muted);
+}
+
+@media (max-width: 1100px) {
+  .watch-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .fl-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+
+/* live μπάρα κάτω από τη σκακιέρα */
+.mode-banner.live .live-tag {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.mode-banner.live.s-live .live-tag {
+  color: var(--danger, #d64545);
+}
+.mode-banner.live.s-error .msg {
+  color: var(--danger, #d64545);
+}
+.mode-banner.live button.is-new {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+.mode-banner.live button.live-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* live: μπάρες παικτών πάνω και κάτω από τη σκακιέρα (όνομα και ρολόι στη μεριά του χρώματός τους) */
+.live-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 34px;
+  margin: 2px 0;
+  padding: 0 4px 0 8px;
+  border-radius: 6px;
+  background: var(--panel-2);
+  font-size: 14px;
+}
+.live-who {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.live-dot {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+}
+.live-dot.white {
+  background: #f4f4f4;
+}
+.live-dot.black {
+  background: #222;
+}
+.live-title {
+  color: var(--warn);
+  font-size: 12px;
+}
+.live-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+.live-elo {
+  color: var(--muted);
+  font-size: 12px;
+}
+.live-score {
+  margin-left: 4px;
+  color: var(--accent);
+}
+.live-clock {
+  flex: none;
+  min-width: 78px;
+  padding: 3px 10px;
+  border-radius: 5px;
+  background: var(--panel);
+  color: var(--muted);
+  font: 600 18px/1.2 ui-monospace, Consolas, monospace;
+  text-align: right;
+}
+.live-clock.on {
+  background: var(--ok);
+  color: #fff;
+}
+.live-clock.on.low {
+  background: var(--danger);
+}

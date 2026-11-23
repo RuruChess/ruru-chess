@@ -1,0 +1,556 @@
+/* «Προετοιμασία για αντίπαλο». Μεταβλητές του `.tx` (tactics.css), άρα φωτεινό και σκοτεινό θέμα. */
+.tx .prep-lobby {
+  grid-template-columns: minmax(0, 1fr) 280px;
+  /* σε όλο το πλάτος, ώστε η μπάρα κύλισης να είναι στην άκρη του παραθύρου και όχι στη μέση */
+  max-width: none;
+  padding-inline: max(var(--sp-8), calc((100% - 1240px) / 2 + var(--sp-8)));
+}
+.tx .prep-lobby.is-empty {
+  grid-template-columns: minmax(0, 760px);
+  justify-content: center;
+}
+.tx .prep-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.tx .prep-side {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+}
+.tx .prep-new {
+  width: 100%;
+}
+
+/* φόρμα: τρεις ενότητες, όλες οι γραμμές ίδιες (ετικέτα αριστερά, πεδίο δεξιά) */
+.tx .prep-form {
+  width: 100%;
+  max-width: 760px;
+  overflow: visible;
+  container-type: inline-size;
+}
+.tx .prep-head-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.tx .prep-friend {
+  width: 170px;
+}
+.tx .prep-body {
+  gap: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.tx .prep-sec {
+  display: grid;
+  gap: 10px;
+  padding: 16px 0;
+}
+.tx .prep-sec + .prep-sec {
+  border-top: 1px solid var(--line);
+}
+.tx .prep-sec > h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 2px;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+}
+.tx .prep-sec-n {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+}
+.tx .prep-row {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 4px 14px;
+}
+.tx .prep-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: start;
+  min-height: 40px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.tx .prep-label > b {
+  color: var(--text);
+  font-weight: var(--fw-semibold);
+}
+.tx .prep-control {
+  min-width: 0;
+}
+.tx .prep-combo {
+  position: relative;
+}
+.tx .prep-menu {
+  position: absolute;
+  z-index: 20;
+  inset: calc(100% + 4px) 0 auto;
+  max-height: 300px;
+  overflow: auto;
+  padding: 4px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: 0 10px 28px rgb(0 0 0 / 0.18);
+}
+.tx .prep-option {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.tx .prep-option > b {
+  font-weight: var(--fw-semibold);
+}
+.tx .prep-option > span {
+  font-size: 12px;
+  color: var(--text-2);
+}
+.tx .prep-option:hover {
+  background: var(--hover);
+}
+.tx .prep-option.is-hi {
+  background: var(--accent-soft);
+}
+.tx .prep-title-badge {
+  color: var(--warn);
+}
+.tx .prep-note {
+  margin: 5px 0 0;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.tx .prep-note.is-ok {
+  color: var(--ok-text);
+}
+.tx .prep-note.is-bad {
+  color: var(--danger-text);
+}
+.tx .prep-maybe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.tx .prep-maybe .kb-chip {
+  height: 26px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: var(--fw-regular);
+}
+.tx .prep-period {
+  display: flex;
+  gap: 8px;
+}
+.tx .prep-period > .kb-input {
+  flex: 1;
+  min-width: 0;
+}
+.tx .prep-seg {
+  display: flex;
+  height: 40px;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+}
+.tx .prep-seg > button {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  border: 0;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.tx .prep-seg > button + button {
+  border-left: 1px solid var(--line);
+}
+.tx .prep-seg > button[aria-pressed='true'] {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: var(--fw-semibold);
+}
+.tx .prep-speeds {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+/* πολλαπλή επιλογή: απαλό «πατημένο» αντί για γεμάτο μπλε */
+.tx .prep-speeds .kb-chip[aria-pressed='true'] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tx .prep-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  font-size: var(--fs-sm);
+}
+.tx .prep-foot {
+  flex-direction: column;
+  gap: 4px;
+}
+.tx .prep-foot > .kb-btn {
+  flex: none;
+  width: 100%;
+}
+@container (max-width: 520px) {
+  .tx .prep-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tx .prep-label {
+    min-height: 0;
+  }
+  .tx .prep-check {
+    margin-left: 0;
+  }
+  .tx .prep-friend {
+    width: 120px;
+  }
+}
+
+/* λίστα προετοιμασιών */
+.tx .prep-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tx .prep-list .bots-sub {
+  margin: 0 0 4px;
+}
+.tx .prep-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.tx .prep-item:hover {
+  border-color: var(--line-strong);
+}
+.tx .prep-item.is-sel {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.tx .prep-item-name {
+  font-weight: var(--fw-semibold);
+}
+
+/* αναφορά */
+.tx .prep-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.tx .prep-title h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+.tx .prep-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.tx .prep-chips .chip {
+  padding: 0 10px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 12px;
+  height: 24px;
+}
+.tx .prep-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tx .prep-progress {
+  display: grid;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.tx .prep-source {
+  display: grid;
+  grid-template-columns: 20px 130px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+}
+.tx .prep-source + .prep-source {
+  border-top: 1px solid var(--line);
+}
+.tx .prep-source-ic {
+  display: grid;
+  place-items: center;
+}
+.tx .prep-source.is-done .prep-source-ic {
+  color: var(--ok);
+}
+.tx .prep-source.is-error .prep-source-ic {
+  color: var(--danger);
+}
+.tx .prep-empty {
+  padding: 14px 16px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.tx .prep-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+.tx .prep-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.tx .prep-big {
+  font-size: 22px;
+  font-weight: var(--fw-semibold);
+}
+.tx .prep-speedrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tx .prep-speed {
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  font-size: 12px;
+}
+
+/* μπάρα σκορ του αντιπάλου: πράσινο νίκες, γκρι ισοπαλίες, κόκκινο ήττες */
+.tx .prep-bar {
+  display: flex;
+  width: 100%;
+  min-width: 70px;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--surface-3);
+}
+.tx .prep-bar .pb-w {
+  background: var(--ok);
+}
+.tx .prep-bar .pb-d {
+  background: var(--draws);
+}
+.tx .prep-bar .pb-l {
+  background: var(--danger);
+}
+
+/* εξερευνητής ρεπερτορίου */
+.tx .prep-explore {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.tx .prep-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.tx .prep-tabs .btn.is-on {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+.tx .prep-explorer {
+  display: grid;
+  grid-template-columns: minmax(220px, 340px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.tx .prep-board {
+  min-width: 0;
+}
+.tx .prep-board-note {
+  margin-top: 4px;
+}
+.tx .prep-moves {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.tx .prep-path {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+}
+.tx .prep-crumb {
+  padding: 2px 5px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.tx .prep-crumb:hover {
+  background: var(--hover);
+}
+.tx .prep-crumb.is-cur {
+  color: var(--text);
+  font-weight: var(--fw-semibold);
+  background: var(--accent-soft);
+}
+.tx .prep-opening {
+  font-size: 13px;
+  font-weight: var(--fw-medium);
+}
+.tx .prep-tree tbody tr {
+  cursor: pointer;
+}
+.tx .prep-tree tbody tr:hover {
+  background: var(--hover);
+}
+.tx .prep-tree .prep-mv {
+  font-weight: var(--fw-semibold);
+  font-size: 14px;
+}
+.tx .prep-tree td:nth-child(3) {
+  width: 40%;
+}
+.tx .prep-explore-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.tx .prep-two-col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 14px;
+}
+.tx .prep-h3 {
+  font-size: 15px;
+  margin: 0 0 6px;
+}
+.tx .prep-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tx .prep-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.tx .prep-line:hover {
+  border-color: var(--line-strong);
+}
+.tx .prep-line.is-weak b {
+  color: var(--danger);
+}
+.tx .prep-line-moves {
+  font-size: 13px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.tx .prep-line > :last-child {
+  flex: none;
+}
+.tx .prep-recent tr {
+  cursor: pointer;
+}
+.tx .prep-recent tr:hover {
+  background: var(--hover);
+}
+.tx .prep-recent .side {
+  vertical-align: middle;
+}
+.tx .prep-opp {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tx .prep-res {
+  font-weight: var(--fw-semibold);
+  text-align: center;
+}
+.tx .prep-res.is-w {
+  color: var(--ok);
+}
+.tx .prep-res.is-l {
+  color: var(--danger);
+}
+
+@media (max-width: 980px) {
+  .tx .prep-lobby,
+  .tx .prep-lobby.is-empty {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tx .prep-side {
+    position: static;
+  }
+  .tx .prep-explorer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tx .prep-board {
+    max-width: 340px;
+  }
+}

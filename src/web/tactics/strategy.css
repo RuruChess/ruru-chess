@@ -1,0 +1,421 @@
+/*
+ * «Στρατηγικά» (GameLessons.tsx): η λίστα των μαθημάτων στο νέο σχέδιο (προδιαγραφή: mockups/strategy.html).
+ * Δικό της πρόθεμα sl-*: τα .gl-* τα μοιράζονται τα Φινάλε και η λίστα παρτίδων. Tokens και .kb-* στο styles.css.
+ */
+.subpages-body > .kb-wrap {
+  flex: 1;
+  min-height: 0;
+}
+.sl-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.sl-book + .sl-book {
+  margin-top: 32px;
+}
+.sl-book-h {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 14px;
+}
+.sl-book-h h2 {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+}
+.sl-note {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
+  color: var(--text-2);
+}
+.sl-prog {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.sl-prog > .kb-bar {
+  width: 140px;
+}
+.sl-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sl-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+}
+.sl-diag {
+  flex: none;
+  width: 152px;
+}
+.sl-mini {
+  display: block;
+}
+.sl-turn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.sl-turn > i {
+  width: 9px;
+  height: 9px;
+  border: 1px solid #555;
+  border-radius: 50%;
+}
+.sl-turn > i.w {
+  background: #fff;
+}
+.sl-turn > i.b {
+  background: #222;
+}
+.sl-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sl-cap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--muted);
+}
+.sl-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  line-height: 1.3;
+}
+.sl-title > svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--ok-text);
+}
+.sl-theme {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.sl-meta {
+  margin-top: auto;
+  padding-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.sl-foot {
+  margin-top: 8px;
+}
+.sl-credit {
+  margin: 32px 0 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+@media (max-width: 1100px) {
+  .sl-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  .sl-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sl-book-h {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* μάθημα (GameLessonView): σκακιέρα αριστερά, πλαϊνό σε κάρτα όσο ψηλό η σκακιέρα (καταστάσεις 2–3 του mockup) */
+.subpages-body > .sl-lesson {
+  flex: 1;
+  min-height: 0;
+}
+.sl-lesson {
+  height: 100%;
+  overflow: auto;
+  container-type: size;
+  background: var(--bg);
+  line-height: 1.5;
+  /* για το PgnLine (κινήσεις .tx-mv), που αλλιώς τα παίρνει από το .tx */
+  --hover: color-mix(in srgb, var(--text) 5%, transparent);
+  --r-xs: 4px;
+}
+.sl-ggrid {
+  --B: min(calc(100cqh - 48px), calc(100cqw - 64px - 24px - 380px));
+  display: grid;
+  grid-template-columns: var(--B) minmax(360px, 480px);
+  gap: 24px;
+  justify-content: center;
+  align-items: start;
+  padding: 24px 32px;
+}
+.sl-board {
+  position: relative;
+  width: var(--B);
+}
+.kb-card.sl-side {
+  height: var(--B);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+.sl-side-h {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 16px 10px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.sl-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+/* σε grid με κύλιση η σημειογραφία μίκραινε σε μία γραμμή */
+.sl-body > * {
+  flex-shrink: 0;
+}
+.sl-cap2 {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.sl-h1 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: var(--fw-semibold);
+}
+.sl-sub {
+  margin-top: 4px;
+}
+.sl-qdots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.sl-qdots i {
+  width: 28px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+}
+.sl-qdots i.done {
+  background: var(--ok);
+}
+.sl-qdots i.cur {
+  background: var(--accent);
+}
+.sl-intro {
+  display: grid;
+  gap: 8px;
+}
+.sl-intro p,
+.sl-pending,
+.sl-cmt {
+  margin: 0;
+}
+.sl-hint {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.sl-q {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  padding: 16px 18px;
+  border: 1px solid var(--accent);
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.sl-qh {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--accent-text);
+}
+.sl-qh > svg,
+.sl-who > svg {
+  width: 16px;
+  height: 16px;
+}
+.sl-ask {
+  margin: 0;
+  font-size: 16px;
+  font-weight: var(--fw-semibold);
+  line-height: 1.45;
+}
+.sl-pending {
+  font-weight: var(--fw-medium);
+}
+.sl-fb {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--panel-2);
+  font-size: 14px;
+  line-height: 1.45;
+}
+.sl-fb.is-ok {
+  border-color: color-mix(in srgb, var(--ok) 45%, transparent);
+  background: var(--ok-soft);
+}
+.sl-mv {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+}
+.sl-mv.is-var {
+  border-style: dashed;
+}
+.sl-mv-h {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+}
+.sl-cmt {
+  line-height: 1.55;
+}
+.sl-who {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: var(--fw-semibold);
+  color: var(--text-2);
+}
+.sl-vars {
+  display: grid;
+  gap: 6px;
+  justify-self: stretch;
+}
+.sl-vars-h {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.sl-var {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+}
+.sl-var .pgn-line > * + * {
+  margin-left: 0.25em;
+}
+.sl-var .pgn-line .tx-mv {
+  padding: 0 3px;
+}
+.sl-var .tx-sol-v .tx-sol-v {
+  margin-left: 10px;
+}
+.sl-var .tx-sol-c {
+  color: var(--text-2);
+  font-style: italic;
+}
+.sl-sec {
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sl-sum {
+  margin: 0;
+  padding: 14px 16px;
+  border-left: 3px solid var(--ok);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  background: var(--panel-2);
+  line-height: 1.55;
+}
+.sl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.sl-notation {
+  max-height: 260px;
+  overflow: auto;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: var(--fs-sm);
+}
+.sl-lcredit {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.sl-nav {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+  border-top: 1px solid var(--border);
+  background: var(--panel-2);
+}
+.sl-sp {
+  flex: 1;
+}
+.sl-next {
+  min-width: 120px;
+  justify-content: center;
+}
+/* στενό παράθυρο: το πλαϊνό κάτω από τη σκακιέρα */
+@media (max-width: 900px) {
+  .sl-ggrid {
+    --B: min(calc(100cqw - 32px), calc(100cqh - 32px));
+    grid-template-columns: var(--B);
+    padding: 16px;
+  }
+  .kb-card.sl-side {
+    height: auto;
+    overflow: visible;
+  }
+  .sl-body {
+    overflow: visible;
+  }
+}

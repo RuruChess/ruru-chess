@@ -1,0 +1,640 @@
+/*
+ * «Παίξε με bots»: στυλ από το RealChessBase (Λάζαρος Μπατσής, GPL-3.0), προσαρμοσμένα στο Ruru.
+ * Χρησιμοποιούν τις μεταβλητές του `.tx` (tactics.css), άρα ακολουθούν το φωτεινό και το σκοτεινό θέμα.
+ */
+.tx.bots {
+  height: 100%;
+  --txbar: 0px;
+}
+
+/* ---- επιλογή αντιπάλου ---- */
+.tx .bots-lobby {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 24px;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  /* όπως το .kb-page: ο τίτλος στην ίδια θέση με τις άλλες σελίδες */
+  padding: var(--sp-10) var(--sp-8) 56px;
+  min-height: 0;
+  overflow: auto;
+  align-items: start;
+}
+.tx .bots-head h1 {
+  font-size: 24px;
+  margin: 0 0 6px;
+  letter-spacing: var(--tracking-title);
+}
+.tx .bots-head p {
+  margin: 0 0 10px;
+  max-width: 660px;
+}
+.tx .bots-progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.tx .bots-progress .ic,
+.tx .bot-won {
+  color: var(--warn);
+}
+.tx .bot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+.tx .bot-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 28px 12px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  white-space: normal;
+  cursor: pointer;
+  transition:
+    border-color var(--dur),
+    box-shadow var(--dur),
+    background var(--dur);
+}
+.tx .bot-card:hover {
+  border-color: var(--line-strong);
+}
+.tx .bot-card.is-sel {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+  background: var(--accent-soft);
+}
+.tx .bot-level {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 11px;
+  color: var(--text-3);
+}
+.tx .bot-av {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-weight: var(--fw-semibold);
+  font-size: 17px;
+}
+.tx .bot-av-lg {
+  width: 56px;
+  height: 56px;
+  font-size: 24px;
+}
+.tx .bot-av-beginner {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+.tx .bot-av-balanced {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.tx .bot-av-aggressive {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.tx .bot-av-solid {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.tx .bot-av-engine {
+  background: var(--surface-3);
+  color: var(--text);
+}
+.tx .bot-av-you {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  background: var(--surface-3);
+  color: var(--text);
+}
+.tx .bot-txt {
+  flex: 1;
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.tx .bot-name {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-weight: var(--fw-semibold);
+  font-size: 14px;
+}
+.tx .bot-blurb {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.35;
+}
+.tx .bot-rec {
+  font-size: 12px;
+}
+.tx .bots-setup {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.tx .bots-chosen {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tx .bots-chosen-name {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 17px;
+  font-weight: var(--fw-semibold);
+}
+.tx .bot-say {
+  position: relative;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  font-size: 14px;
+  font-style: italic;
+}
+.tx .bot-say::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 22px;
+  border: 6px solid transparent;
+  border-top: 0;
+  border-bottom-color: var(--surface-2);
+}
+.tx .play-opt,
+.tx .field {
+  display: grid;
+  gap: 6px;
+}
+.tx .field-label {
+  font-size: 12px;
+  font-weight: var(--fw-semibold);
+  color: var(--text-3);
+}
+.tx .play-hints {
+  display: grid;
+  gap: 6px;
+}
+.tx .play-custom {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+}
+.tx .play-custom input[type='range'] {
+  width: 100%;
+}
+.tx .play-note {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  padding: 12px;
+  border-radius: var(--r-md);
+  background: var(--warn-soft);
+  font-size: 13px;
+}
+.tx .bots-start {
+  justify-content: center;
+  height: 40px;
+  font-size: 15px;
+}
+
+/* ---- η παρτίδα ---- */
+.tx .bots-main {
+  --B: min(calc(100vh - var(--topbar-h) - var(--statusbar-h) - 2 * var(--pad) - 104px), 52vw);
+}
+.tx .bots-board {
+  display: grid;
+  gap: 6px;
+}
+.tx .bots-boardwrap {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.tx .bots-evalbar {
+  display: flex;
+}
+.tx .bots-evalbar .evalbar {
+  height: 100%;
+}
+.tx .bots-boardbox {
+  flex: 1;
+  min-width: 0;
+}
+.tx .play-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 2px;
+}
+.tx .play-bar .bot-av {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+/* πρόσωπα των αντιπάλων (faces.tsx) */
+.tx .bot-av-face {
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  background: none;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.06);
+}
+.tx .bot-av-face svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.tx .bot-av-face.bot-av-lg {
+  width: 88px;
+  height: 88px;
+}
+.tx .play-bar .bot-av-face {
+  width: 38px;
+  height: 38px;
+}
+.tx .play-bar-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+}
+.tx .play-bar-mat {
+  font-size: 12px;
+  font-weight: var(--fw-regular);
+  color: var(--text-3);
+}
+.tx .play-clock {
+  min-width: 76px;
+  padding: 4px 10px;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  font-size: 18px;
+  font-weight: var(--fw-semibold);
+  text-align: right;
+}
+.tx .play-clock.on {
+  background: var(--text);
+  color: var(--bg);
+}
+.tx .play-clock.on.low {
+  background: var(--danger);
+  color: #fff;
+}
+.tx .play-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  font-size: 14px;
+}
+.tx .play-status.is-error {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.tx .play-turn {
+  font-weight: var(--fw-semibold);
+}
+.tx .tx-side > .bots-moves {
+  flex: 1 1 auto;
+  min-height: 120px;
+  max-height: 300px;
+  overflow: auto;
+  display: grid;
+  align-content: start;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+.tx .bots-move-row {
+  display: grid;
+  grid-template-columns: 38px 1fr 1fr;
+  align-items: center;
+  font-size: 14px;
+}
+.tx .bots-move-num {
+  padding-right: 8px;
+  text-align: right;
+  color: var(--text-3);
+}
+.tx .bots-move {
+  padding: 3px 6px;
+  border: 0;
+  border-radius: var(--r-xs);
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.tx .bots-move:hover {
+  background: var(--hover);
+}
+.tx .bots-move.on {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-weight: var(--fw-semibold);
+}
+.tx .bots-nav {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+.tx .play-actions,
+.tx .play-over-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tx .btn-danger {
+  color: var(--danger);
+}
+.tx .play-sec {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.tx .play-over {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.tx .play-over.is-win {
+  border-color: var(--ok);
+  background: var(--ok-soft);
+}
+.tx .play-over.is-loss {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+.tx .play-over-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.tx .play-over-score {
+  font-size: 28px;
+  font-weight: var(--fw-semibold);
+}
+.tx .play-over-title {
+  font-size: 18px;
+  font-weight: var(--fw-semibold);
+}
+
+@media (max-width: 1100px) {
+  .tx .bots-lobby {
+    grid-template-columns: 1fr;
+  }
+  .tx .bots-setup {
+    position: static;
+  }
+}
+
+/* ---- Φινάλε: «Παίξε τη θέση» ---- */
+.tx .eg-list {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--pad);
+  min-height: 0;
+  overflow: auto;
+}
+.tx .eg-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+  margin: 14px 0 8px;
+}
+.tx .eg-group {
+  margin-top: 20px;
+}
+.tx .eg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+.tx .eg-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  white-space: normal;
+  cursor: pointer;
+}
+.tx .eg-card:hover {
+  border-color: var(--line-strong);
+}
+.tx .eg-card.is-done {
+  border-color: color-mix(in srgb, var(--ok) 55%, var(--line));
+}
+.tx .eg-card:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.tx .mini-board {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 112px;
+  height: 112px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.tx .mini-board span {
+  position: relative;
+}
+.tx .mini-board img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.tx .eg-txt {
+  flex: 1;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.tx .eg-goal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+}
+.tx .eg-goal.is-win {
+  color: var(--ok);
+}
+.tx .eg-goal.is-draw {
+  color: var(--warn);
+}
+.tx .eg-goal.big {
+  font-size: 18px;
+}
+.tx .eg-title {
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+}
+.tx .eg-mat {
+  font-size: 15px;
+  letter-spacing: 0.02em;
+}
+.tx .eg-src {
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tx .eg-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+.tx .eg-ok {
+  color: var(--ok);
+}
+.tx .eg-head {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.tx .eg-head p {
+  margin: 0;
+}
+.tx .eg-pv {
+  flex-basis: 100%;
+  margin: 0;
+}
+.tx .eg-credit {
+  margin-top: 20px;
+}
+.tx .eg-goalrow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.tx .eg-goalrow .btn.is-on {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.tx .eg-card {
+  position: relative;
+}
+.tx .eg-num {
+  position: absolute;
+  top: 6px;
+  right: 9px;
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+/* ---- Λήψη Leela και Maia (Ρυθμίσεις → Μηχανές, bots, θέσεις) ---- */
+.lc0-install {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.lc0-install p {
+  margin: 0;
+}
+.lc0-install .lc0-title {
+  font-weight: 600;
+}
+.lc0-install .lc0-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.lc0-install.is-tx {
+  margin: 0;
+  border-color: var(--line);
+  background: var(--surface);
+}
+
+.tx .bots-sub {
+  margin: 22px 0 0;
+  font-size: 16px;
+}
+.tx .maia-card {
+  cursor: default;
+}
+.tx .maia-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+.tx .maia-chips .chip.is-on {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+.tx .eg-leela-hint {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tx .eg-leela-hint .lc0-install {
+  padding: 0;
+  border: 0;
+  background: none;
+}

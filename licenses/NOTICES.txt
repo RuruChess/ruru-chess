@@ -1,0 +1,152 @@
+Third-party notices for code, formats and files used by Ruru Chess
+(the npm dependencies are appended to THIRD-PARTY-LICENSES.txt by scripts/make-release.mjs)
+
+Ruru Chess is GPL-3.0-or-later (LICENSE), with parts under AGPL-3.0 (licenses/AGPL-3.0.txt).
+The two are combined as GPLv3 section 13 and AGPLv3 section 13 allow; each part keeps its own licence.
+There is no warranty of any kind.
+
+== lila (Lichess) — https://github.com/lichess-org/lila (GNU AGPL v3 or later) ==
+Copyright (c) 2012-2026 the lila authors
+Authors: https://github.com/lichess-org/lila/graphs/contributors
+
+Translated to TypeScript and modified for Ruru Chess, on the dates shown:
+  src/core/puzzle.ts                     2026-10-27  answer check, practice goals
+  src/core/glicko2.ts                    2026-10-27  puzzle rating rules and limits
+  src/server/tactics/dashboard.ts        2026-10-27  performance dashboard
+  src/server/tactics/select.ts           2026-10-27  puzzle selection
+  src/server/tactics/index.ts            2026-10-27 to 2026-11-22  Storm settings
+  src/web/annotate.ts                    2026-10-22 to 2026-11-22  winning chances, accuracy
+  src/web/components/EnginePanel.tsx     2026-10-22 to 2026-11-22  winning chances
+License text: licenses/AGPL-3.0.txt
+
+== lichess-puzzler — https://github.com/ornicar/lichess-puzzler (GNU AGPL v3) ==
+Copyright (c) ornicar (Thibault Duplessis) and the lichess-puzzler contributors
+Theme rules of tagger/cook.py, translated to TypeScript and modified in src/core/puzzle.ts (2026-10-27).
+License text: licenses/AGPL-3.0.txt
+
+== Puzzle theme names (src/data/puzzle-themes.json) ==
+English texts from lila (translation/source/puzzleTheme.xml): CC0 1.0.
+Some Greek texts come from the Greek translation of Lichess, by the Lichess translators
+(https://crowdin.com/project/lichess) and the lila authors: GNU AGPL v3 or later, modified 2026-10-26.
+License text: licenses/AGPL-3.0.txt
+
+== cbh2pgn — https://github.com/asdfjkl/cbh2pgn (MIT) ==
+Used for the ChessBase .cbh reader (src/server/formats/cbh.ts).
+
+Copyright (c) 2022 Dominik Klein
+
+== cbvault — https://github.com/itshak/cbvault (MIT) ==
+Used for the ChessBase .cbh and .cbv readers (src/server/formats/cbh.ts, cbv.ts).
+
+Copyright (c) 2026 cbvault Contributors
+
+== Scid bytebuf.h — https://github.com/benini/scid (MIT) ==
+Used for the Scid 4 reader (src/server/formats/scid.ts).
+
+Copyright (C) 2019 Fulvio Benini
+
+== MIT License, applies to each of the three works above ==
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+== Scid — https://github.com/benini/scid (GNU GPL) ==
+Index, names, comments and piece lists of the Scid 4 format (codec_scid4.cpp, game.cpp, position.cpp),
+translated to TypeScript and modified in src/server/formats/scid.ts (2026-11-16 to 2026-11-22).
+
+Copyright (C) 1999-2003 Shane Hudson
+Copyright (C) 2006-2009 Pascal Georges
+Copyright (C) 2014-2017 Fulvio Benini
+
+The headers of those files name the GNU GPL without a version number. Scid's COPYING is the text of
+version 2, whose section 9 then allows any published version, and Ruru Chess uses version 3 or later.
+This reading has not been confirmed by the Scid authors: Scid's appdata and SourceForge page say "GPL-2.0".
+License text: LICENSE
+
+== scalachess — https://github.com/lichess-org/scalachess (MIT) ==
+Glicko-2 calculation, translated to TypeScript and modified in src/core/glicko2.ts (2026-10-27).
+
+Copyright (c) 2012-2014 Thibault Duplessis
+
+The MIT license
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+== goochjs/glicko2 — https://github.com/goochjs/glicko2 (BSD-2-Clause) ==
+The Glicko-2 calculation of scalachess, and so of src/core/glicko2.ts, is based on it.
+
+Copyright (c) 2013, Jeremy Gooch
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+== RealChessBase — Lazaros Batsis (GNU GPL v3 or later) ==
+Tactics trainer, bots, Lc0 and Maia support, adapted for Ruru Chess. CREDITS.md lists the adapted files. License text: LICENSE.
+
+== Chess pieces (GNU GPL v2 or later) ==
+"Cburnett": Colin M.L. Burnett. "Merida": Armando Hernandez Marroquin. License text: LICENSE.
+
+== Move sounds "Piano" and "Retro" (GNU AGPL v3 or later) ==
+Enigmahack, from https://github.com/lichess-org/lila. License text: licenses/AGPL-3.0.txt
+
+== 7-Zip, 7za.exe (GNU LGPL v2.1) ==
+Copyright (C) Igor Pavlov. Source code: https://www.7-zip.org/ (and alongside the GitHub Release archive)
+License text: licenses/LGPL-2.1.txt
+
+== Electron 45.4.1 & Chromium (MIT / BSD / GNU LGPL v2.1 for ffmpeg.dll) ==
+Electron: https://github.com/electron/electron/tree/v45.4.1
+Chromium: https://www.chromium.org/
+License texts included in the packaged runtime: electron/runtime/LICENSE and electron/runtime/LICENSES.chromium.html
+
+== Endgame lesson texts (CC BY-SA 4.0) ==
+Adapted from English Wikipedia articles; each lesson names its article and revision.
+https://creativecommons.org/licenses/by-sa/4.0/legalcode

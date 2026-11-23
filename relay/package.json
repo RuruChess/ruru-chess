@@ -1,0 +1,17 @@
+{
+  "name": "ruru-play",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ruru — παρτίδα με φίλο μέσω link (Cloudflare Worker + Durable Object)",
+  "license": "GPL-3.0-or-later AND AGPL-3.0-or-later",
+  "type": "module",
+  "scripts": {
+    "build:web": "node ../node_modules/vite/bin/vite.js build --config vite.config.ts",
+    "dev": "npm run build:web && wrangler dev --port 8787",
+    "deploy": "node legal-check.mjs && npm run build:web && wrangler deploy",
+    "types": "wrangler types"
+  },
+  "devDependencies": {
+    "wrangler": "^4.161.0"
+  }
+}

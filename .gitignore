@@ -1,0 +1,25 @@
+node_modules/
+dist/
+data/cache/
+data/test/
+*.log
+.vite/
+*.skdb
+*.skdb-wal
+*.skdb-shm
+*.pos
+*.tree
+*.part
+.claude/settings.local.json
+release/
+/preset.json
+
+# εργαλεία έκδοσης (Node για τον εγκαταστάτη, Inno Setup): node scripts/make-release.mjs
+.tools/
+/site/dist/
+
+# αντίγραφο του εικονιδίου για τη συντόμευση της επιφάνειας εργασίας (scripts/make-shortcut.ps1)
+/.shortcut/
+
+# σχέδια οθονών (HTML/PNG) και screenshots ελέγχου: μένουν μόνο τοπικά
+/mockups/

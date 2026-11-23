@@ -1,0 +1,329 @@
+/*
+ * «Βιβλίο σε βάση» (BooksWindow.tsx): η πρώτη οθόνη στο νέο σχέδιο (προδιαγραφή: mockups/book-screen.html).
+ * Τα tokens και οι κοινές κλάσεις .kb-* είναι στο styles.css· εδώ μόνο ό,τι είναι δικό της οθόνης.
+ */
+.books {
+  height: 100%;
+  overflow: auto;
+  background: var(--bg);
+  line-height: 1.5;
+}
+.books-page {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--sp-10) var(--sp-8) 56px;
+}
+.books-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-4) var(--sp-6);
+  margin-bottom: 28px;
+}
+.books-head > .kb-head {
+  margin-bottom: 0;
+}
+
+/* «Πώς δουλεύει;» */
+.books-how {
+  position: relative;
+}
+.books-how summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  color: var(--accent-text);
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  list-style: none;
+}
+.books-how summary::-webkit-details-marker {
+  display: none;
+}
+.books-how summary:hover {
+  background: var(--accent-soft);
+}
+.books-how summary svg {
+  width: 16px;
+  height: 16px;
+}
+.books-pop {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 5;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--panel);
+  box-shadow: var(--shadow-md);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.books-pop ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+.books-pop b {
+  color: var(--text);
+  font-weight: var(--fw-semibold);
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr);
+  gap: var(--sp-6);
+  align-items: start;
+}
+.books-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+/* γραμμή με το PDF (ή το ✓) και τον τίτλο */
+.books-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+}
+.books-bt {
+  flex: 1;
+  min-width: 0;
+}
+.books-bt b {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--fw-semibold);
+}
+.books-bt b.h2 {
+  font-size: 18px;
+}
+.books-bt > span {
+  display: block;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.books-pdf {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 50px;
+  border-radius: var(--r-sm);
+  background: var(--danger-soft);
+  color: var(--danger-text);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.books-okc {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--ok-soft);
+  color: var(--ok-text);
+}
+
+/* φόρμα */
+.books-form {
+  padding: 20px 22px;
+  border-top: 1px solid var(--border);
+}
+.books-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr) 110px;
+  gap: 14px;
+}
+.books-note {
+  margin: 10px 0 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.books-opt {
+  margin-top: 18px;
+}
+.books-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 22px;
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 var(--r-lg) var(--r-lg);
+  background: var(--panel-2);
+}
+.books-foot .books-prog {
+  flex: 1;
+  min-width: 200px;
+  padding: 0;
+}
+.books-wait {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+
+/* πρόοδος, αποτέλεσμα */
+.books-prog {
+  padding: 0 22px 20px;
+}
+.books-status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin-top: 10px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.books-body {
+  display: grid;
+  gap: var(--sp-4);
+  padding: 0 22px 20px;
+}
+.books-meter .books-status {
+  margin: 0 0 8px;
+}
+.books-meter .books-status b {
+  color: var(--text);
+}
+.books-quality {
+  margin: 8px 0 0;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.books-warn summary {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  cursor: pointer;
+}
+.books-warn p {
+  margin: 8px 0 0;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.books-warn ul {
+  max-height: 260px;
+  overflow: auto;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-sm);
+}
+.books-warn li {
+  padding: 3px 0;
+  border-bottom: 1px solid var(--border);
+}
+.books-page-no {
+  display: inline-block;
+  min-width: 48px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.books-priv {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 2px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.books-priv svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+/* «Τα βιβλία σου» */
+.books-shelf-h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: 18px 22px 6px;
+}
+.books-shelf-h h2 {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+}
+.books-shelf ul {
+  max-height: calc(100vh - 300px);
+  overflow: auto;
+  margin: 0;
+  padding: 4px 10px 12px;
+  list-style: none;
+}
+.books-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  text-align: left;
+  white-space: normal;
+}
+.books-item:hover:not(:disabled) {
+  background: var(--panel-2);
+}
+.books-cover {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 54px;
+  border-radius: 3px 6px 6px 3px;
+  background: var(--c);
+  color: #fff;
+  font: 600 14px/1 Georgia, 'Times New Roman', serif;
+  box-shadow: inset 4px 0 0 rgba(0, 0, 0, 0.2);
+}
+.books-chev {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+}
+.books-empty {
+  margin: 0;
+  padding: 6px 22px 20px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+
+@media (max-width: 960px) {
+  .books-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .books-shelf ul {
+    max-height: none;
+  }
+}
+@media (max-width: 640px) {
+  .books-page {
+    padding: 24px 16px 40px;
+  }
+  .books-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .books-row {
+    flex-wrap: wrap;
+  }
+}

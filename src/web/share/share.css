@@ -1,0 +1,522 @@
+/*
+ * «Κοινή ανάλυση» (ShareWindow.tsx) στο νέο σχέδιο (προδιαγραφή: mockups/share.html): η αρχική σελίδα
+ * και η επιλογή παρτίδας (GamePicker.tsx). Τα tokens και οι κοινές κλάσεις .kb-* είναι στο styles.css.
+ */
+
+/* πρόσκληση σε φίλους που περιμένει να ξεκινήσει η ανάλυση */
+.share-inv {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-5);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--accent);
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+}
+.share-inv > svg {
+  flex: none;
+  color: var(--accent);
+}
+.share-inv > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.share-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 400px;
+  gap: var(--sp-6);
+  align-items: start;
+}
+.share-side {
+  display: grid;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+.kb-card-h.share-pick-h {
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.share-or {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--muted);
+}
+.share-or::before,
+.share-or::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--border);
+}
+.share-alt,
+.share-alt .gp {
+  display: grid;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+.share-alt .kb-btn {
+  justify-content: flex-start;
+}
+.kb-input.share-paste {
+  height: auto;
+  min-height: 90px;
+  padding: 10px 12px;
+  font: 13px/1.4 ui-monospace, Consolas, monospace;
+  resize: vertical;
+}
+.share-inline-ic {
+  vertical-align: -2px;
+  color: var(--accent);
+}
+
+/* ---- επιλογή παρτίδας: βάσεις και φάκελοι αριστερά, παρτίδες δεξιά ---- */
+.gx {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  min-height: 440px;
+}
+.gx-nav {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
+  min-width: 0;
+  padding: var(--sp-3);
+  border-right: 1px solid var(--border);
+  border-radius: 0 0 0 var(--r-lg);
+  background: var(--panel-2);
+}
+.gx-tabs {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--panel);
+}
+.gx-tabs button {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  height: 30px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+.gx-tabs button:hover:not(:disabled) {
+  background: transparent;
+  color: var(--text);
+}
+.gx-tabs button.on,
+.gx-tabs button.on:hover:not(:disabled) {
+  background: var(--panel-2);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.12);
+  outline: 1px solid var(--border);
+}
+.gx-items {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 2px;
+  max-height: 420px;
+  overflow: auto;
+}
+.gx-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: var(--sp-2) 10px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--text);
+  font-size: var(--fs-md);
+  text-align: left;
+}
+.gx-item:hover:not(:disabled) {
+  background: var(--panel);
+}
+.gx-item.on,
+.gx-item.on:hover:not(:disabled) {
+  background: var(--panel);
+  box-shadow: inset 3px 0 0 var(--accent);
+  font-weight: var(--fw-semibold);
+}
+.gx-item:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.gx-item svg {
+  flex: none;
+  color: var(--muted);
+}
+.gx-item.on svg {
+  color: var(--accent);
+}
+.gx-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gx-count {
+  flex: none;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.gx-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  padding: 2px 0 6px;
+}
+.gx-quick button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 26px;
+  padding: 0 9px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--panel);
+  color: var(--text-2);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-semibold);
+}
+.gx-quick button.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.gx-path {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 2px 4px 4px;
+  overflow: hidden;
+  font-size: var(--fs-micro);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.gx-path span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gx-up {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--panel);
+  color: var(--text);
+}
+
+/* παρτίδες */
+.gx > .gp {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-width: 0;
+  padding: 14px var(--sp-4);
+}
+.gx-title {
+  overflow: hidden;
+  font-size: var(--fs-lead);
+  font-weight: var(--fw-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gp-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.gp-search svg {
+  position: absolute;
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+  pointer-events: none;
+}
+.gp-search .kb-input {
+  padding-left: 36px;
+}
+.gp-list {
+  display: grid;
+  align-content: start;
+  max-height: 380px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+}
+.gp-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px var(--sp-3);
+  padding: 10px 14px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  background: var(--panel);
+  color: var(--text);
+  text-align: left;
+}
+.gp-row:first-child {
+  border-top: 0;
+}
+.gp-row:hover:not(:disabled) {
+  background: var(--accent-soft);
+}
+.gp-row:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.gp-players {
+  overflow: hidden;
+  font-weight: var(--fw-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gp-res {
+  grid-row: span 2;
+  align-self: center;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--panel-2);
+  font-weight: var(--fw-semibold);
+}
+.gp-meta {
+  overflow: hidden;
+  font-size: var(--fs-micro);
+  color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gp-more,
+.gp-empty {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.gp-empty {
+  padding: var(--sp-3);
+}
+
+@media (max-width: 1100px) {
+  .share-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .gx {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+  .gx-nav {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+  }
+  .gx-items {
+    max-height: 220px;
+  }
+}
+
+/* ---- «Σε ανάλυση»: μπάρα πάνω από το παράθυρο ανάλυσης (BoardWindow) ---- */
+.share-embed {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+.share-embed-bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 6px 24px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+.share-embed-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  white-space: nowrap;
+  font-weight: var(--fw-semibold);
+}
+.share-embed-ic {
+  flex: none;
+  color: var(--danger);
+}
+.share-embed-sub {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
+  color: var(--text-2);
+}
+.share-embed-bar > .share-embed-hint {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* «Έξοδος»: να φαίνεται αμέσως (αίτημα του χρήστη, 35de10d) */
+.share-embed-bar > .kb-btn.share-exit {
+  flex: none;
+  margin-left: auto;
+  color: var(--danger-text);
+  border-color: color-mix(in srgb, var(--danger) 55%, transparent);
+}
+.share-embed-bar > .kb-btn.share-exit:hover {
+  color: #fff;
+  background: var(--danger);
+  border-color: var(--danger);
+}
+.share-embed-board {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+/* ---- το πάνελ της κοινής ανάλυσης (ShareHost) μέσα στο παράθυρο ανάλυσης ----
+ * Το .sa-* το μοιράζεται η σελίδα του φίλου στο relay: εδώ μόνο κάτω από το .board-window.
+ * Τα --line/--surface ορίζονται μόνο στο .tx (tactics.css)· χωρίς αυτά χάνονταν τα περιγράμματα. */
+.board-window .sa-panel {
+  --line: var(--border);
+  --surface: var(--panel);
+  --surface-2: var(--panel-2);
+}
+/* φαρδύ παράθυρο: σε τρίτη στήλη (BoardWindow: shareW) */
+.board-window .bw-right.share-col {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6px var(--share-w);
+  grid-template-rows: auto auto minmax(0, 1fr);
+  min-width: calc(306px + var(--share-w));
+}
+.bw-right.share-col > * {
+  grid-column: 1;
+  min-width: 0;
+}
+/* το διαχωριστικό πριν από τη στήλη: σύρεται (BoardWindow: drag('share')) */
+.bw-right.share-col > .share-split {
+  grid-column: 2;
+  grid-row: 1 / -1;
+}
+.bw-right.share-col > .sa-panel {
+  grid-column: 3;
+  grid-row: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+  padding: 0;
+  overflow: auto;
+  border-bottom: 0;
+  border-left: 1px solid var(--border);
+  background: var(--panel);
+  font-size: var(--fs-sm);
+}
+.share-col > .sa-panel > .sa-head {
+  gap: 12px;
+  padding: 0 16px 16px;
+  border-bottom: 1px solid var(--border);
+}
+/* επικεφαλίδα της στήλης */
+.share-col > .sa-panel > .sa-head > .sa-row:first-child {
+  margin: 0 -16px;
+  padding: 12px 12px 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-md);
+}
+/* πρώτα το link και «Ίδια θέση», μετά τα μέλη (όπως το mockup) */
+.share-col > .sa-panel > .sa-head > .sm {
+  order: 1;
+  margin: 0 -16px;
+  padding: 14px 16px 0;
+  border-top: 1px solid var(--border);
+}
+.share-col .sa-link,
+.share-col .sa-input {
+  height: 34px;
+  border-radius: var(--r-sm);
+  background: var(--panel);
+}
+.share-col .sa-btn {
+  height: 34px;
+  border-radius: var(--r-sm);
+  background: var(--panel);
+  font-weight: var(--fw-semibold);
+}
+.share-col .sa-btn:hover:not(:disabled) {
+  background: var(--panel-2);
+}
+.share-col .sa-follow {
+  color: var(--text);
+  font-weight: var(--fw-semibold);
+}
+.share-col > .sa-panel > .sa-toggle {
+  align-self: flex-start;
+  margin: 12px 16px 0;
+}
+.share-col > .sa-panel > .fp {
+  margin: 8px 16px 0;
+}
+/* το chat γεμίζει το ύψος της στήλης */
+.share-col > .sa-panel > .sa-chat {
+  flex: 1;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.share-col .sa-chat-list {
+  flex: 1;
+  max-height: none;
+  padding: 12px 16px;
+  gap: 10px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+.share-col .sa-chat > .sa-emojis {
+  margin: 0 16px 8px;
+}
+.share-col .sa-chat > form.sa-row {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* chat: ποιος το βλέπει, πότε σβήνει, πού γίνονται αναφορές */
+.sa-notice {
+  margin: 6px 0;
+  line-height: 1.35;
+}
+.share-col .sa-chat > .sa-notice {
+  margin: 0;
+  padding: 6px 16px;
+}

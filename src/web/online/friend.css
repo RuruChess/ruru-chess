@@ -1,0 +1,246 @@
+/*
+ * «Παίξε με φίλο» (FriendWindow.tsx) στο νέο σχέδιο (προδιαγραφή: mockups/friend.html).
+ * Η νέα πρόσκληση είναι εκτός .tx· η παρτίδα μένει στη διάταξη του play.css (.tx.bots), με τη δεξιά στήλη σε κάρτα.
+ * Τα tokens και οι κοινές κλάσεις .kb-* είναι στο styles.css.
+ */
+.friend-grid {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--sp-6);
+  align-items: start;
+}
+
+/* προεπισκόπηση: σκακιέρα με τους δύο παίκτες και το ρολόι */
+.friend-prev {
+  padding: var(--sp-4) var(--sp-5);
+}
+.friend-pboard {
+  width: clamp(320px, 38vw, 448px);
+}
+.friend-pbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-width: 0;
+  padding: var(--sp-2) 0;
+}
+.friend-pav {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-weight: var(--fw-semibold);
+}
+.friend-pav.ghost {
+  border: 1px dashed var(--border-strong);
+  background: var(--panel-2);
+  color: var(--muted);
+}
+.friend-pwho {
+  flex: 1;
+  min-width: 0;
+}
+.friend-pwho b {
+  display: block;
+  overflow: hidden;
+  font-size: var(--fs-lead);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.friend-pwho > span {
+  display: block;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.friend-you {
+  color: var(--muted);
+}
+.friend-clk {
+  margin-left: auto;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--panel-2);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  line-height: 1;
+  white-space: nowrap;
+}
+.friend-clk small {
+  margin-left: 2px;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+/* ρυθμίσεις */
+.friend-side {
+  display: grid;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+.friend-two {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 14px;
+}
+@media (max-width: 900px) {
+  .friend-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .friend-prev {
+    justify-self: center;
+  }
+}
+@media (max-width: 640px) {
+  .friend-pboard {
+    width: calc(100vw - 74px);
+  }
+  .friend-two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- η παρτίδα: η δεξιά στήλη σε κάρτα (όπως στο mockup) ---- */
+.tx.friend .bots-side {
+  gap: 14px;
+  margin: 0;
+  padding: 0 0 var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+}
+.tx.friend .bots-side > * {
+  margin-right: var(--sp-5);
+  margin-left: var(--sp-5);
+}
+.tx.friend .friend-exit-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0;
+  padding: 14px var(--sp-4) 14px var(--sp-5);
+  border-bottom: 1px solid var(--border);
+}
+.tx.friend .friend-exit-title {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 0;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.tx.friend .friend-invited {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: var(--sp-3) 14px;
+  border-radius: 10px;
+  background: var(--ok-soft);
+  color: var(--ok-text);
+  font-size: 13px;
+}
+.tx.friend .friend-invited svg {
+  flex: none;
+  margin-top: 1px;
+}
+.tx.friend .friend-link {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-2);
+}
+.tx.friend .friend-link.is-waiting {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.tx.friend .friend-link-lbl {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+.tx.friend .friend-link.is-waiting .friend-link-lbl {
+  font-size: 14px;
+  color: var(--accent-text);
+}
+.tx.friend .friend-link-row {
+  display: flex;
+  gap: var(--sp-2);
+}
+.tx.friend .friend-link-row .kb-input {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+}
+.tx.friend .friend-link-note {
+  font-size: 13px;
+  color: var(--muted);
+}
+.tx.friend .bots-side .play-status {
+  padding: 0;
+  background: none;
+  font-weight: 600;
+}
+.tx.friend .bots-side .play-status.is-error {
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--danger-soft);
+}
+.tx.friend .bots-side .ol-conn {
+  color: var(--ok-text);
+}
+.tx.friend .tx-side > .bots-moves {
+  max-height: none;
+  border-color: var(--border);
+  background: var(--panel-2);
+}
+/* οι παίκτες: όνομα πάνω, χρώμα κάτω· το ρολόι σε κουτί, τονισμένο όταν μετρά */
+.tx.friend .play-bar {
+  height: 52px;
+}
+.tx.friend .play-bar .bot-av {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.tx.friend .play-bar-name {
+  font-size: 15px;
+}
+.tx.friend .play-clock {
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  font-size: 20px;
+  line-height: 1;
+}
+.tx.friend .play-clock.on {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.tx.friend .play-clock.on.low {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: #fff;
+}
+/* η στήλη δεξιά όσο ψηλή η σκακιέρα· οι κινήσεις γεμίζουν τον χώρο και κυλούν */
+@media (min-width: 1101px) {
+  .tx.friend .bots-side {
+    contain: size;
+  }
+  .tx.friend .tx-side > .bots-moves {
+    flex: 1 1 0;
+  }
+}

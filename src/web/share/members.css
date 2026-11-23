@@ -1,0 +1,662 @@
+/* Κοινή ανάλυση: ποιοι είναι μέσα, φωνή, άδειες του οικοδεσπότη (ShareMembers.tsx). */
+/* Ενσωματωμένη οθόνη YouTube (VideoEmbed.tsx): στη θέση της κάμερας ή στη δεξιά στήλη */
+.yt-box {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--line, var(--border));
+  border-radius: 10px;
+  background: var(--surface-2, var(--panel-2));
+  min-width: 0;
+}
+.yt-box.is-min {
+  gap: 0;
+}
+.yt-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.yt-ic {
+  flex: none;
+  color: var(--accent);
+}
+.yt-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.yt-form {
+  display: grid;
+  gap: 6px;
+}
+.yt-err {
+  font-size: 12px;
+  color: var(--danger);
+}
+.yt-hint {
+  line-height: 1.3;
+}
+.yt-scope {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+.yt-scope button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--line, var(--border));
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.yt-scope button.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+.sm-vid-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--sm-line);
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.sm-vid-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.yt-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+}
+.yt-frame.hidden {
+  display: none;
+}
+.yt-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.yt-consent-act {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.yt-consent-act .yt-play {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+.yt-consent-act .yt-play:hover {
+  filter: brightness(1.06);
+}
+.sa-panel.video-panel {
+  padding: 12px;
+}
+.board-window .bw-right:not(.share-col) > .sa-panel.video-panel {
+  border-bottom: 1px solid var(--border);
+}
+.board-window .bw-right:not(.share-col) > .sa-panel.video-panel .yt-frame {
+  max-height: 240px;
+}
+
+.sm {
+  --sm-line: var(--line, var(--border));
+  --sm-soft: var(--surface-2, var(--panel-2));
+  --sm-muted: var(--text-2, var(--muted));
+  --sm-ok: var(--ok);
+  --sm-bad: var(--danger);
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.sm-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+}
+.sm-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sm-muted);
+}
+.sm-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+.sm-all button {
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--sm-line);
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.sm-all button.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+.sm-list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sm-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 34px;
+  padding: 3px 4px 3px 2px;
+  border-radius: 8px;
+}
+.sm-row:hover {
+  background: color-mix(in srgb, var(--text) 4%, transparent);
+}
+.sm-row.out .sm-avatar {
+  opacity: 0.55;
+}
+.sm-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: hsl(var(--hue) 55% 46%);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 0 0 2px var(--surface, var(--panel));
+  transition: box-shadow 120ms ease;
+}
+.sm-avatar.speaking {
+  box-shadow:
+    0 0 0 2px var(--surface, var(--panel)),
+    0 0 0 4px var(--sm-ok),
+    0 0 10px 3px color-mix(in srgb, var(--sm-ok) 45%, transparent);
+}
+.sm-who {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+button.sm-who {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+button.sm-who:hover .sm-name-text {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.sm-row.pinned {
+  background: var(--accent-soft);
+}
+.sm-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+.sm-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.sm-row.me .sm-name-text {
+  font-weight: 600;
+}
+.sm-crown {
+  flex: none;
+  color: #d4a017;
+}
+.sm-chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--sm-line);
+  border-radius: 999px;
+  background: var(--sm-soft);
+  color: var(--sm-muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.sm-chip.edit {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.sm-chip.static {
+  cursor: default;
+}
+.sm-chip.icon {
+  padding: 0 6px;
+}
+button.sm-chip:hover {
+  border-color: var(--accent);
+}
+.sm-icons {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.sm-ic {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+}
+.sm-ic.is-on {
+  color: var(--sm-ok);
+}
+.sm-ic.is-off {
+  color: var(--sm-muted);
+}
+.sm-ic.is-pin {
+  color: var(--accent);
+}
+.sm-ic.is-bad,
+.sm-btn.is-bad {
+  color: var(--sm-bad);
+}
+.sm-out {
+  padding: 0 4px;
+  white-space: nowrap;
+}
+.sm-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--sm-muted);
+  cursor: pointer;
+}
+.sm-btn:hover,
+.sm-btn.on {
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+  color: var(--text);
+}
+.sm-spin {
+  animation: sm-spin 1s linear infinite;
+}
+@keyframes sm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* μενού ενός ατόμου */
+.sm-menu-wrap {
+  position: relative;
+}
+.sm-menu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 4px);
+  right: 0;
+  display: grid;
+  gap: 2px;
+  min-width: 230px;
+  padding: 6px;
+  border: 1px solid var(--sm-line);
+  border-radius: 10px;
+  background: var(--surface, var(--panel));
+  box-shadow: var(--shadow);
+}
+.sm-menu-title {
+  padding: 2px 8px 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.sm-menu button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.sm-menu button:hover {
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+}
+.sm-menu button.danger {
+  color: var(--sm-bad);
+}
+.sm-menu button.danger:hover {
+  background: color-mix(in srgb, var(--sm-bad) 12%, transparent);
+}
+.sm-menu-sep {
+  height: 1px;
+  margin: 4px 2px;
+  background: var(--sm-line);
+}
+.sm-vol {
+  display: grid;
+  grid-template-columns: auto 1fr 38px;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+}
+.sm-vol input {
+  width: 100%;
+  accent-color: var(--accent);
+}
+.sm-vol .tnum {
+  text-align: right;
+  color: var(--sm-muted);
+  font-size: 12px;
+}
+
+/* τα κουμπιά της φωνής */
+.sm-voice-wrap {
+  display: grid;
+  gap: 6px;
+}
+.sm-voice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-top: 2px;
+  padding: 6px;
+  border: 1px solid var(--sm-line);
+  border-radius: 10px;
+  background: var(--sm-soft);
+}
+.sm-round {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--sm-line);
+  border-radius: 50%;
+  background: var(--surface, var(--panel));
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    color 120ms ease;
+}
+.sm-round:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.sm-round.on {
+  border-color: var(--sm-ok);
+  background: color-mix(in srgb, var(--sm-ok) 16%, var(--surface, var(--panel)));
+  color: var(--sm-ok);
+}
+.sm-round.off {
+  border-color: color-mix(in srgb, var(--sm-bad) 55%, transparent);
+  background: color-mix(in srgb, var(--sm-bad) 12%, var(--surface, var(--panel)));
+  color: var(--sm-bad);
+}
+.sm-round.leave {
+  border-color: transparent;
+  background: var(--sm-bad);
+  color: #fff;
+}
+.sm-round.leave:hover {
+  filter: brightness(1.1);
+}
+.sm-round:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.sm-voice-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--sm-muted);
+  font-size: 12px;
+}
+.sm-voice-text.is-bad {
+  color: var(--sm-bad);
+}
+.sm-join {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--sm-ok);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.sm-join:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.sm-join:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.sm-unblock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 30px;
+  border: 1px dashed var(--accent);
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+}
+.sm-err {
+  color: var(--sm-bad);
+  font-size: 12px;
+}
+
+/* το ένα παράθυρο της κάμερας (16:9) */
+.sv {
+  position: relative;
+  width: min(100%, 288px);
+  aspect-ratio: 16 / 9;
+  margin: 0 auto 2px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #15171c;
+}
+.sv video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sv video.mirror {
+  transform: scaleX(-1);
+}
+.sv-ph {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  background: hsl(var(--hue) 55% 46%);
+  color: #fff;
+  font-weight: 700;
+}
+.sv-name {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: calc(100% - 12px);
+  padding: 2px 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.55);
+  color: #fff;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sv-tools {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: inline-flex;
+  gap: 4px;
+}
+.sv-tools button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 6px;
+  background: rgb(0 0 0 / 0.5);
+  color: #fff;
+  cursor: pointer;
+}
+.sv-tools button:hover {
+  background: rgb(0 0 0 / 0.75);
+}
+.sv-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--sm-line);
+  border-radius: 8px;
+  background: var(--sm-soft);
+  color: var(--sm-muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.sv-bar:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+.sv-bar-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* «βλέπεις μόνο» */
+.sm-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text) 5%, transparent);
+  color: var(--text-2, var(--muted));
+  font-size: 12px;
+}
+.sm-note.ok {
+  background: color-mix(in srgb, var(--ok) 14%, transparent);
+  color: var(--ok);
+}
+.sm-note.flash {
+  animation: sm-shake 0.45s ease;
+  background: color-mix(in srgb, var(--warn, #b26a00) 16%, transparent);
+  color: var(--text);
+}
+@keyframes sm-shake {
+  20%,
+  60% {
+    transform: translateX(-3px);
+  }
+  40%,
+  80% {
+    transform: translateX(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sm-note.flash,
+  .sm-spin {
+    animation: none;
+  }
+}
+
+/* πριν από το «Μπες στη φωνή»: φαίνεται η IP */
+.sm-ip {
+  margin: 0;
+  color: var(--sm-muted);
+  line-height: 1.4;
+}

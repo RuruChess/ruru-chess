@@ -1,0 +1,919 @@
+/* Φίλοι: η στήλη στις Βάσεις και τα παράθυρα chat κάτω δεξιά (όπως στο LoL). Πάνω στα στυλ του .tx (tactics.css). */
+
+.fr-panel.tx,
+.fr-signup.tx {
+  background: var(--panel);
+  flex: 1;
+}
+.fr-signup {
+  gap: 10px;
+  padding: 4px 14px 14px;
+  overflow: auto;
+}
+.fr-signup p {
+  margin: 0;
+}
+.fr-signup .link-btn {
+  align-self: flex-start;
+}
+
+.fr-panel {
+  min-height: 0;
+}
+.fr-me {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.fr-note {
+  margin: 8px 12px 0;
+}
+
+/* αρχικό με την κουκκίδα της παρουσίας */
+.fr-av {
+  position: relative;
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+}
+.fr-dot {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 2px solid var(--panel);
+  background: var(--text-3);
+}
+.fr-dot.s-online,
+.fr-status.s-online,
+.fr-dot.s-game,
+.fr-status.s-game {
+  --st: var(--ok);
+}
+.fr-dot.s-away,
+.fr-status.s-away {
+  --st: var(--warn);
+}
+.fr-dot.s-analysis,
+.fr-status.s-analysis {
+  --st: var(--accent);
+}
+.fr-dot[class*='s-'] {
+  background: var(--st, var(--text-3));
+}
+.fr-dot.s-offline {
+  background: var(--text-3);
+  opacity: 0.7;
+}
+.fr-status {
+  font-size: 12px;
+  color: var(--st, var(--muted));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fr-who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  line-height: 1.25;
+}
+.fr-name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fr-tag {
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 1px;
+}
+
+.fr-add {
+  display: flex;
+  gap: 6px;
+  padding: 10px 12px 4px;
+}
+.fr-add .input {
+  flex: 1;
+  min-width: 0;
+}
+.fr-add-result {
+  padding: 2px 14px 4px;
+  color: var(--ok);
+}
+.fr-add-result.is-error {
+  color: var(--danger);
+}
+
+.fr-list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 4px 0 12px;
+}
+.fr-group-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 10px 4px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: left;
+}
+.fr-group-head:hover {
+  color: var(--text);
+}
+.fr-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  margin: 0 4px;
+}
+.fr-row:hover,
+.fr-row:focus-visible {
+  background: var(--cursor);
+  outline: none;
+}
+.fr-row.s-offline .fr-av {
+  filter: grayscale(0.7);
+  opacity: 0.75;
+}
+.fr-row.s-offline .fr-name {
+  color: var(--muted);
+}
+.fr-req {
+  cursor: default;
+}
+.fr-more {
+  opacity: 0;
+}
+.fr-row:hover .fr-more,
+.fr-row:focus-within .fr-more {
+  opacity: 1;
+}
+/* γρήγορες ενέργειες στη γραμμή φίλου: μόνο με το ποντίκι πάνω της (ή με το πληκτρολόγιο) */
+.fr-quick {
+  display: none;
+  flex: none;
+  align-items: center;
+}
+.fr-row:hover .fr-quick,
+.fr-row:focus-within .fr-quick {
+  display: inline-flex;
+}
+.fr-quick .icon-btn {
+  width: 26px;
+  height: 26px;
+}
+.fr-yes {
+  color: var(--ok);
+}
+/* πρόσκληση που περιμένει: η γραμμή τονίζεται και τα ✓/✗ φαίνονται πάντα (όχι μόνο με το ποντίκι) */
+.fr-row.fr-inv {
+  background: var(--accent-soft);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.fr-status.s-inv {
+  color: var(--accent);
+  font-weight: 600;
+}
+.fr-inv-acts {
+  display: inline-flex;
+  flex: none;
+  gap: 2px;
+}
+.fr-inv-acts .icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+.fr-inv-acts .fr-yes {
+  background: color-mix(in srgb, var(--ok) 16%, transparent);
+}
+.fr-inv-acts .fr-no {
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+}
+.fr-row.fr-inv .fr-quick {
+  display: none;
+}
+.fr-unread {
+  flex: none;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-grid;
+  place-items: center;
+}
+.fr-empty {
+  padding: 8px 14px;
+  margin: 0;
+}
+
+.fr-code {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.fr-code code {
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  padding: 6px 10px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 6px;
+  user-select: all;
+}
+.fr-code .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---- τα παράθυρα chat */
+
+.cd-dock.tx {
+  position: fixed;
+  right: 12px;
+  bottom: 0;
+  /* το .tx (tactics.css) έχει height: 100%: το παράθυρο ανέβαινε πάνω και σκέπαζε το μενού των Φίλων */
+  height: auto;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  background: none;
+  pointer-events: none;
+  max-width: calc(100vw - 24px);
+}
+.cd-dock > * {
+  pointer-events: auto;
+}
+.cd-chats {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+.cd-win {
+  width: 300px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--border-strong);
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.cd-win.is-min {
+  height: auto;
+  width: 220px;
+}
+.cd-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 10px;
+  background: var(--panel-2, var(--panel));
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+}
+.cd-who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  line-height: 1.2;
+}
+.cd-who b {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+}
+.cd-who .fr-status {
+  font-size: 11px;
+}
+.cd-head-btns {
+  display: flex;
+  gap: 2px;
+}
+.cd-list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cd-list > div {
+  display: flex;
+  flex-direction: column;
+}
+.cd-older {
+  align-self: center;
+  margin-bottom: 4px;
+}
+.cd-empty {
+  margin: auto;
+  text-align: center;
+}
+.cd-day {
+  align-self: center;
+  margin: 6px 0 2px;
+}
+.cd-msg {
+  position: relative;
+  align-self: flex-start;
+  max-width: 85%;
+  padding: 5px 9px;
+  border-radius: 12px 12px 12px 4px;
+  background: var(--cursor);
+  font-size: 13px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.cd-msg.me {
+  align-self: flex-end;
+  border-radius: 12px 12px 4px 12px;
+  background: var(--accent-soft);
+}
+.cd-time {
+  font-size: 10px;
+  margin-left: 6px;
+  float: right;
+  margin-top: 4px;
+}
+.cd-inv {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  white-space: normal;
+}
+.cd-del {
+  position: absolute;
+  top: 0;
+  right: 100%;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 6px 4px 4px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+}
+.cd-msg.me:hover .cd-del,
+.cd-del:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+/* αναφορά μηνύματος άλλου: δεξιά του, χωρίς κενό στο hover, και με το πληκτρολόγιο */
+.cd-report {
+  right: auto;
+  left: 100%;
+  padding: 4px 4px 4px 6px;
+}
+.cd-msg:hover .cd-report,
+.cd-report:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.cd-del:hover {
+  color: var(--danger);
+}
+.cd-win .sa-emojis {
+  margin: 0 8px;
+}
+.cd-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border-top: 1px solid var(--border);
+}
+.cd-form .sa-input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* η κεφαλίδα της στήλης: Φίλοι / Αρχεία */
+.files-side .side-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  font-size: 12px;
+  padding: 2px 8px;
+}
+.files-side h3 .side-btns {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ---- ειδοποιήσεις (όπως στο LoL): πάνω δεξιά, με ✓ / ✗ πάνω τους */
+
+.nt-stack.tx {
+  position: fixed;
+  top: 50px;
+  right: 12px;
+  z-index: 65;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: none;
+  pointer-events: none;
+}
+.nt-card {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 320px;
+  max-width: calc(100vw - 24px);
+  padding: 9px 9px 9px 11px;
+  background: var(--panel);
+  border: 1px solid var(--border-strong);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  animation: nt-in 0.22s ease-out;
+}
+.nt-card.nt-request {
+  border-left-color: var(--ok);
+}
+/* μόνο διαφάνεια: η κάρτα δεν μετακινείται, ώστε το ✓ να είναι από την αρχή εκεί που φαίνεται */
+@keyframes nt-in {
+  from {
+    opacity: 0;
+  }
+}
+.nt-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+.nt-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.nt-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nt-detail {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nt-btn {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.08s, background 0.12s;
+}
+.nt-btn:hover {
+  transform: scale(1.08);
+}
+.nt-yes {
+  background: var(--ok);
+  color: #fff;
+}
+.nt-yes:hover {
+  background: color-mix(in srgb, var(--ok) 85%, #000);
+}
+.nt-no {
+  background: none;
+  border-color: var(--border-strong);
+  color: var(--muted);
+}
+.nt-no:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* ---- «Παρτίδα με …» */
+
+.gi-body.tx {
+  background: none;
+  gap: 14px;
+}
+.gi-who {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.gi-send {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+/* ---- ομάδες */
+
+.fr-av.fr-team-av {
+  border-radius: 28%;
+}
+.cd-from {
+  align-self: flex-start;
+  margin: 4px 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.tm-body.tx {
+  background: none;
+  gap: 12px;
+}
+.tm-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tm-head .fr-who {
+  gap: 2px;
+}
+.tm-title {
+  font-size: 17px;
+  font-weight: 700;
+}
+.tm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tm-actions .btn,
+.tm-rename .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.tm-rename {
+  display: flex;
+  gap: 6px;
+}
+.tm-rename .input {
+  flex: 1;
+}
+.tm-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tm-sec h4 {
+  margin: 4px 0 2px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.tm-list {
+  max-height: 260px;
+  overflow: auto;
+  margin: 0 -4px;
+}
+.tm-list .fr-row {
+  cursor: default;
+}
+.tm-role {
+  flex: none;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tm-role.owner {
+  background: color-mix(in srgb, var(--warn) 18%, transparent);
+  color: var(--warn);
+}
+.tm-footer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+.tm-footer .danger-text {
+  color: var(--danger);
+}
+
+/* ---- αποστολή βάσεων */
+
+.sf-what {
+  padding: 4px 0;
+}
+.sf-rights {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--warn) 40%, transparent);
+  background: color-mix(in srgb, var(--warn) 9%, transparent);
+  cursor: pointer;
+}
+.sf-rights input {
+  margin-top: 2px;
+}
+.nt-card.nt-file {
+  border-left-color: var(--warn);
+}
+.cd-file b {
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------------------
+   Φίλοι μέσα στις καρτέλες «Παίξε με φίλο» και «Κοινή ανάλυση» (FriendPick.tsx) */
+.tx .fp {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.tx .fp-head {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.tx .fp-hint {
+  margin: 0;
+}
+.tx .fp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.tx .fp-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  min-width: 0;
+}
+.tx .fp-row:hover {
+  background: var(--cursor);
+}
+.tx .fp-row .fr-who {
+  flex: 1;
+  min-width: 0;
+}
+.tx .fp-row > .btn,
+.tx .fp-row > .sa-btn {
+  flex: none;
+}
+.fp-live {
+  padding: 4px 0 8px;
+  border-top: 0;
+}
+
+/* «Κοινή ανάλυση με…» (InviteAnalysis.tsx): μεγάλα κουμπιά επιλογών */
+.tx .ia-body {
+  gap: 12px;
+}
+.tx .ia-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tx .ia-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  text-align: left;
+  font: inherit;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.tx .ia-opt:hover:not(:disabled),
+.tx .ia-opt:focus-visible {
+  border-color: var(--accent);
+  background: var(--cursor);
+  outline: none;
+}
+.tx .ia-opt:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.tx .ia-ic {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--accent);
+  background: var(--cursor);
+}
+.tx .ia-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+.tx .ia-text > * {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tx .ia-go {
+  flex: none;
+  color: var(--muted);
+}
+
+/* Watch Live (φάση 2): φίλοι στο Lichess, Lichess / Chess.com στο προφίλ */
+.fr-watch {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  color: var(--ok);
+}
+.fr-acc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.fr-acc-form .fr-add-result {
+  padding: 0;
+}
+.fr-acc-field {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+.fr-profile {
+  cursor: default;
+  margin: 0 0 8px;
+  padding: 0;
+}
+.fr-profile:hover {
+  background: none;
+}
+.fr-acc-link {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+.fr-acc-link .btn {
+  justify-self: start;
+  gap: 6px;
+}
+
+/* κάρτες «ή κάλεσε φίλο» (GameFriendList) και «Κάλεσε φίλους» (AnalysisInvitePick) του νέου σχεδίου */
+.ff-hint {
+  margin: 0;
+  padding: 6px 22px var(--sp-5);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.ff-list {
+  display: grid;
+  padding: var(--sp-1) 10px var(--sp-2);
+}
+.ff-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-md);
+}
+.ff-row:hover {
+  background: var(--panel-2);
+}
+.ff-row .fr-who {
+  flex: 1;
+  min-width: 0;
+}
+.ff-foot {
+  margin: 0;
+  padding: 0 22px var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.kb-callout.ff-err {
+  margin: 0 22px var(--sp-4);
+}
+.ff-check {
+  cursor: pointer;
+}
+.ff-check input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+/* όροι, ηλικία, αναφορά */
+.fr-consent {
+  display: grid;
+  gap: 8px;
+}
+.fr-consent label,
+.fr-sure {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+  line-height: 1.35;
+}
+.fr-consent input,
+.fr-sure input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 1px 0 0;
+  accent-color: var(--accent);
+}
+.fr-legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.fr-report.tx {
+  display: grid;
+  height: auto;
+  background: none;
+  gap: 10px;
+}
+.cd-notice {
+  padding: 4px 8px;
+  text-align: center;
+}
+.legal-text {
+  line-height: 1.5;
+}
+.legal-text h3 {
+  margin: 16px 0 4px;
+}
+.legal-text ul {
+  padding-left: 20px;
+}

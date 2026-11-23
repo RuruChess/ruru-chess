@@ -1,0 +1,1216 @@
+{
+ "_license": "Κείμενο: (α) μετάφραση και προσαρμογή από άρθρα της αγγλικής Wikipedia (οι συντάκτες τους), CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0/ · κάθε τέτοιο μάθημα γράφει το άρθρο και την έκδοσή του (oldid). (β) Τέσσερα «Βασικά ματ» με βάση το J. R. Capablanca, «Chess Fundamentals» (1921), κεφάλαιο I, κοινό κτήμα· δική μας μετάφραση και προσαρμογή. (γ) Δύο μαθήματα του Ruru (ματ με δύο πύργους, πατ με βασίλισσα). Οι γραμμές ελέγχθηκαν με Stockfish 19.",
+ "items": [
+  {
+   "seq": 31,
+   "order": 1,
+   "part": {
+    "el": "Βασικά ματ",
+    "en": "Basic mates"
+   },
+   "fen": "8/8/8/5k2/8/8/R7/1R4K1 w - - 0 1",
+   "goal": "win",
+   "rating": 600,
+   "title": {
+    "el": "Ματ με δύο πύργους: η «σκάλα»",
+    "en": "Mate with two rooks: the ladder"
+   },
+   "intro": {
+    "el": "Δύο πύργοι κάνουν ματ χωρίς τη βοήθεια του βασιλιά. Ο ένας κόβει τον βασιλιά από μια γραμμή, ο άλλος δίνει σαχ στην επόμενη: σαν σκάλα, γραμμή-γραμμή ως την άκρη.",
+    "en": "Two rooks mate without help from the king. One cuts the king off along a rank, the other checks on the next one: like a ladder, rank by rank to the edge."
+   },
+   "summary": {
+    "el": "Οι πύργοι δουλεύουν εναλλάξ: ο ένας κρατά τη γραμμή, ο άλλος ανεβαίνει και δίνει σαχ. Όταν ο βασιλιάς πλησιάζει έναν πύργο, ο πύργος δεν δίνει σαχ από κοντά: πηγαίνει στην άλλη άκρη της ίδιας γραμμής και η σκάλα συνεχίζει.",
+    "en": "The rooks take turns: one holds the rank, the other climbs and checks. When the king approaches a rook, the rook does not check from close by: it moves to the far end of the same rank and the ladder goes on."
+   },
+   "solution": {
+    "el": "1. Ra4 {Ο πύργος κόβει την τέταρτη γραμμή: ο βασιλιάς δεν κατεβαίνει πια.} Ke5 2. Rb5+ {Σαχ στην πέμπτη γραμμή· ο βασιλιάς ανεβαίνει.} Kd6 3. Ra6+ {Ο πρώτος πύργος ανεβαίνει ένα σκαλί.} Kc7 {Ο βασιλιάς πλησιάζει τους πύργους: το 4.Rb7+ θα έχανε τον πύργο (Kxb7).} 4. Rh5! {Ο πύργος φεύγει στην άλλη άκρη. Την έκτη γραμμή την κρατά ο πύργος του a6.} Kb7 {Τώρα απειλείται ο πύργος του a6.} 5. Rf6 {Μακριά από τον βασιλιά, πάντα στην έκτη γραμμή.} Kc7 6. Rh7+ {Το επόμενο σκαλί: ο βασιλιάς πάει στην τελευταία γραμμή.} Kd8 (6... Kb8 7. Rf8#) 7. Rf8# {Ματ: ο ένας πύργος κρατά την έβδομη γραμμή, ο άλλος δίνει σαχ στην όγδοη.}",
+    "en": "1. Ra4 {The rook cuts off the fourth rank: the king can no longer come down.} Ke5 2. Rb5+ {Check on the fifth rank; the king goes up.} Kd6 3. Ra6+ {The first rook climbs one step.} Kc7 {The king approaches the rooks: 4.Rb7+ would lose the rook (Kxb7).} 4. Rh5! {The rook moves to the far end. The rook on a6 holds the sixth rank.} Kb7 {Now the rook on a6 is attacked.} 5. Rf6 {Away from the king, still on the sixth rank.} Kc7 6. Rh7+ {The next step: the king goes to the last rank.} Kd8 (6... Kb8 7. Rf8#) 7. Rf8# {Mate: one rook holds the seventh rank, the other checks on the eighth.}"
+   }
+  },
+  {
+   "seq": 32,
+   "order": 2,
+   "part": {
+    "el": "Βασικά ματ",
+    "en": "Basic mates"
+   },
+   "fen": "8/8/8/4k3/8/8/8/2Q1K3 w - - 0 1",
+   "goal": "win",
+   "rating": 700,
+   "title": {
+    "el": "Ματ με βασίλισσα",
+    "en": "Mate with the queen"
+   },
+   "intro": {
+    "el": "Η βασίλισσα είναι πύργος και αξιωματικός μαζί: το πιο εύκολο ματ. Πρώτα η βασίλισσα κλείνει τον βασιλιά σε λίγα τετράγωνα, μετά έρχεται ο δικός σου βασιλιάς.",
+    "en": "The queen is a rook and a bishop in one: the easiest mate. First the queen shuts the king into a few squares, then your own king comes up."
+   },
+   "summary": {
+    "el": "Σπρώχνεις τον βασιλιά στην άκρη με κινήσεις της βασίλισσας που του αφήνουν όσο λιγότερα τετράγωνα γίνεται (συχνά σε απόσταση άλματος ίππου από αυτόν), και φέρνεις τον βασιλιά σου να βοηθήσει. Δεν χρειάζονται σαχ στην τύχη, και πρόσεχε πάντα το πατ. Γίνεται σε λιγότερες από δέκα κινήσεις.",
+    "en": "You push the king to the edge with queen moves that leave it as few squares as possible (often a knight’s move away from it), and bring your king to help. No random checks are needed, and always watch out for stalemate. It takes fewer than ten moves."
+   },
+   "solution": {
+    "el": "1. Qc6 {Η βασίλισσα κόβει τη στήλη c και την έκτη γραμμή, χωρίς σαχ.} Kd4 2. Kd2 {Ο βασιλιάς έρχεται να βοηθήσει. Ο μαύρος βασιλιάς έχει πια ένα μόνο τετράγωνο, το e5.} Ke5 3. Ke3 Kf5 4. Qd6 {Η βασίλισσα σφίγγει το κουτί: ο βασιλιάς σπρώχνεται προς τη στήλη h.} Kg5 (4... Kg4 5. Qg6+ {και ο βασιλιάς πάει στη στήλη h.}) 5. Qe6 Kh4 (5... Kh5 6. Kf4 Kh4 7. Qh6#) 6. Qg6 {Ο βασιλιάς μένει με δύο τετράγωνα στη στήλη h.} Kh3 7. Kf3 {Ο λευκός βασιλιάς στηρίζει το τετράγωνο του ματ.} Kh2 (7... Kh4 8. Qg4#) 8. Qg2# {Η βασίλισσα, με τη στήριξη του βασιλιά, κάνει ματ στην άκρη.}",
+    "en": "1. Qc6 {The queen cuts off the c-file and the sixth rank, without check.} Kd4 2. Kd2 {The king comes to help. The black king now has a single square, e5.} Ke5 3. Ke3 Kf5 4. Qd6 {The queen tightens the box: the king is pushed towards the h-file.} Kg5 (4... Kg4 5. Qg6+ {and the king goes to the h-file.}) 5. Qe6 Kh4 (5... Kh5 6. Kf4 Kh4 7. Qh6#) 6. Qg6 {The king is left with two squares on the h-file.} Kh3 7. Kf3 {The white king supports the mating square.} Kh2 (7... Kh4 8. Qg4#) 8. Qg2# {The queen, supported by the king, mates on the edge.}"
+   },
+   "source": {
+    "book": "Chess Fundamentals",
+    "author": "J. R. Capablanca",
+    "year": 1921,
+    "chapter": "I. Some simple mates"
+   }
+  },
+  {
+   "seq": 33,
+   "order": 3,
+   "part": {
+    "el": "Βασικά ματ",
+    "en": "Basic mates"
+   },
+   "fen": "k7/8/8/1Q6/8/8/8/5K2 w - - 0 1",
+   "goal": "win",
+   "rating": 800,
+   "title": {
+    "el": "Ματ με βασίλισσα: πρόσεξε το πατ",
+    "en": "Mate with the queen: beware of stalemate"
+   },
+   "intro": {
+    "el": "Ο μαύρος βασιλιάς είναι ήδη κλειδωμένος στη γωνία: πηγαίνει μόνο a8–a7. Μένει να έρθει ο βασιλιάς σου, χωρίς να του πάρεις και το τελευταίο τετράγωνο πριν από το ματ.",
+    "en": "The black king is already locked in the corner: it only shuttles a8–a7. Your king just has to come up, without taking its last square away before the mate."
+   },
+   "summary": {
+    "el": "Πατ είναι όταν η πλευρά που παίζει δεν έχει καμία νόμιμη κίνηση και δεν είναι σε σαχ: η παρτίδα τελειώνει ισόπαλη. Με βασίλισσα, πριν από κάθε κίνηση ρώτα «θα έχει ο αντίπαλος κίνηση;» και άφηνε στον βασιλιά ένα τετράγωνο ως τη στιγμή του ματ.",
+    "en": "Stalemate is when the side to move has no legal move and is not in check: the game ends in a draw. With a queen, before every move ask “will my opponent have a move?” and leave the king one square until the moment of mate."
+   },
+   "solution": {
+    "el": "1. Ke2 {Η βασίλισσα κρατά τον βασιλιά στη γωνία· έρχεται ο δικός σου βασιλιάς.} (1. Qb6?? {Πατ! Ο μαύρος βασιλιάς δεν έχει καμία κίνηση και δεν είναι σε σαχ.}) 1... Ka7 2. Kd3 Ka8 3. Kc4 Ka7 4. Kc5 Ka8 {Ακόμη και τώρα, με τον βασιλιά σου κοντά, το Qb6?? θα ήταν πατ.} 5. Kc6 {Ο βασιλιάς στηρίζει πια το b7, το τετράγωνο του ματ.} Ka7 6. Qb7# {Η βασίλισσα, με τη στήριξη του βασιλιά, κάνει ματ.}",
+    "en": "1. Ke2 {The queen keeps the king in the corner; your own king comes up.} (1. Qb6?? {Stalemate! The black king has no move and is not in check.}) 1... Ka7 2. Kd3 Ka8 3. Kc4 Ka7 4. Kc5 Ka8 {Even now, with your king close by, Qb6?? would be stalemate.} 5. Kc6 {The king now supports b7, the mating square.} Ka7 6. Qb7# {The queen, supported by the king, mates.}"
+   }
+  },
+  {
+   "seq": 34,
+   "order": 4,
+   "part": {
+    "el": "Βασικά ματ",
+    "en": "Basic mates"
+   },
+   "fen": "7k/8/8/8/8/8/8/R6K w - - 0 1",
+   "goal": "win",
+   "rating": 900,
+   "title": {
+    "el": "Ματ με πύργο: ο βασιλιάς στην άκρη",
+    "en": "Mate with the rook: the king on the edge"
+   },
+   "intro": {
+    "el": "Ο πύργος μόνος του δεν κάνει ματ: χρειάζεται τον βασιλιά. Ο μαύρος βασιλιάς είναι ήδη στην τελευταία γραμμή· κράτα τον εκεί και φέρε τον βασιλιά σου απέναντί του.",
+    "en": "A rook alone cannot mate: it needs the king. The black king is already on the last rank; keep it there and bring your king opposite it."
+   },
+   "summary": {
+    "el": "Ο κανόνας: σπρώξε τον βασιλιά στην άκρη. Ο πύργος κόβει μια γραμμή και ο βασιλιάς σου έρχεται στην ίδια στήλη με τον αντίπαλο βασιλιά (αντιπαράθεση)· τότε ο πύργος δίνει σαχ και είναι ματ. Αν ο αντίπαλος βασιλιάς αποφεύγει την αντιπαράθεση, μια κίνηση του πύργου τον αναγκάζει.",
+    "en": "The rule: drive the king to the edge. The rook cuts off a rank and your king comes to the same file as the enemy king (opposition); then the rook checks and it is mate. If the enemy king avoids the opposition, a rook move forces it."
+   },
+   "solution": {
+    "el": "1. Ra7 {Ο πύργος κλείνει τον βασιλιά στην τελευταία γραμμή.} Kg8 2. Kg2 {Τώρα έρχεται ο βασιλιάς, στη στήλη του αντίπαλου βασιλιά ή δίπλα της.} Kf8 3. Kf3 Ke8 4. Ke4 Kd8 5. Kd5 Kc8 (5... Ke8 6. Kd6 Kf8 7. Ke6 Kg8 8. Kf6 Kh8 9. Kg6 Kg8 10. Ra8#) 6. Kd6! {Όχι 6.Kc6, γιατί ο βασιλιάς γυρίζει στο d8 και το ματ αργεί. Στην έκτη γραμμή ο βασιλιάς σου στέκεται στη διπλανή στήλη, προς το κέντρο.} Kb8 (6... Kd8 7. Ra8#) 7. Rc7 {Ο πύργος παίρνει και τη στήλη c: ο βασιλιάς πάει στη γωνία.} Ka8 8. Kc6 Kb8 9. Kb6 Ka8 10. Rc8# {Ματ σε δέκα κινήσεις.}",
+    "en": "1. Ra7 {The rook confines the king to the last rank.} Kg8 2. Kg2 {Now the king comes up, on the enemy king’s file or next to it.} Kf8 3. Kf3 Ke8 4. Ke4 Kd8 5. Kd5 Kc8 (5... Ke8 6. Kd6 Kf8 7. Ke6 Kg8 8. Kf6 Kh8 9. Kg6 Kg8 10. Ra8#) 6. Kd6! {Not 6.Kc6, because the king goes back to d8 and the mate takes longer. On the sixth rank your king stands on the next file, towards the centre.} Kb8 (6... Kd8 7. Ra8#) 7. Rc7 {The rook takes the c-file too: the king goes to the corner.} Ka8 8. Kc6 Kb8 9. Kb6 Ka8 10. Rc8# {Mate in ten moves.}"
+   },
+   "source": {
+    "book": "Chess Fundamentals",
+    "author": "J. R. Capablanca",
+    "year": 1921,
+    "chapter": "I. Some simple mates"
+   }
+  },
+  {
+   "seq": 35,
+   "order": 5,
+   "part": {
+    "el": "Βασικά ματ",
+    "en": "Basic mates"
+   },
+   "fen": "8/8/8/8/4k3/8/8/4K2R w - - 0 1",
+   "goal": "win",
+   "rating": 1000,
+   "title": {
+    "el": "Ματ με πύργο: ο βασιλιάς στο κέντρο",
+    "en": "Mate with the rook: the king in the centre"
+   },
+   "intro": {
+    "el": "Ο μαύρος βασιλιάς είναι στο κέντρο. Πριν δουλέψει ο πύργος, ανεβαίνει ο βασιλιάς σου στο κέντρο: όχι μπροστά στον αντίπαλο βασιλιά, αλλά δίπλα του.",
+    "en": "The black king is in the centre. Before the rook can work, your king comes up to the centre: not in front of the enemy king, but to one side of it."
+   },
+   "summary": {
+    "el": "Ο πύργος κλείνει τον βασιλιά σε όσο λιγότερα τετράγωνα γίνεται και ο βασιλιάς σου στέκεται συχνά δίπλα στον πύργο: τον προστατεύει και παίρνει τετράγωνα από τον αντίπαλο βασιλιά. Στην άκρη, μια κίνηση αναμονής του πύργου αναγκάζει τον βασιλιά να μπει μπροστά στον δικό σου, και ο πύργος κάνει ματ. Από οποιαδήποτε θέση θέλει λιγότερες από είκοσι κινήσεις.",
+    "en": "The rook confines the king to as few squares as possible, and your king often stands next to the rook: it guards it and takes squares from the enemy king. On the edge, a rook waiting move forces the king in front of yours, and the rook mates. From any position it takes fewer than twenty moves."
+   },
+   "solution": {
+    "el": "1. Ke2 {Πρώτα ο βασιλιάς, προς το κέντρο.} Kd5 2. Ke3 {Δίπλα στον αντίπαλο βασιλιά, όχι μπροστά του.} Kc4 (2... Ke5 3. Rh5+ {και ο πύργος τον σπρώχνει πίσω.}) 3. Rh5 {Ο πύργος κόβει την πέμπτη γραμμή.} Kc3 (3... Kb4 4. Kd3) 4. Rh4 {Τώρα και την τέταρτη: ο βασιλιάς έχει όλο και λιγότερα τετράγωνα.} Kc2 5. Rc4+ Kb3 6. Kd3 {Ο βασιλιάς δίπλα στον πύργο: τον προστατεύει και κλείνει τετράγωνα.} Kb2 7. Rb4+ Ka3 8. Kc3 Ka2 9. Ra4+ {Ο βασιλιάς πάει στη γωνία. Ματ σε τρεις κινήσεις.} Kb1 10. Ra8 {Κίνηση αναμονής: ο πύργος μένει στη στήλη a και ο βασιλιάς πρέπει να μπει μπροστά στον δικό σου.} Kc1 11. Ra1# {Ματ.}",
+    "en": "1. Ke2 {First the king, towards the centre.} Kd5 2. Ke3 {To one side of the enemy king, not in front of it.} Kc4 (2... Ke5 3. Rh5+ {and the rook drives it back.}) 3. Rh5 {The rook cuts off the fifth rank.} Kc3 (3... Kb4 4. Kd3) 4. Rh4 {Now the fourth as well: the king has fewer and fewer squares.} Kc2 5. Rc4+ Kb3 6. Kd3 {The king next to the rook: it guards it and takes squares away.} Kb2 7. Rb4+ Ka3 8. Kc3 Ka2 9. Ra4+ {The king goes to the corner. Mate in three.} Kb1 10. Ra8 {A waiting move: the rook stays on the a-file and the king has to step in front of yours.} Kc1 11. Ra1# {Mate.}"
+   },
+   "source": {
+    "book": "Chess Fundamentals",
+    "author": "J. R. Capablanca",
+    "year": 1921,
+    "chapter": "I. Some simple mates"
+   }
+  },
+  {
+   "seq": 36,
+   "order": 6,
+   "part": {
+    "el": "Βασικά ματ",
+    "en": "Basic mates"
+   },
+   "fen": "7k/8/8/8/8/8/8/2B1KB2 w - - 0 1",
+   "goal": "win",
+   "rating": 1300,
+   "title": {
+    "el": "Ματ με δύο αξιωματικούς",
+    "en": "Mate with two bishops"
+   },
+   "intro": {
+    "el": "Οι δύο αξιωματικοί, ο ένας δίπλα στον άλλον, φτιάχνουν έναν τοίχο που ο βασιλιάς δεν περνά. Εδώ ο μαύρος βασιλιάς είναι ήδη στη γωνία: κράτα τον εκεί.",
+    "en": "The two bishops, side by side, form a wall the king cannot cross. Here the black king is already in the corner: keep it there."
+   },
+   "summary": {
+    "el": "Με δύο αξιωματικούς ο βασιλιάς πρέπει να πάει όχι μόνο στην άκρη αλλά και σε γωνία. Οι αξιωματικοί τον κλείνουν σε λίγα τετράγωνα και ο βασιλιάς σου έρχεται στην έκτη γραμμή, σε μία από τις δύο τελευταίες στήλες. Όταν χρειάζεται, μια κίνηση αναμονής ενός αξιωματικού αναγκάζει τον αντίπαλο να υποχωρήσει. Πρόσεχε το πατ.",
+    "en": "With two bishops the king must be driven not only to the edge but into a corner. The bishops shut it into a few squares and your king comes to the sixth rank, on one of the last two files. When needed, a bishop waiting move forces the opponent back. Watch out for stalemate."
+   },
+   "solution": {
+    "el": "1. Bd3 Kg7 2. Bg5 Kf7 3. Bf5 {Οι αξιωματικοί, ο ένας δίπλα στον άλλον, κλείνουν τον βασιλιά σε λίγα τετράγωνα.} Kg7 4. Kf2 {Τώρα έρχεται ο βασιλιάς. Ο στόχος του είναι το h6 ή το g6.} Kf7 5. Kg3 Kg7 6. Kh4 Kf7 7. Kh5 Kg7 8. Bg6 Kg8 9. Kh6 Kf8 10. Bh5 {Κίνηση αναμονής: ο αξιωματικός περιμένει και ο βασιλιάς πρέπει να γυρίσει πίσω.} Kg8 11. Be7 Kh8 12. Bg4 {Ο αξιωματικός ετοιμάζει σαχ στη λευκή διαγώνιο, όταν ο βασιλιάς γυρίσει στο g8.} Kg8 13. Be6+ Kh8 14. Bf6# {Ματ σε δεκατέσσερις κινήσεις.}",
+    "en": "1. Bd3 Kg7 2. Bg5 Kf7 3. Bf5 {The bishops, side by side, shut the king into a few squares.} Kg7 4. Kf2 {Now the king comes up. Its target is h6 or g6.} Kf7 5. Kg3 Kg7 6. Kh4 Kf7 7. Kh5 Kg7 8. Bg6 Kg8 9. Kh6 Kf8 10. Bh5 {A waiting move: the bishop marks time and the king has to go back.} Kg8 11. Be7 Kh8 12. Bg4 {The bishop prepares a check on the light diagonal for when the king returns to g8.} Kg8 13. Be6+ Kh8 14. Bf6# {Mate in fourteen moves.}"
+   },
+   "source": {
+    "book": "Chess Fundamentals",
+    "author": "J. R. Capablanca",
+    "year": 1921,
+    "chapter": "I. Some simple mates"
+   }
+  },
+  {
+   "seq": 2,
+   "order": 7,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: τα βασικά",
+    "en": "King and pawns: the basics"
+   },
+   "fen": "3k4/8/3KP3/8/8/8/8/8 b - - 0 1",
+   "pre": true,
+   "goal": "win",
+   "rating": 1200,
+   "title": {
+    "el": "Βασιλιάς στην έκτη, μπροστά από το πιόνι",
+    "en": "King on the sixth, in front of the pawn"
+   },
+   "intro": {
+    "el": "Παίζουν τα μαύρα. Ο λευκός βασιλιάς είναι ήδη στην έκτη γραμμή.",
+    "en": "Black to move. The white king is already on the sixth rank."
+   },
+   "summary": {
+    "el": "Βασιλιάς στην έκτη γραμμή μπροστά από το πιόνι του κερδίζει. Ένας κανόνας: το πιόνι πρέπει να φτάσει στην έβδομη χωρίς να δώσει σαχ· αν δώσει σαχ, ο αμυνόμενος βασιλιάς μπαίνει μπροστά του και έρχεται ισοπαλία.",
+    "en": "A king on the sixth rank in front of its pawn wins. A rule of thumb: the pawn must reach the seventh rank without giving check; if it checks, the defending king steps in front of it and the game is drawn."
+   },
+   "solution": {
+    "el": "1... Ke8 (1... Kc8 2. e7 Kb7 3. e8=Q {Ο μαύρος βασιλιάς δεν μπορεί να πάει στο d7.}) 2. e7! {Το πιόνι προχωρά στην έβδομη χωρίς σαχ.} Kf7 3. Kd7 {Ο βασιλιάς ελέγχει το e8: το πιόνι γίνεται βασίλισσα.}",
+    "en": "1... Ke8 (1... Kc8 2. e7 Kb7 3. e8=Q {The black king cannot go to d7.}) 2. e7! {The pawn reaches the seventh rank without check.} Kf7 3. Kd7 {The king controls e8: the pawn promotes.}"
+   },
+   "source": {
+    "article": "King and pawn versus king endgame",
+    "oldid": 1369231680,
+    "url": "https://en.wikipedia.org/w/index.php?title=King_and_pawn_versus_king_endgame&oldid=1369231680"
+   }
+  },
+  {
+   "seq": 1,
+   "order": 8,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: τα βασικά",
+    "en": "King and pawns: the basics"
+   },
+   "fen": "8/8/8/8/P7/K4k2/8/8 b - - 0 1",
+   "pre": true,
+   "goal": "win",
+   "rating": 1250,
+   "title": {
+    "el": "Ο κανόνας του τετραγώνου και ο «ώμος»",
+    "en": "The rule of the square and shouldering"
+   },
+   "intro": {
+    "el": "Ο μαύρος βασιλιάς μπαίνει στο τετράγωνο του πιονιού. Τα λευκά έχουν όμως και τον βασιλιά τους.",
+    "en": "The black king steps into the square of the pawn. But White also has a king."
+   },
+   "summary": {
+    "el": "Το τετράγωνο του πιονιού λέει αν ένας βασιλιάς προλαβαίνει ένα πιόνι που τρέχει μόνο του. Όταν βοηθά και ο άλλος βασιλιάς, μετρά και ο «ώμος»: ο βασιλιάς στέκεται ανάμεσα στον αντίπαλο βασιλιά και στο πιόνι και τον κρατά μακριά.",
+    "en": "The square of the pawn tells whether a king can catch a lone running pawn. When the other king helps, shouldering counts too: the king stands between the enemy king and the pawn and keeps it away."
+   },
+   "solution": {
+    "el": "1... Ke4 {Ο μαύρος βασιλιάς μπαίνει στο τετράγωνο του πιονιού (a4–a8–e8–e4): αν το πιόνι ήταν μόνο του, θα το έπιανε.} 2. Kb4! {Ο λευκός βασιλιάς στέκεται ανάμεσα και κλείνει τον δρόμο.} Kd5 3. Kb5! {Με τον «ώμο»: κρατά τον μαύρο βασιλιά μακριά από τη στήλη c.} Kd6 (3... Kd4 4. a5 Kd5 5. a6 Kd6 6. a7 {Το πιόνι τρέχει και ο μαύρος βασιλιάς δεν φτάνει.}) 4. Kb6! Kd7 5. Kb7! {Ο μαύρος βασιλιάς δεν πλησιάζει το c8.} Kd6 6. a5 Kc5 7. a6 Kb5 8. a7 {και το πιόνι γίνεται βασίλισσα.}",
+    "en": "1... Ke4 {Moving into the square of the pawn (a4–a8–e8–e4): a lone pawn would be caught.} 2. Kb4! {The white king stands in between and blocks the way.} Kd5 3. Kb5! {Shouldering: the black king is kept away from the c-file.} Kd6 (3... Kd4 4. a5 Kd5 5. a6 Kd6 6. a7 {The pawn runs and the black king is too late.}) 4. Kb6! Kd7 5. Kb7! {The black king cannot approach c8.} Kd6 6. a5 Kc5 7. a6 Kb5 8. a7 {and the pawn promotes.}"
+   },
+   "source": {
+    "article": "King and pawn versus king endgame",
+    "oldid": 1369231680,
+    "url": "https://en.wikipedia.org/w/index.php?title=King_and_pawn_versus_king_endgame&oldid=1369231680"
+   }
+  },
+  {
+   "seq": 3,
+   "order": 9,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: τα βασικά",
+    "en": "King and pawns: the basics"
+   },
+   "fen": "3k4/8/2KP4/8/8/8/8/8 w - - 0 1",
+   "goal": "win",
+   "rating": 1250,
+   "themes": [
+    "zugzwang"
+   ],
+   "title": {
+    "el": "Η εξαίρεση: 1.d7!",
+    "en": "The exception: 1.d7!"
+   },
+   "intro": {
+    "el": "Συνήθως ο βασιλιάς που πηγαινοέρχεται μπροστά από το πιόνι κρατά την ισοπαλία. Εδώ όμως παίζουν τα λευκά.",
+    "en": "Usually a king shuttling in front of the pawn holds the draw. Here, however, White is to move."
+   },
+   "summary": {
+    "el": "Ο αμυνόμενος βασιλιάς που πηγαινοέρχεται ανάμεσα σε δύο τετράγωνα μπροστά από το πιόνι συνήθως κρατά. Η εξαίρεση είναι αυτή η θέση με τα λευκά να παίζουν: το 1.d7! αφήνει στα μαύρα μόνο το e7 και ο λευκός βασιλιάς πιάνει το c7.",
+    "en": "A defending king shuttling between two squares in front of the pawn usually holds. The exception is this position with White to move: 1.d7! leaves Black only e7 and the white king takes c7."
+   },
+   "solution": {
+    "el": "1. d7! {Τα μαύρα είναι σε zugzwang: ο βασιλιάς τους έχει ένα μόνο τετράγωνο.} Ke7 2. Kc7 {και 3.d8=Q.}",
+    "en": "1. d7! {Black is in zugzwang: the king has a single square.} Ke7 2. Kc7 {followed by 3.d8=Q.}"
+   },
+   "source": {
+    "article": "King and pawn versus king endgame",
+    "oldid": 1369231680,
+    "url": "https://en.wikipedia.org/w/index.php?title=King_and_pawn_versus_king_endgame&oldid=1369231680"
+   }
+  },
+  {
+   "seq": 4,
+   "order": 10,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: τα βασικά",
+    "en": "King and pawns: the basics"
+   },
+   "fen": "6k1/8/6K1/6P1/8/8/8/8 w - - 0 1",
+   "goal": "win",
+   "rating": 1300,
+   "title": {
+    "el": "Πιόνι του ίππου: 1.Kh6!",
+    "en": "Knight pawn: 1.Kh6!"
+   },
+   "intro": {
+    "el": "Με πιόνι του ίππου υπάρχει μια παγίδα πατ στη γωνία.",
+    "en": "With a knight pawn there is a stalemate trap in the corner."
+   },
+   "summary": {
+    "el": "Με πιόνι του ίππου (στήλη b ή g) ο αμυνόμενος βασιλιάς ελπίζει σε πατ στη γωνία. Ο επιτιθέμενος βασιλιάς πηγαίνει δίπλα στο πιόνι από την πλευρά της γωνίας (εδώ στο h6) και το πατ χάνεται. Η θέση είναι ήδη στο βιβλίο του Lolli (1763).",
+    "en": "With a knight pawn (b- or g-file) the defending king hopes for stalemate in the corner. The attacking king goes next to the pawn on the corner side (here h6) and the stalemate disappears. The position already appears in Lolli’s book (1763)."
+   },
+   "solution": {
+    "el": "1. Kh6! {Ο βασιλιάς μπαίνει δίπλα στο πιόνι από την πλευρά της γωνίας. Το φυσικό 1.Kf6 Kh7 2.Kf7 Kh8 δεν προχωρά, γιατί το 3.g6?? είναι πατ: τα λευκά πρέπει να γυρίσουν με 3.Kg6 Kg8 και 4.Kh6.} Kh8 (1... Kf7 2. Kh7! {Ο βασιλιάς πιάνει το g8.} Kf8 3. g6 Ke7 4. g7 {και το πιόνι γίνεται βασίλισσα.}) 2. g6 Kg8 3. g7 Kf7 4. Kh7 {και 5.g8=Q.}",
+    "en": "1. Kh6! {The king goes next to the pawn on the corner side. The natural 1.Kf6 Kh7 2.Kf7 Kh8 makes no progress, because 3.g6?? is stalemate: White has to go back with 3.Kg6 Kg8 and 4.Kh6.} Kh8 (1... Kf7 2. Kh7! {The king takes control of g8.} Kf8 3. g6 Ke7 4. g7 {and the pawn promotes.}) 2. g6 Kg8 3. g7 Kf7 4. Kh7 {followed by 5.g8=Q.}"
+   },
+   "source": {
+    "article": "King and pawn versus king endgame",
+    "oldid": 1369231680,
+    "url": "https://en.wikipedia.org/w/index.php?title=King_and_pawn_versus_king_endgame&oldid=1369231680"
+   }
+  },
+  {
+   "seq": 5,
+   "order": 11,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: τα βασικά",
+    "en": "King and pawns: the basics"
+   },
+   "fen": "8/8/4k3/8/2PK4/8/8/8 w - - 0 1",
+   "goal": "win",
+   "rating": 1400,
+   "title": {
+    "el": "Κρίσιμα τετράγωνα, όχι αντιπαράθεση",
+    "en": "Key squares, not the opposition"
+   },
+   "intro": {
+    "el": "Ποιο είναι το σωστό τετράγωνο για τον λευκό βασιλιά;",
+    "en": "Which is the right square for the white king?"
+   },
+   "summary": {
+    "el": "Η αντιπαράθεση είναι μέσο και όχι σκοπός (Averbakh): ο σκοπός είναι να φτάσει ο βασιλιάς σε κρίσιμο τετράγωνο, και από εκεί το πιόνι περνά. Για πιόνι στην τέταρτη γραμμή είναι τα τρία τετράγωνα δύο γραμμές μπροστά του.",
+    "en": "The opposition is a means, not an end (Averbakh): the aim is to bring the king to a key square, from where the pawn gets through. For a pawn on the fourth rank these are the three squares two ranks in front of it."
+   },
+   "solution": {
+    "el": "1. Kc5! {Κατευθείαν προς τα κρίσιμα τετράγωνα του πιονιού (b6, c6, d6). Η «αντιπαράθεση» 1.Ke4? φέρνει μόνο ισοπαλία.} Kd7 (1... Ke5 2. Kb6 Kd6 3. c5+ Kd7 4. Kb7 {και το πιόνι προχωρά.}) 2. Kb6 {Κρίσιμο τετράγωνο: τα λευκά κερδίζουν.} Kc8 3. c5 Kb8 4. c6 Kc8 5. c7 Kd7 6. Kb7 {και 7.c8=Q.}",
+    "en": "1. Kc5! {Straight towards the key squares of the pawn (b6, c6, d6). Taking the opposition with 1.Ke4? merely draws.} Kd7 (1... Ke5 2. Kb6 Kd6 3. c5+ Kd7 4. Kb7 {and the pawn advances.}) 2. Kb6 {A key square: White wins.} Kc8 3. c5 Kb8 4. c6 Kc8 5. c7 Kd7 6. Kb7 {followed by 7.c8=Q.}"
+   },
+   "source": {
+    "article": "King and pawn versus king endgame",
+    "oldid": 1369231680,
+    "url": "https://en.wikipedia.org/w/index.php?title=King_and_pawn_versus_king_endgame&oldid=1369231680"
+   }
+  },
+  {
+   "seq": 7,
+   "order": 12,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: τα βασικά",
+    "en": "King and pawns: the basics"
+   },
+   "fen": "8/8/8/2k5/8/2K5/2P5/8 b - - 0 1",
+   "pre": true,
+   "goal": "win",
+   "rating": 1400,
+   "title": {
+    "el": "Κρίσιμο τετράγωνο και μετά η έκτη γραμμή",
+    "en": "A key square, then the sixth rank"
+   },
+   "intro": {
+    "el": "Παίζουν τα μαύρα. (Αν έπαιζαν τα λευκά, θα ήταν ισοπαλία: 1.Kb3 Kb5.)",
+    "en": "Black to move. (With White to move it would be a draw: 1.Kb3 Kb5.)"
+   },
+   "summary": {
+    "el": "Με το πιόνι πίσω, πρώτα πηγαίνει ο βασιλιάς: σε κρίσιμο τετράγωνο, μετά με αντιπαράθεση και «στροφές» γύρω από τον αντίπαλο βασιλιά ως την έκτη γραμμή. Το πιόνι έρχεται τελευταίο.",
+    "en": "With the pawn far back the king goes first: to a key square, then with the opposition and turning manoeuvres round the enemy king up to the sixth rank. The pawn comes last."
+   },
+   "solution": {
+    "el": "1... Kb5 (1... Kd5 2. Kb4 {Το άλλο κρίσιμο τετράγωνο.} Kc6 3. Kc4 Kd6 4. Kb5 Kc7 5. Kc5 Kd7 6. Kb6 {Ο βασιλιάς στην έκτη: κερδίζει.}) 2. Kd4 {Κρίσιμο τετράγωνο: για πιόνι στη δεύτερη γραμμή είναι τα b4, c4 και d4.} Kc6 3. Kc4 {Αντιπαράθεση.} Kb6 4. Kd5 {Ο βασιλιάς «στρίβει» γύρω από τον αντίπαλο.} Kc7 5. Kc5 {Πάλι αντιπαράθεση.} Kd7 6. Kb6 {Ο βασιλιάς είναι στην έκτη γραμμή μπροστά από το πιόνι: τα λευκά κερδίζουν και το πιόνι προχωρά.}",
+    "en": "1... Kb5 (1... Kd5 2. Kb4 {The other key square.} Kc6 3. Kc4 Kd6 4. Kb5 Kc7 5. Kc5 Kd7 6. Kb6 {The king on the sixth: it wins.}) 2. Kd4 {A key square: for a pawn on the second rank they are b4, c4 and d4.} Kc6 3. Kc4 {Opposition.} Kb6 4. Kd5 {Turning round the enemy king.} Kc7 5. Kc5 {Opposition again.} Kd7 6. Kb6 {The king is on the sixth rank in front of the pawn: White wins and the pawn advances.}"
+   },
+   "source": {
+    "article": "King and pawn versus king endgame",
+    "oldid": 1369231680,
+    "url": "https://en.wikipedia.org/w/index.php?title=King_and_pawn_versus_king_endgame&oldid=1369231680"
+   }
+  },
+  {
+   "seq": 6,
+   "order": 13,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: τα βασικά",
+    "en": "King and pawns: the basics"
+   },
+   "fen": "5k2/8/8/8/8/2P5/8/3K4 w - - 0 1",
+   "goal": "win",
+   "rating": 1450,
+   "title": {
+    "el": "Από την άλλη πλευρά του πιονιού",
+    "en": "Round the other side of the pawn"
+   },
+   "intro": {
+    "el": "Τα κρίσιμα τετράγωνα του πιονιού είναι b5, c5 και d5. Από πού θα φτάσει εκεί ο βασιλιάς;",
+    "en": "The key squares of the pawn are b5, c5 and d5. Which way does the king get there?"
+   },
+   "summary": {
+    "el": "Αν ο ευθύς δρόμος προς τα κρίσιμα τετράγωνα κλείνει, ψάξε άλλον: εδώ ο βασιλιάς περνά γύρω από το πιόνι (c2–b3–b4) και με την αντιπαράθεση φτάνει στο b5 ή στο d5.",
+    "en": "If the direct route to the key squares is blocked, look for another one: here the king goes round the pawn (c2–b3–b4) and with the opposition reaches b5 or d5."
+   },
+   "solution": {
+    "el": "1. Kc2! {Ο ευθύς δρόμος 1.Kd2 Ke7 2.Kd3 Kd7 3.Kc4 Kc6 αφήνει τα μαύρα να πάρουν την αντιπαράθεση. Ο βασιλιάς πηγαίνει από την άλλη πλευρά του πιονιού.} Ke7 2. Kb3 Kd6 3. Kb4 Kc6 4. Kc4! {Αντιπαράθεση: τα μαύρα είναι σε zugzwang και πρέπει να παραμερίσουν.} Kd6 (4... Kb6 5. Kd5 {και ο λευκός βασιλιάς φτάνει σε κρίσιμο τετράγωνο από την άλλη πλευρά.}) 5. Kb5 {Κρίσιμο τετράγωνο: τα λευκά κερδίζουν.}",
+    "en": "1. Kc2! {The direct route 1.Kd2 Ke7 2.Kd3 Kd7 3.Kc4 Kc6 lets Black take the opposition. The king goes round the other side of the pawn.} Ke7 2. Kb3 Kd6 3. Kb4 Kc6 4. Kc4! {Opposition: Black is in zugzwang and has to give way.} Kd6 (4... Kb6 5. Kd5 {and the white king reaches a key square on the other side.}) 5. Kb5 {A key square: White wins.}"
+   },
+   "source": {
+    "article": "King and pawn versus king endgame",
+    "oldid": 1369231680,
+    "url": "https://en.wikipedia.org/w/index.php?title=King_and_pawn_versus_king_endgame&oldid=1369231680"
+   }
+  },
+  {
+   "seq": 16,
+   "order": 14,
+   "part": {
+    "el": "Πύργος και πιόνι: Lucena και Philidor",
+    "en": "Rook and pawn: Lucena and Philidor"
+   },
+   "fen": "1K1k4/1P6/8/8/8/8/r7/2R5 w - - 0 1",
+   "goal": "win",
+   "rating": 1500,
+   "title": {
+    "el": "Θέση Lucena: χτίσε τη γέφυρα",
+    "en": "The Lucena position: build a bridge"
+   },
+   "intro": {
+    "el": "Ίσως η πιο σημαντική θέση της θεωρίας των φινάλε, κατά τον Karsten Müller. Ο λευκός βασιλιάς είναι μπροστά από το πιόνι και πρέπει να βγει.",
+    "en": "Perhaps the most important position in endgame theory, according to Karsten Müller. The white king is in front of its pawn and has to get out."
+   },
+   "summary": {
+    "el": "Η θέση Lucena κερδίζει πάντα (εκτός από πιόνι του πύργου). Τρία βήματα: διώξε με σαχ τον αντίπαλο βασιλιά μια στήλη μακριά, φέρε τον πύργο στην τέταρτη γραμμή, βγάλε τον βασιλιά και κλείσε τα σαχ με τον πύργο: η «γέφυρα».",
+    "en": "The Lucena position always wins (except with a rook pawn). Three steps: drive the enemy king one file away with a check, bring the rook to the fourth rank, walk the king out and block the checks with the rook: the bridge."
+   },
+   "solution": {
+    "el": "1. Rd1+! {Πρώτα ο μαύρος βασιλιάς διώχνεται μακριά από τη στήλη του πιονιού.} Ke7 2. Rd4! {«Χτίζεις γέφυρα» (Nimzowitsch): ο πύργος θα κλείσει τα σαχ στην τέταρτη γραμμή.} Ra1 3. Kc7 Rc1+ 4. Kb6 Rb1+ 5. Kc6 Rc1+ (5... Ke6 {Τώρα υπάρχει παγίδα: αν 6.Rd5 (γέφυρα στην πέμπτη), τότε 6...Rxb7! και ισοπαλία.} 6. Rd6+! Ke7 7. Rd5! {Τώρα η γέφυρα στην πέμπτη γραμμή δουλεύει.} Rc1+ 8. Kb6 Rb1+ 9. Rb5 {και το πιόνι γίνεται βασίλισσα.}) 6. Kb5 Rb1+ 7. Rb4! {Ο πύργος κλείνει το σαχ: τα σαχ τελείωσαν και το πιόνι προχωρά.}",
+    "en": "1. Rd1+! {First the black king is driven away from the file of the pawn.} Ke7 2. Rd4! {Building a bridge (Nimzowitsch): the rook will block the checks on the fourth rank.} Ra1 3. Kc7 Rc1+ 4. Kb6 Rb1+ 5. Kc6 Rc1+ (5... Ke6 {Now there is a trap: if 6.Rd5 (a bridge on the fifth rank), then 6...Rxb7! draws.} 6. Rd6+! Ke7 7. Rd5! {Now the bridge on the fifth rank works.} Rc1+ 8. Kb6 Rb1+ 9. Rb5 {and the pawn promotes.}) 6. Kb5 Rb1+ 7. Rb4! {The rook blocks the check: the checks are over and the pawn promotes.}"
+   },
+   "source": {
+    "article": "Lucena position",
+    "oldid": 1356336262,
+    "url": "https://en.wikipedia.org/w/index.php?title=Lucena_position&oldid=1356336262"
+   }
+  },
+  {
+   "seq": 18,
+   "order": 15,
+   "part": {
+    "el": "Πύργος και πιόνι: Lucena και Philidor",
+    "en": "Rook and pawn: Lucena and Philidor"
+   },
+   "fen": "8/8/8/8/5k2/1R2p3/r7/4K3 w - - 0 1",
+   "goal": "draw",
+   "rating": 1500,
+   "themes": [
+    "equality",
+    "defensiveMove"
+   ],
+   "title": {
+    "el": "Θέση Philidor: σαχ από πίσω",
+    "en": "The Philidor position: checks from behind"
+   },
+   "intro": {
+    "el": "Όσο το πιόνι ήταν στην τέταρτη γραμμή, ο λευκός πύργος έμενε στην τρίτη και κρατούσε τον μαύρο βασιλιά μακριά (1...Rb2 2.Rc3 Ra2 3.Rb3 e3). Τώρα το πιόνι ήρθε στην τρίτη.",
+    "en": "While the pawn was on the fourth rank, the white rook stayed on the third and kept the black king away (1...Rb2 2.Rc3 Ra2 3.Rb3 e3). Now the pawn has reached the third rank."
+   },
+   "summary": {
+    "el": "Η άμυνα Philidor: ο βασιλιάς μπροστά από το πιόνι και ο πύργος στην τρίτη γραμμή, όσο το πιόνι δεν έχει φτάσει εκεί. Μόλις φτάσει, ο πύργος πηγαίνει στην άλλη άκρη της σκακιέρας και δίνει σαχ από πίσω.",
+    "en": "The Philidor defence: the king in front of the pawn and the rook on the third rank until the pawn gets there. As soon as it does, the rook goes to the far end of the board and checks from behind."
+   },
+   "solution": {
+    "el": "1. Rb8! {Με το πιόνι στο e3 ο μαύρος βασιλιάς δεν έχει καταφύγιο: ο πύργος πηγαίνει στην άλλη άκρη της σκακιέρας για να δίνει σαχ από πίσω. Όχι 1.Rb4+? Kf3, που χάνει.} Kf3 2. Rf8+ Ke4 3. Re8+ Kf4 (3... Kd3 4. Rd8+ Ke4 5. Re8+ {Τα σαχ συνεχίζονται.}) 4. Rf8+ Ke5 5. Re8+ {Ο μαύρος βασιλιάς δεν κρύβεται χωρίς να αφήσει το πιόνι: ισοπαλία.}",
+    "en": "1. Rb8! {With the pawn on e3 the black king has no shelter: the rook goes to the far end of the board to check from behind. Not 1.Rb4+? Kf3, which loses.} Kf3 2. Rf8+ Ke4 3. Re8+ Kf4 (3... Kd3 4. Rd8+ Ke4 5. Re8+ {The checks go on.}) 4. Rf8+ Ke5 5. Re8+ {The black king cannot hide without giving up the pawn: draw.}"
+   },
+   "source": {
+    "article": "Philidor position",
+    "oldid": 1356336197,
+    "url": "https://en.wikipedia.org/w/index.php?title=Philidor_position&oldid=1356336197"
+   }
+  },
+  {
+   "seq": 19,
+   "order": 16,
+   "part": {
+    "el": "Πύργος και πιόνι: Lucena και Philidor",
+    "en": "Rook and pawn: Lucena and Philidor"
+   },
+   "fen": "4k3/R7/8/3KP3/5r2/8/8/8 b - - 0 1",
+   "goal": "draw",
+   "rating": 1600,
+   "themes": [
+    "equality",
+    "defensiveMove"
+   ],
+   "title": {
+    "el": "Θέση Philidor: παίζουν τα μαύρα",
+    "en": "The Philidor position: Black to move"
+   },
+   "intro": {
+    "el": "Ο λευκός βασιλιάς απειλεί να φτάσει στην έκτη γραμμή. Παίζουν τα μαύρα.",
+    "en": "The white king threatens to reach the sixth rank. Black to move."
+   },
+   "summary": {
+    "el": "Ο αμυνόμενος πύργος πρέπει να προλάβει την τρίτη γραμμή πριν φτάσει εκεί ο επιτιθέμενος βασιλιάς. Από εκεί κρατά τον βασιλιά έξω, και όταν το πιόνι προχωρήσει, δίνει σαχ από πίσω.",
+    "en": "The defending rook must reach its third rank before the attacking king does. From there it keeps the king out, and when the pawn advances it checks from behind."
+   },
+   "solution": {
+    "el": "1... Rb4! {Ο πύργος πηγαίνει στην τρίτη γραμμή (στο b6) πριν φτάσει εκεί ο λευκός βασιλιάς.} 2. Ke6 Rb6+ 3. Kf5 Rc6 {Η άμυνα Philidor: ο πύργος στην τρίτη γραμμή κρατά τον βασιλιά έξω. Αν το πιόνι πάει στο e6, ο πύργος πηγαίνει πίσω του και δίνει σαχ από πίσω.}",
+    "en": "1... Rb4! {The rook heads for the third rank (b6) before the white king gets there.} 2. Ke6 Rb6+ 3. Kf5 Rc6 {The Philidor defence: the rook on the third rank keeps the king out. If the pawn goes to e6, the rook goes behind it and checks from behind.}"
+   },
+   "source": {
+    "article": "Philidor position",
+    "oldid": 1356336197,
+    "url": "https://en.wikipedia.org/w/index.php?title=Philidor_position&oldid=1356336197"
+   }
+  },
+  {
+   "seq": 17,
+   "order": 17,
+   "part": {
+    "el": "Πύργος και πιόνι: Lucena και Philidor",
+    "en": "Rook and pawn: Lucena and Philidor"
+   },
+   "fen": "1K1k4/1P6/8/8/8/8/r7/2R5 b - - 0 1",
+   "pre": true,
+   "goal": "win",
+   "rating": 1700,
+   "title": {
+    "el": "Θέση Lucena: παίζουν τα μαύρα",
+    "en": "The Lucena position: Black to move"
+   },
+   "intro": {
+    "el": "Η ίδια θέση, αλλά παίζουν πρώτα τα μαύρα και εμποδίζουν τη γέφυρα στην τέταρτη γραμμή.",
+    "en": "The same position, but Black moves first and prevents the bridge on the fourth rank."
+   },
+   "summary": {
+    "el": "Αν ο αμυνόμενος πύργος πιάσει την τέταρτη γραμμή, η γέφυρα χτίζεται στην πέμπτη. Ο πύργος που δίνει σαχ χρειάζεται απόσταση από τον βασιλιά· όταν είναι κοντά, ο βασιλιάς τον πλησιάζει και τα σαχ τελειώνουν.",
+    "en": "If the defending rook takes the fourth rank, the bridge is built on the fifth. A checking rook needs distance from the king; when it is close, the king approaches it and the checks end."
+   },
+   "solution": {
+    "el": "1... Ra4 {Τα μαύρα εμποδίζουν τον πύργο να πάει στην τέταρτη γραμμή.} 2. Rd1+ Ke7 3. Kc7 Rc4+ 4. Kb6 Rb4+ 5. Ka6 Rb2 {Ο μαύρος πύργος δεν είναι αρκετά μακριά για να συνεχίσει τα σαχ.} (5... Ra4+ 6. Kb5 {Ο πύργος a4 δέχεται επίθεση και τα σαχ τελειώνουν.}) 6. Rd5! {Η γέφυρα χτίζεται τώρα στην πέμπτη γραμμή.} Ra2+ (6... Ke6 {Επίθεση στον πύργο.} 7. Rb5! Ra2+ 8. Kb6 Rd2 9. b8=Q {Το πιόνι έγινε βασίλισσα.}) 7. Kb6 Rb2+ 8. Rb5 {και το πιόνι γίνεται βασίλισσα.}",
+    "en": "1... Ra4 {Black prevents the rook from reaching the fourth rank.} 2. Rd1+ Ke7 3. Kc7 Rc4+ 4. Kb6 Rb4+ 5. Ka6 Rb2 {The black rook is not far enough away to keep checking.} (5... Ra4+ 6. Kb5 {The a4-rook is attacked and the checks end.}) 6. Rd5! {The bridge is now built on the fifth rank.} Ra2+ (6... Ke6 {Attacking the rook.} 7. Rb5! Ra2+ 8. Kb6 Rd2 9. b8=Q {The pawn has promoted.}) 7. Kb6 Rb2+ 8. Rb5 {and the pawn promotes.}"
+   },
+   "source": {
+    "article": "Lucena position",
+    "oldid": 1356336262,
+    "url": "https://en.wikipedia.org/w/index.php?title=Lucena_position&oldid=1356336262"
+   }
+  },
+  {
+   "seq": 20,
+   "order": 18,
+   "part": {
+    "el": "Πύργος και πιόνι: Lucena και Philidor",
+    "en": "Rook and pawn: Lucena and Philidor"
+   },
+   "fen": "4k3/R7/8/3KP3/5r2/8/8/8 w - - 0 1",
+   "goal": "win",
+   "rating": 1800,
+   "title": {
+    "el": "Θέση Philidor: παίζουν τα λευκά",
+    "en": "The Philidor position: White to move"
+   },
+   "intro": {
+    "el": "Η ίδια θέση, αλλά παίζουν τα λευκά. Ο μαύρος πύργος δεν έχει φτάσει ακόμη στην τρίτη γραμμή.",
+    "en": "The same position, but White is to move. The black rook has not reached the third rank yet."
+   },
+   "summary": {
+    "el": "Όταν ο επιτιθέμενος βασιλιάς φτάσει στην έκτη γραμμή μαζί με το πιόνι πριν από τον αμυνόμενο πύργο, η άμυνα Philidor δεν γίνεται πια: η απειλή ματ στην όγδοη γραμμή διώχνει τον βασιλιά από το τετράγωνο της προαγωγής.",
+    "en": "When the attacking king reaches the sixth rank with its pawn before the defending rook gets there, the Philidor defence is no longer possible: the mating threat on the eighth rank drives the king from the queening square."
+   },
+   "solution": {
+    "el": "1. Ke6! {Απειλεί 2.Ra8#. Αν 1.Kd6?, τότε 1...Re4! και ισοπαλία.} Kf8 {Ο βασιλιάς πάει στη «μικρή πλευρά» του πιονιού, που είναι η καλύτερη.} (1... Kd8 2. Ra8+ Kc7 3. Ke7 Rf2 4. e6 {και το πιόνι προχωρά με τη βοήθεια του βασιλιά.}) 2. Ra8+ Kg7 3. Kd6 Rd4+ 4. Ke7 Rb4 5. e6 {και τα λευκά κερδίζουν: το πιόνι προχωρά με τον βασιλιά δίπλα του.}",
+    "en": "1. Ke6! {Threatening 2.Ra8#. After 1.Kd6? Re4! Black draws.} Kf8 {The king goes to the short side of the pawn, which is the better side.} (1... Kd8 2. Ra8+ Kc7 3. Ke7 Rf2 4. e6 {and the pawn advances with the king’s support.}) 2. Ra8+ Kg7 3. Kd6 Rd4+ 4. Ke7 Rb4 5. e6 {and White wins: the pawn advances with the king beside it.}"
+   },
+   "source": {
+    "article": "Philidor position",
+    "oldid": 1356336197,
+    "url": "https://en.wikipedia.org/w/index.php?title=Philidor_position&oldid=1356336197"
+   }
+  },
+  {
+   "seq": 8,
+   "order": 19,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: για προχωρημένους",
+    "en": "King and pawns: advanced"
+   },
+   "fen": "4k3/8/8/1p5p/1P5P/8/8/4K3 w - - 0 1",
+   "goal": "win",
+   "rating": 1600,
+   "title": {
+    "el": "Αντιπαράθεση από απόσταση",
+    "en": "The distant opposition"
+   },
+   "intro": {
+    "el": "Οι βασιλιάδες είναι μακριά, αλλά η αντιπαράθεση μετρά ήδη.",
+    "en": "The kings are far apart, but the opposition already matters."
+   },
+   "summary": {
+    "el": "Η αντιπαράθεση από απόσταση (περιττός αριθμός τετραγώνων ανάμεσα στους βασιλιάδες, με τον αντίπαλο να παίζει) γίνεται κοντινή καθώς πλησιάζουν. Ο σκοπός της είναι να μπει ο βασιλιάς: γι’ αυτό, όταν χρειάζεται, πηγαίνει πλάγια και μπροστά.",
+    "en": "The distant opposition (an odd number of squares between the kings, with the opponent to move) becomes the direct opposition as the kings approach. Its aim is penetration: so when needed the king steps sideways and forward."
+   },
+   "solution": {
+    "el": "1. Ke2! {Τα λευκά παίρνουν την αντιπαράθεση από απόσταση: οι βασιλιάδες στην ίδια στήλη με περιττό αριθμό τετραγώνων ανάμεσα, και παίζει ο αντίπαλος.} Ke7 (1... Kf8 {Η παγίδα: αν 2.Ke3 Ke7 ή 2.Kf3 Kf7, την αντιπαράθεση την έχουν τα μαύρα.} 2. Kd3! {Πλάγια και μπροστά: ο σκοπός της αντιπαράθεσης είναι να μπει ο βασιλιάς.} Ke7 3. Ke3! {Πάλι αντιπαράθεση από απόσταση, όπως στην κύρια γραμμή.} Ke6 4. Ke4 Kd6 5. Kd4 Kc6 6. Ke5) 2. Ke3 Ke6 3. Ke4 {Τώρα αντιπαράθεση από κοντά: ο μαύρος βασιλιάς πρέπει να παραμερίσει.} Kd6 (3... Kf6 4. Kf4! {Η αντίστοιχη κίνηση: τα μαύρα πρέπει πάλι να παραμερίσουν και ο βασιλιάς φτάνει στο h5.}) 4. Kd4 {Όχι 4.Kf5?, που οδηγεί σε κούρσα όπου βγάζουν βασίλισσα και οι δύο πλευρές.} Kc6 (4... Ke6 5. Kc5 {και τα λευκά είναι πολύ μπροστά στην κούρσα προαγωγής.}) 5. Ke5 {Τα λευκά κερδίζουν ένα από τα πιόνια και η καινούργια ελεύθερη στήλη τους δίνει την παρτίδα.}",
+    "en": "1. Ke2! {White takes the distant opposition: the kings on the same file with an odd number of squares between them, and the opponent to move.} Ke7 (1... Kf8 {The trap: after 2.Ke3 Ke7 or 2.Kf3 Kf7 Black has the distant opposition.} 2. Kd3! {Sideways and forward: the aim of the opposition is to penetrate.} Ke7 3. Ke3! {The distant opposition again, transposing to the main line.} Ke6 4. Ke4 Kd6 5. Kd4 Kc6 6. Ke5) 2. Ke3 Ke6 3. Ke4 {Now the direct opposition: the black king has to step aside.} Kd6 (3... Kf6 4. Kf4! {The corresponding move: Black has to step aside again and the king reaches h5.}) 4. Kd4 {Not 4.Kf5?, which leads to a race where both sides promote.} Kc6 (4... Ke6 5. Kc5 {and White is way ahead in the queening race.}) 5. Ke5 {White wins one of the pawns, and the passed pawn it creates decides the game.}"
+   },
+   "source": {
+    "article": "Opposition (chess)",
+    "oldid": 1356336308,
+    "url": "https://en.wikipedia.org/w/index.php?title=Opposition_(chess)&oldid=1356336308"
+   }
+  },
+  {
+   "seq": 14,
+   "order": 20,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: για προχωρημένους",
+    "en": "King and pawns: advanced"
+   },
+   "fen": "8/8/8/8/pK6/8/5P2/1k6 b - - 0 1",
+   "goal": "draw",
+   "rating": 1600,
+   "themes": [
+    "equality"
+   ],
+   "title": {
+    "el": "Η ιδέα του Réti σε παρτίδα (Yates–Marshall)",
+    "en": "The Réti idea in a game (Yates–Marshall)"
+   },
+   "intro": {
+    "el": "Από την παρτίδα Yates–Marshall. Παίζουν τα μαύρα και σώζουν την παρτίδα.",
+    "en": "From the game Yates–Marshall. Black to move saves the game."
+   },
+   "summary": {
+    "el": "Η κίνηση με διπλό σκοπό: ο βασιλιάς πηγαίνει προς το αντίπαλο πιόνι από τετράγωνα που στηρίζουν και το δικό του πιόνι. Ο αντίπαλος δεν προλαβαίνει να κάνει και τα δύο.",
+    "en": "The move with a double purpose: the king heads for the enemy pawn via squares that also support its own pawn. The opponent has no time to deal with both."
+   },
+   "solution": {
+    "el": "1... Kb2! {Ο βασιλιάς πλησιάζει το πιόνι f και συγχρόνως στηρίζει το δικό του. Αν 1...Kc2?, τότε 2.f4 και τα λευκά κερδίζουν.} 2. Kxa4 (2. f4 a3 {και κερδίζουν τα μαύρα: το πιόνι a φτάνει πρώτο.}) Kc3! 3. f4 Kd4 {Ο βασιλιάς προλαβαίνει το πιόνι: ισοπαλία.}",
+    "en": "1... Kb2! {The king approaches the f-pawn and supports its own pawn at the same time. If 1...Kc2?, then 2.f4 wins for White.} 2. Kxa4 (2. f4 a3 {and Black wins: the a-pawn is first.}) Kc3! 3. f4 Kd4 {The king catches the pawn: draw.}"
+   },
+   "source": {
+    "article": "Réti endgame study",
+    "oldid": 1358453473,
+    "url": "https://en.wikipedia.org/w/index.php?title=R%C3%A9ti_endgame_study&oldid=1358453473"
+   }
+  },
+  {
+   "seq": 10,
+   "order": 21,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: για προχωρημένους",
+    "en": "King and pawns: advanced"
+   },
+   "fen": "8/2K5/4p3/4P3/6k1/8/8/8 w - - 0 1",
+   "goal": "win",
+   "rating": 1650,
+   "themes": [
+    "zugzwang"
+   ],
+   "title": {
+    "el": "Αμοιβαίο zugzwang: το εφεδρικό τετράγωνο",
+    "en": "Mutual zugzwang: the spare square"
+   },
+   "intro": {
+    "el": "Και οι δύο βασιλιάδες τρέχουν προς το πιόνι του άλλου. Μόνο μία κίνηση κερδίζει.",
+    "en": "Both kings are heading for the other’s pawn. Only one move wins."
+   },
+   "summary": {
+    "el": "Όταν και οι δύο βασιλιάδες μπορούν να επιτεθούν στο πιόνι του άλλου, χάνει όποιος πρέπει να παίξει τη λάθος στιγμή. Ο πρώτος που πλησιάζει κρατά ένα τετράγωνο σε εφεδρεία: εδώ το 1.Kd7! και μετά το 2.Kd6 ρίχνουν το zugzwang στα μαύρα.",
+    "en": "When both kings can attack the other’s pawn, whoever has to move at the wrong moment loses. The first king to approach keeps a square in reserve: here 1.Kd7! and then 2.Kd6 pass the zugzwang to Black."
+   },
+   "solution": {
+    "el": "1. Kd7! {Η μόνη κίνηση που κερδίζει. Αν 1.Kd6?, τότε 1...Kf5 και τα λευκά είναι σε zugzwang: χάνουν το e5 και την παρτίδα.} Kf5 (1... Kf4 2. Kxe6 {και τα λευκά κερδίζουν.}) 2. Kd6! {Τώρα σε zugzwang είναι τα μαύρα.} Kg6 3. Kxe6 {και τα λευκά κερδίζουν.}",
+    "en": "1. Kd7! {The only winning move. After 1.Kd6? Kf5 White is in zugzwang, loses the e5-pawn and the game.} Kf5 (1... Kf4 2. Kxe6 {and White wins.}) 2. Kd6! {Now Black is in zugzwang.} Kg6 3. Kxe6 {and White wins.}"
+   },
+   "source": {
+    "article": "Key square",
+    "oldid": 1356336252,
+    "url": "https://en.wikipedia.org/w/index.php?title=Key_square&oldid=1356336252"
+   }
+  },
+  {
+   "seq": 9,
+   "order": 22,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: για προχωρημένους",
+    "en": "King and pawns: advanced"
+   },
+   "fen": "8/1p1k4/1P6/2PK4/8/8/8/8 w - - 0 1",
+   "goal": "win",
+   "rating": 1700,
+   "themes": [
+    "zugzwang"
+   ],
+   "title": {
+    "el": "Τρίγωνο",
+    "en": "Triangulation"
+   },
+   "intro": {
+    "el": "Αν έπαιζαν τα μαύρα, θα έπρεπε να αφήσουν τον λευκό βασιλιά να περάσει. Πώς θα παίξουν αυτά;",
+    "en": "If it were Black to move, Black would have to let the white king through. How to hand over the move?"
+   },
+   "summary": {
+    "el": "Όταν η θέση κερδίζει με τον αντίπαλο να παίζει, χάσε έναν χρόνο: ο βασιλιάς κάνει τρίγωνο (τρεις κινήσεις για να γυρίσει στο ίδιο τετράγωνο), ενώ ο αντίπαλος βασιλιάς δεν μπορεί να κάνει το ίδιο χωρίς να αφήσει τα τετράγωνα που φυλάει.",
+    "en": "When the position wins with the opponent to move, lose a tempo: the king makes a triangle (three moves back to the same square), while the enemy king cannot do the same without leaving the squares it guards."
+   },
+   "solution": {
+    "el": "1. Ke5! {Τα λευκά θέλουν την ίδια θέση με τα μαύρα να παίζουν. Ο βασιλιάς κάνει τρίγωνο: d5–e5–d4–d5. Όχι 1.c6+? Kc8 που φέρνει ισοπαλία.} Kc6 (1... Ke7 2. c6! bxc6 3. b7 {και το πιόνι b γίνεται βασίλισσα.}) 2. Kd4 Kd7 3. Kd5 {Το τρίγωνο έκλεισε: ίδια θέση, αλλά τώρα παίζουν τα μαύρα και είναι σε zugzwang.} Kc8 4. Ke6! {Διαγώνια αντιπαράθεση.} Kd8 5. Kd6 {Αντιπαράθεση.} Kc8 6. Ke7 Kb8 7. Kd7 Ka8 8. c6 {και τα λευκά κερδίζουν.}",
+    "en": "1. Ke5! {White wants the same position with Black to move. The king makes a triangle: d5–e5–d4–d5. Not 1.c6+? Kc8, which draws.} Kc6 (1... Ke7 2. c6! bxc6 3. b7 {and the b-pawn promotes.}) 2. Kd4 Kd7 3. Kd5 {The triangle is complete: the same position, but now Black is to move and is in zugzwang.} Kc8 4. Ke6! {Diagonal opposition.} Kd8 5. Kd6 {Opposition.} Kc8 6. Ke7 Kb8 7. Kd7 Ka8 8. c6 {and White wins.}"
+   },
+   "source": {
+    "article": "Triangulation (chess)",
+    "oldid": 1379615573,
+    "url": "https://en.wikipedia.org/w/index.php?title=Triangulation_(chess)&oldid=1379615573"
+   }
+  },
+  {
+   "seq": 12,
+   "order": 23,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: για προχωρημένους",
+    "en": "King and pawns: advanced"
+   },
+   "fen": "7K/8/k1P5/7p/8/8/8/8 w - - 0 1",
+   "goal": "draw",
+   "rating": 1700,
+   "themes": [
+    "equality"
+   ],
+   "title": {
+    "el": "Η μελέτη του Réti (1921)",
+    "en": "The Réti study (1921)"
+   },
+   "intro": {
+    "el": "Ο λευκός βασιλιάς είναι έξω από το τετράγωνο του πιονιού h και μακριά από το δικό του πιόνι. Φαίνεται χαμένο.",
+    "en": "The white king is outside the square of the h-pawn and far from its own pawn. It looks hopeless."
+   },
+   "summary": {
+    "el": "Ένας βασιλιάς μπορεί να κυνηγά δύο στόχους μαζί: στη διαγώνιο φτάνει όσο γρήγορα και στην ευθεία. Ο λευκός βασιλιάς απειλεί να στηρίξει το δικό του πιόνι και συγχρόνως μπαίνει στο τετράγωνο του αντίπαλου πιονιού.",
+    "en": "A king can chase two goals at once: along a diagonal it gets there as fast as along a straight line. The white king threatens to support its own pawn and at the same time steps into the square of the enemy pawn."
+   },
+   "solution": {
+    "el": "1. Kg7! {Ο βασιλιάς πηγαίνει στη διαγώνιο: πλησιάζει ταυτόχρονα το πιόνι h5 και το δικό του πιόνι.} h4 (1... Kb6 2. Kf6 h4 3. Ke5 h3 4. Kd6 h2 5. c7 h1=Q 6. c8=Q {Ισοπαλία.}) 2. Kf6 Kb6 (2... h3 3. Ke7 h2 4. c7 Kb7 5. Kd7 {και βγάζουν βασίλισσα και οι δύο πλευρές.}) 3. Ke5! {Δύο απειλές: Kf4 για το πιόνι h ή Kd6 για να στηρίξει το δικό του.} Kxc6 (3... h3 4. Kd6 h2 5. c7 h1=Q 6. c8=Q {Ισοπαλία.}) 4. Kf4 {Ο βασιλιάς μπήκε στο τετράγωνο του πιονιού: ισοπαλία.}",
+    "en": "1. Kg7! {The king takes the diagonal: it approaches the h5-pawn and its own pawn at the same time.} h4 (1... Kb6 2. Kf6 h4 3. Ke5 h3 4. Kd6 h2 5. c7 h1=Q 6. c8=Q {Draw.}) 2. Kf6 Kb6 (2... h3 3. Ke7 h2 4. c7 Kb7 5. Kd7 {and both sides promote.}) 3. Ke5! {Two threats: Kf4 against the h-pawn, or Kd6 to support its own pawn.} Kxc6 (3... h3 4. Kd6 h2 5. c7 h1=Q 6. c8=Q {Draw.}) 4. Kf4 {The king is inside the square of the pawn: draw.}"
+   },
+   "source": {
+    "article": "Réti endgame study",
+    "oldid": 1358453473,
+    "url": "https://en.wikipedia.org/w/index.php?title=R%C3%A9ti_endgame_study&oldid=1358453473"
+   }
+  },
+  {
+   "seq": 13,
+   "order": 24,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: για προχωρημένους",
+    "en": "King and pawns: advanced"
+   },
+   "fen": "8/6p1/k1P2p1p/7K/8/8/8/8 w - - 0 1",
+   "goal": "draw",
+   "rating": 1900,
+   "themes": [
+    "equality"
+   ],
+   "title": {
+    "el": "Réti: η δεύτερη μελέτη",
+    "en": "Réti: the second study"
+   },
+   "intro": {
+    "el": "Ο Réti ξαναχρησιμοποίησε την ίδια ιδέα σε άλλη μελέτη.",
+    "en": "Réti used the same idea in another study."
+   },
+   "summary": {
+    "el": "Η ίδια ιδέα του Réti: κάθε κίνηση του βασιλιά έχει δύο σκοπούς, να κυνηγήσει το αντίπαλο πιόνι και να στηρίξει το δικό του. Ο αντίπαλος δεν μπορεί να σταματήσει και τα δύο.",
+    "en": "The same Réti idea: every king move has two purposes, to chase the enemy pawn and to support its own. The opponent cannot stop both."
+   },
+   "solution": {
+    "el": "1. Kg6 {Πρώτα το πιόνι g7.} Kb6 2. Kxg7 f5 (2... h5 3. Kxf6! h4 4. Ke5 h3 5. Kd6 h2 6. c7 h1=Q 7. c8=Q {Ισοπαλία.}) 3. Kf6! {Η ίδια ιδέα: ο βασιλιάς πλησιάζει και το πιόνι f και το πιόνι c.} f4 4. Ke5 f3 5. Kd6 f2 6. c7 f1=Q 7. c8=Q Qf4+ 8. Kd5 {Βασίλισσα εναντίον βασίλισσας: ισοπαλία.}",
+    "en": "1. Kg6 {First the g7-pawn.} Kb6 2. Kxg7 f5 (2... h5 3. Kxf6! h4 4. Ke5 h3 5. Kd6 h2 6. c7 h1=Q 7. c8=Q {Draw.}) 3. Kf6! {The same idea: the king approaches both the f-pawn and the c-pawn.} f4 4. Ke5 f3 5. Kd6 f2 6. c7 f1=Q 7. c8=Q Qf4+ 8. Kd5 {Queen against queen: a draw.}"
+   },
+   "source": {
+    "article": "Réti endgame study",
+    "oldid": 1358453473,
+    "url": "https://en.wikipedia.org/w/index.php?title=R%C3%A9ti_endgame_study&oldid=1358453473"
+   }
+  },
+  {
+   "seq": 15,
+   "order": 25,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: για προχωρημένους",
+    "en": "King and pawns: advanced"
+   },
+   "fen": "8/6K1/8/ppp2k2/8/1P6/1P5P/8 w - - 0 1",
+   "goal": "draw",
+   "rating": 1900,
+   "themes": [
+    "equality"
+   ],
+   "title": {
+    "el": "Lasker–Tarrasch (1914)",
+    "en": "Lasker–Tarrasch (1914)"
+   },
+   "intro": {
+    "el": "Ο Tarrasch άλλαξε τα κομμάτια σε αυτό το φινάλε πιστεύοντας ότι κερδίζει. Ο Lasker βρήκε τη σωτηρία.",
+    "en": "Tarrasch exchanged into this ending believing it was a win. Lasker found the save."
+   },
+   "summary": {
+    "el": "Ο Lasker έσωσε τη θέση με την ιδέα που ο Réti έκανε αργότερα μελέτη: απείλησε να προχωρήσει το πιόνι h, κέρδισε χρόνο και ο βασιλιάς γύρισε εγκαίρως στα πιόνια της πτέρυγας της βασίλισσας.",
+    "en": "Lasker saved the game with the idea Réti later turned into a study: he threatened to advance the h-pawn, gained a tempo, and the king came back to the queenside pawns in time."
+   },
+   "solution": {
+    "el": "1. h4 Kg4 2. Kg6! {Απειλεί 3.h5. Τα μαύρα είχαν υπολογίσει μόνο το 2.Kf6? c4 3.bxc4 bxc4 4.Ke5 c3 5.bxc3 a4 6.Kd4 a3 που κερδίζει για αυτά.} Kxh4 {Αναγκαστικό.} 3. Kf5 {Ο βασιλιάς κέρδισε έναν χρόνο και γυρίζει από άλλη διαγώνιο, που δεν την κλείνουν τα πιόνια του.} Kg3 4. Ke4 Kf2 5. Kd5 Ke3 6. Kxc5 Kd3 7. Kxb5 Kc2 8. Kxa5 Kxb3 {Ισοπαλία.}",
+    "en": "1. h4 Kg4 2. Kg6! {Threatening 3.h5. Black had only considered 2.Kf6? c4 3.bxc4 bxc4 4.Ke5 c3 5.bxc3 a4 6.Kd4 a3, winning for Black.} Kxh4 {Forced.} 3. Kf5 {The king has gained a tempo and comes back along a different diagonal, not obstructed by its own pawns.} Kg3 4. Ke4 Kf2 5. Kd5 Ke3 6. Kxc5 Kd3 7. Kxb5 Kc2 8. Kxa5 Kxb3 {Draw.}"
+   },
+   "source": {
+    "article": "Réti endgame study",
+    "oldid": 1358453473,
+    "url": "https://en.wikipedia.org/w/index.php?title=R%C3%A9ti_endgame_study&oldid=1358453473"
+   }
+  },
+  {
+   "seq": 11,
+   "order": 26,
+   "part": {
+    "el": "Βασιλιάς και πιόνια: για προχωρημένους",
+    "en": "King and pawns: advanced"
+   },
+   "fen": "4k3/4P3/3P4/2p3pp/2P5/8/6K1/8 w - - 0 1",
+   "goal": "win",
+   "rating": 2000,
+   "themes": [
+    "zugzwang"
+   ],
+   "title": {
+    "el": "Τρίγωνο από μακριά (Shirov–Grischuk)",
+    "en": "Triangulation from afar (Shirov–Grischuk)"
+   },
+   "intro": {
+    "el": "Από ανάλυση της παρτίδας Shirov–Grischuk (Νέο Δελχί, 2000). Οι βασιλιάδες είναι μακριά ο ένας από τον άλλο.",
+    "en": "From the analysis of Shirov–Grischuk (New Delhi, 2000). The kings are far apart."
+   },
+   "summary": {
+    "el": "Το τρίγωνο δεν θέλει τους βασιλιάδες δίπλα δίπλα. Εδώ τα λευκά χάνουν έναν χρόνο μακριά από τη μάχη (Kh2–Kg3–Kg2) και τα μαύρα, χωρίς χρήσιμες κινήσεις, πρέπει να σπρώξουν τα πιόνια τους και να αφήσουν τον βασιλιά να μπει.",
+    "en": "Triangulation does not need the kings side by side. Here White loses a tempo far from the action (Kh2–Kg3–Kg2), and Black, out of useful moves, has to push the pawns and let the king in."
+   },
+   "solution": {
+    "el": "1. Kh2! {Τρίγωνο από μακριά: ο βασιλιάς χάνει έναν χρόνο (g2–h2–g3–g2).} Kf7 2. Kg3 Ke8 3. Kg2! {Ίδια θέση με τα μαύρα να παίζουν, και είναι σε zugzwang.} g4 4. Kg3 Kf7 5. Kf4 Ke8 6. Ke5 Kf7 {Τα μαύρα δεν μπορούν να αφήσουν το Ke6.} 7. Kd5 g3 8. Kc6 g2 (8... Ke8 9. d7+ Kxe7 10. Kc7 {και τα λευκά κερδίζουν εύκολα.}) 9. Kd7 g1=Q 10. e8=Q+ {και τα λευκά κερδίζουν.}",
+    "en": "1. Kh2! {Triangulation from afar: the king loses a tempo (g2–h2–g3–g2).} Kf7 2. Kg3 Ke8 3. Kg2! {The same position with Black to move, and Black is in zugzwang.} g4 4. Kg3 Kf7 5. Kf4 Ke8 6. Ke5 Kf7 {Black cannot allow Ke6.} 7. Kd5 g3 8. Kc6 g2 (8... Ke8 9. d7+ Kxe7 10. Kc7 {and White wins easily.}) 9. Kd7 g1=Q 10. e8=Q+ {and White wins.}"
+   },
+   "source": {
+    "article": "Triangulation (chess)",
+    "oldid": 1379615573,
+    "url": "https://en.wikipedia.org/w/index.php?title=Triangulation_(chess)&oldid=1379615573"
+   }
+  },
+  {
+   "seq": 21,
+   "order": 27,
+   "part": {
+    "el": "Πύργος και πιόνι: για προχωρημένους",
+    "en": "Rook and pawn: advanced"
+   },
+   "fen": "1r3k2/R7/5P2/6K1/8/8/8/8 w - - 0 1",
+   "goal": "win",
+   "rating": 1700,
+   "title": {
+    "el": "Άμυνα της τελευταίας γραμμής: παίζουν τα λευκά",
+    "en": "The back-rank defence: White to move"
+   },
+   "intro": {
+    "el": "Ο μαύρος πύργος φυλάει την τελευταία γραμμή. Παίζουν τα λευκά.",
+    "en": "The black rook guards the back rank. White to move."
+   },
+   "summary": {
+    "el": "Με πιόνι του αξιωματικού ή κεντρικό, η παθητική άμυνα από την τελευταία γραμμή χάνει μόλις ο επιτιθέμενος βασιλιάς φτάσει στην έκτη: έχει άλλη στήλη για να περάσει γύρω από το πιόνι και ο πύργος δεμένος από το ματ.",
+    "en": "With a bishop pawn or a central pawn the passive back-rank defence loses as soon as the attacking king reaches the sixth rank: there is another file to go round the pawn, and the rook is tied down by the mate."
+   },
+   "solution": {
+    "el": "1. Kg6! {Ο βασιλιάς φτάνει στην έκτη γραμμή: ο μαύρος πύργος δεν μπορεί να φύγει από την τελευταία γραμμή εξαιτίας του ματ.} Rd8 2. Rh7 Kg8 3. f7+ Kf8 4. Rh8+ Ke7 5. Rxd8 {και τα λευκά κερδίζουν.}",
+    "en": "1. Kg6! {The king reaches the sixth rank: the black rook cannot leave the back rank because of the mate threat.} Rd8 2. Rh7 Kg8 3. f7+ Kf8 4. Rh8+ Ke7 5. Rxd8 {and White wins.}"
+   },
+   "source": {
+    "article": "Rook and pawn versus rook endgame",
+    "oldid": 1379718778,
+    "url": "https://en.wikipedia.org/w/index.php?title=Rook_and_pawn_versus_rook_endgame&oldid=1379718778"
+   }
+  },
+  {
+   "seq": 22,
+   "order": 28,
+   "part": {
+    "el": "Πύργος και πιόνι: για προχωρημένους",
+    "en": "Rook and pawn: advanced"
+   },
+   "fen": "1r3k2/R7/5P2/6K1/8/8/8/8 b - - 0 1",
+   "goal": "draw",
+   "rating": 1700,
+   "themes": [
+    "equality",
+    "defensiveMove"
+   ],
+   "title": {
+    "el": "Άμυνα της τελευταίας γραμμής: παίζουν τα μαύρα",
+    "en": "The back-rank defence: Black to move"
+   },
+   "intro": {
+    "el": "Η ίδια θέση, αλλά παίζουν τα μαύρα, πριν ο λευκός βασιλιάς φτάσει στο g6.",
+    "en": "The same position, but Black is to move, before the white king reaches g6."
+   },
+   "summary": {
+    "el": "Πριν ο επιτιθέμενος βασιλιάς φτάσει στην έκτη γραμμή, ο αμυνόμενος πύργος φεύγει από την τελευταία γραμμή και δίνει σαχ από πίσω, όπως στην άμυνα Philidor.",
+    "en": "Before the attacking king reaches the sixth rank, the defending rook leaves the back rank and checks from behind, as in the Philidor defence."
+   },
+   "solution": {
+    "el": "1... Rb1! {Εξουδετερώνει το Kg6: τα μαύρα θα δίνουν σαχ από πίσω και δεν υπάρχει άμεση απειλή ματ.} 2. Kg6 Rg1+ 3. Kf5 Rf1+ 4. Ke6 Re1+ 5. Kd6 Rd1+ {Ο λευκός βασιλιάς δεν κρύβεται από τα σαχ: ισοπαλία.}",
+    "en": "1... Rb1! {Neutralising Kg6: Black will check from behind and there is no immediate mate threat.} 2. Kg6 Rg1+ 3. Kf5 Rf1+ 4. Ke6 Re1+ 5. Kd6 Rd1+ {The white king cannot hide from the checks: draw.}"
+   },
+   "source": {
+    "article": "Rook and pawn versus rook endgame",
+    "oldid": 1379718778,
+    "url": "https://en.wikipedia.org/w/index.php?title=Rook_and_pawn_versus_rook_endgame&oldid=1379718778"
+   }
+  },
+  {
+   "seq": 24,
+   "order": 29,
+   "part": {
+    "el": "Πύργος και πιόνι: για προχωρημένους",
+    "en": "Rook and pawn: advanced"
+   },
+   "fen": "4K3/4P1k1/8/8/8/8/r7/5R2 b - - 0 1",
+   "goal": "draw",
+   "rating": 1750,
+   "themes": [
+    "equality",
+    "defensiveMove"
+   ],
+   "title": {
+    "el": "Σαχ από το πλάι",
+    "en": "Checks from the side"
+   },
+   "intro": {
+    "el": "Μοιάζει με θέση Lucena, αλλά ο μαύρος βασιλιάς είναι στη «μικρή πλευρά» του πιονιού. Παίζουν τα μαύρα.",
+    "en": "It looks like a Lucena position, but the black king is on the short side of the pawn. Black to move."
+   },
+   "summary": {
+    "el": "Όταν ο αμυνόμενος βασιλιάς είναι στη «μικρή πλευρά» του πιονιού, ο πύργος από τη «μεγάλη πλευρά» δίνει σαχ από το πλάι. Χρειάζεται απόσταση: τουλάχιστον τρεις στήλες ανάμεσα στον πύργο και στον βασιλιά.",
+    "en": "When the defending king is on the short side of the pawn, the rook checks from the side, from the long side. It needs distance: at least three files between the rook and the king."
+   },
+   "solution": {
+    "el": "1... Ra8+! {Σαχ από το πλάι και από μακριά: ανάμεσα στον πύργο και στον βασιλιά υπάρχουν τουλάχιστον τρεις στήλες και ο μαύρος βασιλιάς δεν κλείνει τα σαχ.} 2. Kd7 Ra7+ 3. Kd6 Ra6+ 4. Kd5 Ra5+ 5. Kd4 (5. Kc4 Re5! {Ο βασιλιάς άφησε το πιόνι: ο πύργος του επιτίθεται από πίσω.} 6. Rb1 Kf7 {και το πιόνι πέφτει.}) Ra4+ {Ο λευκός βασιλιάς δεν γλιτώνει από τα σαχ χωρίς να αφήσει το πιόνι: ισοπαλία.}",
+    "en": "1... Ra8+! {Checking from the side, from far away: there are at least three files between the rook and the king, and the black king does not block the checks.} 2. Kd7 Ra7+ 3. Kd6 Ra6+ 4. Kd5 Ra5+ 5. Kd4 (5. Kc4 Re5! {The king has left the pawn: the rook attacks it from behind.} 6. Rb1 Kf7 {and the pawn falls.}) Ra4+ {The white king cannot escape the checks without leaving the pawn: draw.}"
+   },
+   "source": {
+    "article": "Lucena position",
+    "oldid": 1356336262,
+    "url": "https://en.wikipedia.org/w/index.php?title=Lucena_position&oldid=1356336262"
+   }
+  },
+  {
+   "seq": 23,
+   "order": 30,
+   "part": {
+    "el": "Πύργος και πιόνι: για προχωρημένους",
+    "en": "Rook and pawn: advanced"
+   },
+   "fen": "1r6/4k3/8/8/6P1/6K1/5R2/8 w - - 0 1",
+   "pre": true,
+   "goal": "draw",
+   "rating": 1800,
+   "themes": [
+    "equality",
+    "defensiveMove"
+   ],
+   "title": {
+    "el": "Μετωπική άμυνα",
+    "en": "The frontal defence"
+   },
+   "intro": {
+    "el": "Ο μαύρος βασιλιάς είναι κομμένος από το πιόνι, αλλά ο πύργος του είναι στην πρώτη γραμμή, με τρεις γραμμές ανάμεσα σε αυτόν και στο πιόνι.",
+    "en": "The black king is cut off from the pawn, but its rook is on the first rank, with three ranks between it and the pawn."
+   },
+   "summary": {
+    "el": "Η μετωπική άμυνα: ο πύργος δίνει σαχ από μπροστά ή προσφέρει ανταλλαγή, όταν το φινάλε πιονιών που μένει είναι ισοπαλία. Πετυχαίνει πιο εύκολα όταν το πιόνι είναι πίσω, με τουλάχιστον τρεις γραμμές ως τον πύργο («κανόνας των τριών»).",
+    "en": "The frontal defence: the rook checks from the front or offers an exchange when the resulting pawn ending is a draw. It works best when the pawn is far back, with at least three ranks between pawn and rook (the rule of three)."
+   },
+   "solution": {
+    "el": "1. Kh4 Rh8+! {Σαχ από μπροστά: ο βασιλιάς δεν μπορεί να προχωρήσει μαζί με το πιόνι.} 2. Kg5 Rg8+ 3. Kh5 Rh8+ 4. Kg6 Rg8+ 5. Kh5 Rh8+ {Τα λευκά δεν προχωρούν: ισοπαλία.}",
+    "en": "1. Kh4 Rh8+! {A check from the front: the king cannot advance together with the pawn.} 2. Kg5 Rg8+ 3. Kh5 Rh8+ 4. Kg6 Rg8+ 5. Kh5 Rh8+ {White makes no progress: draw.}"
+   },
+   "source": {
+    "article": "Rook and pawn versus rook endgame",
+    "oldid": 1379718778,
+    "url": "https://en.wikipedia.org/w/index.php?title=Rook_and_pawn_versus_rook_endgame&oldid=1379718778"
+   }
+  },
+  {
+   "seq": 25,
+   "order": 31,
+   "part": {
+    "el": "Πύργος και πιόνι: για προχωρημένους",
+    "en": "Rook and pawn: advanced"
+   },
+   "fen": "1K6/1P1k4/7R/8/r6p/8/8/8 w - - 0 1",
+   "goal": "win",
+   "rating": 1900,
+   "themes": [
+    "zugzwang"
+   ],
+   "title": {
+    "el": "Τρίγωνο με τον πύργο (Topalov–Karpov)",
+    "en": "Triangulation with the rook (Topalov–Karpov)"
+   },
+   "intro": {
+    "el": "Από την παρτίδα Topalov–Karpov. Τρίγωνο κάνει και ο πύργος, όχι μόνο ο βασιλιάς.",
+    "en": "From the game Topalov–Karpov. A rook can triangulate too, not only the king."
+   },
+   "summary": {
+    "el": "Ο πύργος μπορεί κι αυτός να «χάσει» έναν χρόνο κάνοντας τρίγωνο (h6–h7–h8–h6) και να αφήσει τον αντίπαλο σε zugzwang. Ο ίππος δεν μπορεί.",
+    "en": "A rook can also lose a tempo by triangulating (h6–h7–h8–h6) and put the opponent in zugzwang. A knight cannot."
+   },
+   "solution": {
+    "el": "1. Rh7+! Kd8 2. Rh8+ Kd7 3. Rh6 {Ίδια θέση, αλλά τώρα παίζουν τα μαύρα: zugzwang.} Kd8 4. Rh7 {Πάλι zugzwang.} Rb4 5. Ka7 Ra4+ 6. Kb6 {και τα μαύρα παραιτήθηκαν.}",
+    "en": "1. Rh7+! Kd8 2. Rh8+ Kd7 3. Rh6 {The same position, but now Black is to move: zugzwang.} Kd8 4. Rh7 {Zugzwang again.} Rb4 5. Ka7 Ra4+ 6. Kb6 {and Black resigned.}"
+   },
+   "source": {
+    "article": "Triangulation (chess)",
+    "oldid": 1379615573,
+    "url": "https://en.wikipedia.org/w/index.php?title=Triangulation_(chess)&oldid=1379615573"
+   }
+  },
+  {
+   "seq": 26,
+   "order": 32,
+   "part": {
+    "el": "Βασίλισσα",
+    "en": "Queen"
+   },
+   "fen": "8/6KQ/8/8/8/2p5/8/k7 w - - 0 1",
+   "goal": "win",
+   "rating": 1800,
+   "title": {
+    "el": "Βασίλισσα εναντίον πιονιού: 1.Qh6!!",
+    "en": "Queen against pawn: 1.Qh6!!"
+   },
+   "intro": {
+    "el": "Ο δικός της βασιλιάς εμποδίζει τη βασίλισσα να μπει στη μεγάλη διαγώνιο a1–h8.",
+    "en": "Her own king prevents the queen from getting onto the long a1–h8 diagonal."
+   },
+   "summary": {
+    "el": "Η βασίλισσα σταματά ένα πιόνι στην έκτη ή έβδομη γραμμή με σαχ και καρφώματα, κερδίζοντας χρόνο για να έρθει ο βασιλιάς. Όταν ο δικός της βασιλιάς κλείνει τον δρόμο, ψάχνει άλλη γραμμή προς την ίδια διαγώνιο.",
+    "en": "The queen stops a pawn on the sixth or seventh rank with checks and pins, gaining time for her king to arrive. When her own king blocks the way, she finds another route to the same diagonal."
+   },
+   "solution": {
+    "el": "1. Qh6!! {Αν το πιόνι προχωρήσει, η βασίλισσα το σταματά με σαχ· αλλιώς το καρφώνει στη διαγώνιο. Το φυσικό 1.Qh1+? Kb2! φέρνει ισοπαλία.} c2 (1... Kb1 2. Qb6+ Kc1 3. Qe3+ Kb2 4. Qe5 {Το πιόνι καρφώθηκε στη μεγάλη διαγώνιο και ο βασιλιάς έρχεται.}) (1... Kb2 2. Qf6! {Το κάρφωμα στη μεγάλη διαγώνιο.}) 2. Qc1+ Ka2 3. Qxc2+ {και τα λευκά κερδίζουν.}",
+    "en": "1. Qh6!! {If the pawn advances, the queen stops it with check; otherwise she pins it along the diagonal. The natural 1.Qh1+? Kb2! draws.} c2 (1... Kb1 2. Qb6+ Kc1 3. Qe3+ Kb2 4. Qe5 {The pawn is pinned on the long diagonal and the king comes.}) (1... Kb2 2. Qf6! {The pin on the long diagonal.}) 2. Qc1+ Ka2 3. Qxc2+ {and White wins.}"
+   },
+   "source": {
+    "article": "Queen versus pawn endgame",
+    "oldid": 1377471038,
+    "url": "https://en.wikipedia.org/w/index.php?title=Queen_versus_pawn_endgame&oldid=1377471038"
+   }
+  },
+  {
+   "seq": 27,
+   "order": 33,
+   "part": {
+    "el": "Βασίλισσα",
+    "en": "Queen"
+   },
+   "fen": "8/8/8/8/6K1/6Q1/2p5/3k4 w - - 0 1",
+   "goal": "win",
+   "rating": 1900,
+   "themes": [
+    "zugzwang",
+    "mate"
+   ],
+   "title": {
+    "el": "Η μελέτη του Lolli (1763)",
+    "en": "Lolli’s study (1763)"
+   },
+   "intro": {
+    "el": "Πιόνι του αξιωματικού στην έβδομη: ο μαύρος βασιλιάς ελπίζει στο πατ. Δεν πρέπει να περάσει στην άλλη πλευρά του πιονιού.",
+    "en": "A bishop pawn on the seventh: the black king hopes for stalemate. It must not get to the other side of the pawn."
+   },
+   "summary": {
+    "el": "Με πιόνι του αξιωματικού στην έβδομη η άμυνα του πατ σώζει συνήθως τα μαύρα, εκτός αν ο λευκός βασιλιάς είναι κοντά. Η βασίλισσα κρατά τον μαύρο βασιλιά από τη λάθος πλευρά του πιονιού, ώσπου να πλησιάσει ο βασιλιάς για το ματ.",
+    "en": "With a bishop pawn on the seventh the stalemate defence usually saves Black, unless the white king is close. The queen keeps the black king on the wrong side of the pawn until her king arrives for the mate."
+   },
+   "solution": {
+    "el": "1. Qb3! {Ο μαύρος βασιλιάς δεν πρέπει να φτάσει στην άλλη πλευρά του πιονιού, όπου θα είχε την άμυνα του πατ.} Kd2 2. Qb2 Kd1 3. Kf3! Kd2 (3... c1=Q 4. Qe2# {Ματ.}) (3... c1=N {Υποπροαγωγή σε ίππο.} 4. Ke3 Nb3 5. Qc3 {και ματ στην επόμενη κίνηση.}) 4. Kf2 Kd1 5. Qd4+ Kc1 6. Qb4! {Zugzwang.} Kd1 7. Qe1# {Ματ.}",
+    "en": "1. Qb3! {The black king must be kept from the other side of the pawn, where it would have the stalemate defence.} Kd2 2. Qb2 Kd1 3. Kf3! Kd2 (3... c1=Q 4. Qe2# {Mate.}) (3... c1=N {Underpromotion to a knight.} 4. Ke3 Nb3 5. Qc3 {and mate on the next move.}) 4. Kf2 Kd1 5. Qd4+ Kc1 6. Qb4! {Zugzwang.} Kd1 7. Qe1# {Mate.}"
+   },
+   "source": {
+    "article": "Queen versus pawn endgame",
+    "oldid": 1377471038,
+    "url": "https://en.wikipedia.org/w/index.php?title=Queen_versus_pawn_endgame&oldid=1377471038"
+   }
+  },
+  {
+   "seq": 28,
+   "order": 34,
+   "part": {
+    "el": "Βασίλισσα",
+    "en": "Queen"
+   },
+   "fen": "1k6/1r6/2K5/Q7/8/8/8/8 w - - 0 1",
+   "goal": "win",
+   "rating": 2000,
+   "themes": [
+    "zugzwang"
+   ],
+   "title": {
+    "el": "Βασίλισσα εναντίον πύργου: θέση Philidor",
+    "en": "Queen against rook: the Philidor position"
+   },
+   "intro": {
+    "el": "Με τα μαύρα να παίζουν, ο πύργος χάνεται γρήγορα. Παίζουν όμως τα λευκά.",
+    "en": "With Black to move the rook is soon lost. But it is White to move."
+   },
+   "summary": {
+    "el": "Στη θέση Philidor (Q εναντίον R) ο πύργος χάνεται με διπλή επίθεση ή ματ όταν παίζουν τα μαύρα. Αν παίζουν τα λευκά, η βασίλισσα κάνει τρίγωνο (a5–e5–a1–a5) και δίνει την κίνηση στα μαύρα.",
+    "en": "In the Philidor position (queen against rook) the rook is lost to a fork or mate when Black is to move. With White to move, the queen triangulates (a5–e5–a1–a5) and hands the move to Black."
+   },
+   "solution": {
+    "el": "1. Qe5+ Ka8 2. Qa1+ Kb8 3. Qa5! {Τρίγωνο με τη βασίλισσα: η ίδια θέση, αλλά τώρα παίζουν τα μαύρα και είναι σε zugzwang.} Rb1 (3... Rh7 4. Qe5+ Ka8 5. Qa1+ Kb8 6. Qb1+ Ka7 7. Qxh7+ {Η βασίλισσα κερδίζει τον πύργο με διπλή επίθεση.}) (3... Rb3 4. Qe5+ Ka8 5. Kc7! Rb7+ 6. Kc8 Rb5 7. Qa1+ Ra5 8. Qxa5# {Ματ.}) 4. Qd8+ Ka7 5. Qd4+ Ka8 6. Qh8+ Ka7 7. Qh7+ {Διπλή επίθεση στον βασιλιά και στον πύργο b1: τα λευκά κερδίζουν.}",
+    "en": "1. Qe5+ Ka8 2. Qa1+ Kb8 3. Qa5! {Triangulation with the queen: the same position, but now Black is to move and is in zugzwang.} Rb1 (3... Rh7 4. Qe5+ Ka8 5. Qa1+ Kb8 6. Qb1+ Ka7 7. Qxh7+ {The queen wins the rook with a double attack.}) (3... Rb3 4. Qe5+ Ka8 5. Kc7! Rb7+ 6. Kc8 Rb5 7. Qa1+ Ra5 8. Qxa5# {Mate.}) 4. Qd8+ Ka7 5. Qd4+ Ka8 6. Qh8+ Ka7 7. Qh7+ {A fork of the king and the b1-rook: White wins.}"
+   },
+   "source": {
+    "article": "Philidor position",
+    "oldid": 1356336197,
+    "url": "https://en.wikipedia.org/w/index.php?title=Philidor_position&oldid=1356336197"
+   }
+  },
+  {
+   "seq": 29,
+   "order": 35,
+   "part": {
+    "el": "Μελέτες",
+    "en": "Studies"
+   },
+   "fen": "8/8/1KP5/3r4/8/8/8/k7 w - - 0 1",
+   "goal": "win",
+   "rating": 1900,
+   "themes": [
+    "underPromotion"
+   ],
+   "title": {
+    "el": "Η θέση Saavedra",
+    "en": "The Saavedra position"
+   },
+   "intro": {
+    "el": "Η πιο διάσημη μελέτη φινάλε. Τα λευκά παίζουν και κερδίζουν με πιόνι εναντίον πύργου.",
+    "en": "The most famous endgame study. White to play and win with a pawn against a rook."
+   },
+   "summary": {
+    "el": "Ο βασιλιάς πλησιάζει τον πύργο κλιμακωτά για να σταματήσουν τα σαχ, και στο τέλος η προαγωγή σε πύργο αποφεύγει το πατ και απειλεί ματ. Ο ιερέας Fernando Saavedra βρήκε το 1895 τη νίκη σε θέση που θεωρούνταν ισοπαλία.",
+    "en": "The king approaches the rook in a staircase to stop the checks, and at the end promoting to a rook avoids stalemate and threatens mate. In 1895 the priest Fernando Saavedra found the win in a position thought to be a draw."
+   },
+   "solution": {
+    "el": "1. c7 Rd6+ 2. Kb5 {Αν 2.Kc5, τότε 2...Rd1 με την ιδέα 3...Rc1· αν 2.Kb7?, τότε 2...Rd7 καρφώνει το πιόνι.} Rd5+ (2... Rd2 3. c8=Q Rb2+ 4. Ka4 Ra2+ 5. Kb3 Rb2+ 6. Kc3 {και τα λευκά κερδίζουν.}) 3. Kb4 Rd4+ 4. Kb3 Rd3+ 5. Kc2 Rd4! {Η τελευταία παγίδα: αν 6.c8=Q?, τότε 6...Rc4+! 7.Qxc4 και πατ.} 6. c8=R! {Υποπροαγωγή σε πύργο: απειλεί 7.Ra8#.} Ra4 7. Kb3! {Διπλή απειλή: 8.Rc1# και 8.Kxa4. Τα λευκά κερδίζουν.}",
+    "en": "1. c7 Rd6+ 2. Kb5 {If 2.Kc5, then 2...Rd1 with the idea 3...Rc1; if 2.Kb7?, then 2...Rd7 pins the pawn.} Rd5+ (2... Rd2 3. c8=Q Rb2+ 4. Ka4 Ra2+ 5. Kb3 Rb2+ 6. Kc3 {and White wins.}) 3. Kb4 Rd4+ 4. Kb3 Rd3+ 5. Kc2 Rd4! {The last trick: if 6.c8=Q?, then 6...Rc4+! 7.Qxc4 is stalemate.} 6. c8=R! {Underpromotion to a rook: threatening 7.Ra8#.} Ra4 7. Kb3! {A double threat: 8.Rc1# and 8.Kxa4. White wins.}"
+   },
+   "source": {
+    "article": "Saavedra position",
+    "oldid": 1356337825,
+    "url": "https://en.wikipedia.org/w/index.php?title=Saavedra_position&oldid=1356337825"
+   }
+  },
+  {
+   "seq": 30,
+   "order": 36,
+   "part": {
+    "el": "Μελέτες",
+    "en": "Studies"
+   },
+   "fen": "8/8/2P5/1Pr5/8/8/N7/k2K4 w - - 0 1",
+   "goal": "win",
+   "rating": 2300,
+   "themes": [
+    "underPromotion"
+   ],
+   "title": {
+    "el": "Η μελέτη του Liburkin (1931)",
+    "en": "Liburkin’s study (1931)"
+   },
+   "intro": {
+    "el": "Δεύτερο βραβείο, «Shakhmaty v SSSR», 1931: πάνω στην ιδέα της Saavedra, με δύο υποπροαγωγές.",
+    "en": "Second prize, Shakhmaty v SSSR, 1931: built on the Saavedra idea, with two underpromotions."
+   },
+   "summary": {
+    "el": "Η ιδέα της Saavedra γίνεται πιο πλούσια: δύο άμυνες με πατ, που τις αντικρούουν δύο υποπροαγωγές, σε πύργο και σε αξιωματικό. Όταν η βασίλισσα δίνει πατ, δοκίμασε ένα πιο αδύναμο κομμάτι.",
+    "en": "The Saavedra idea made richer: two stalemate defences, met by two underpromotions, to a rook and to a bishop. When a queen gives stalemate, try a weaker piece."
+   },
+   "solution": {
+    "el": "1. Nc1! {Τα μαύρα έχουν δύο κύριες άμυνες.} Rd5+ (1... Rxb5 2. c7 Rd5+ 3. Nd3! Rxd3+ 4. Kc2 Rd4 5. c8=R! Ra4 6. Kb3 {Η θέση Saavedra!}) (1... Kb2 2. Nd3+ {και ο πύργος πέφτει.}) 2. Kc2 {Όχι 2.Nd3? Rxd3+ 3.Kc2 Rd5! 4.Kc3 Rxb5, ισοπαλία.} Rc5+ 3. Kd3! {Όχι 3.Kd2? Rxb5 4.c7 Rb2+! 5.Kd1 Rc2! 6.Kxc2, πατ.} Rxb5 (3... Rxc1 4. Kd4 {με την ιδέα Kd5 και b6: τα λευκά κερδίζουν.}) 4. c7 Rb8! {Τώρα και το 5.cxb8=Q και το 5.cxb8=R είναι πατ.} 5. cxb8=B! {Μόνο ο αξιωματικός κερδίζει: ακολουθεί το ματ με αξιωματικό και ίππο.}",
+    "en": "1. Nc1! {Black has two main defences.} Rd5+ (1... Rxb5 2. c7 Rd5+ 3. Nd3! Rxd3+ 4. Kc2 Rd4 5. c8=R! Ra4 6. Kb3 {The Saavedra position!}) (1... Kb2 2. Nd3+ {and the rook falls.}) 2. Kc2 {Not 2.Nd3? Rxd3+ 3.Kc2 Rd5! 4.Kc3 Rxb5, drawing.} Rc5+ 3. Kd3! {Not 3.Kd2? Rxb5 4.c7 Rb2+! 5.Kd1 Rc2! 6.Kxc2, stalemate.} Rxb5 (3... Rxc1 4. Kd4 {intending Kd5 and b6: White wins.}) 4. c7 Rb8! {Now both 5.cxb8=Q and 5.cxb8=R are stalemate.} 5. cxb8=B! {Only the bishop wins: the bishop and knight mate follows.}"
+   },
+   "source": {
+    "article": "Saavedra position",
+    "oldid": 1356337825,
+    "url": "https://en.wikipedia.org/w/index.php?title=Saavedra_position&oldid=1356337825"
+   }
+  }
+ ]
+}

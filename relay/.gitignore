@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.wrangler/
+# παράγεται με «npm run types»
+worker-configuration.d.ts

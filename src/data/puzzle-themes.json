@@ -1,0 +1,1014 @@
+{
+ "_note": "Ονόματα και περιγραφές θεμάτων για το Ruru (GPL-3.0-or-later). Τα κλειδιά είναι τα ονόματα της στήλης Themes των αρχείων puzzles. Αγγλικά από το lila: CC0 1.0. Μέρος των ελληνικών από τη μετάφραση του Lichess: οι μεταφραστές του Lichess (https://crowdin.com/project/lichess) και the lila authors, AGPL-3.0-or-later, με αλλαγές για το Ruru 2026-10-26.",
+ "_generated": "2026-10-26",
+ "groups": {
+  "result": {
+   "el": "Αποτέλεσμα",
+   "en": "Result"
+  },
+  "length": {
+   "el": "Μήκος",
+   "en": "Length"
+  },
+  "mate": {
+   "el": "Ματ",
+   "en": "Mate"
+  },
+  "phase": {
+   "el": "Φάση",
+   "en": "Phase"
+  },
+  "endgame": {
+   "el": "Τύπος φινάλε",
+   "en": "Endgame type"
+  },
+  "origin": {
+   "el": "Προέλευση",
+   "en": "Origin"
+  },
+  "motif": {
+   "el": "Μοτίβο",
+   "en": "Motif"
+  },
+  "virtual": {
+   "el": "Επιλογή",
+   "en": "Selection"
+  }
+ },
+ "categories": {
+  "recommended": {
+   "en": "Recommended",
+   "el": "Προτεινόμενα"
+  },
+  "phases": {
+   "en": "Phases",
+   "el": "Φάσεις"
+  },
+  "motifs": {
+   "en": "Motifs",
+   "el": "Μοτίβα"
+  },
+  "advanced": {
+   "en": "Advanced",
+   "el": "Για προχωρημένους"
+  },
+  "mates": {
+   "en": "Mates",
+   "el": "Ματ"
+  },
+  "mateThemes": {
+   "en": "Mate themes",
+   "el": "Θέματα ματ"
+  },
+  "specialMoves": {
+   "en": "Special moves",
+   "el": "Ειδικές κινήσεις"
+  },
+  "goals": {
+   "en": "Goals",
+   "el": "Στόχοι"
+  },
+  "lengths": {
+   "en": "Lengths",
+   "el": "Μήκος τακτικού"
+  },
+  "origin": {
+   "en": "Origin",
+   "el": "Πηγή"
+  }
+ },
+ "difficulty": {
+  "standard": {
+   "delta": 0,
+   "en": "Standard",
+   "el": "Στάνταρ"
+  },
+  "easiest": {
+   "delta": -600,
+   "en": "Easiest",
+   "el": "Πολύ εύκολο"
+  },
+  "easier": {
+   "delta": -300,
+   "en": "Easier",
+   "el": "Εύκολο"
+  },
+  "normal": {
+   "delta": 0,
+   "en": "Normal",
+   "el": "Κανονικό"
+  },
+  "harder": {
+   "delta": 300,
+   "en": "Harder",
+   "el": "Δύσκολο"
+  },
+  "hardest": {
+   "delta": 600,
+   "en": "Hardest",
+   "el": "Πολύ δύσκολο"
+  }
+ },
+ "themes": [
+  {
+   "key": "mate",
+   "bit": 0,
+   "group": "result",
+   "cat": "goals",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Checkmate",
+   "el": "Ματ",
+   "descEn": "Deliver checkmate and win the game.",
+   "descEl": "Δώσε ματ και κέρδισε την παρτίδα."
+  },
+  {
+   "key": "crushing",
+   "bit": 1,
+   "group": "result",
+   "cat": "goals",
+   "weight": "hinting",
+   "dashboard": false,
+   "en": "Crushing",
+   "el": "Συντριπτικό πλεονέκτημα",
+   "descEn": "Find the line that leaves a winning position, usually with a big material gain.",
+   "descEl": "Βρες τη γραμμή που αφήνει κερδισμένη θέση, συνήθως με μεγάλο κέρδος υλικού."
+  },
+  {
+   "key": "advantage",
+   "bit": 2,
+   "group": "result",
+   "cat": "goals",
+   "weight": "hinting",
+   "dashboard": false,
+   "en": "Advantage",
+   "el": "Πλεονέκτημα",
+   "descEn": "Find the line that gives a clear advantage (roughly 2 to 6 pawns by engine evaluation).",
+   "descEl": "Βρες τη γραμμή που δίνει καθαρό πλεονέκτημα (περίπου 2 έως 6 πιόνια κατά τη μηχανή)."
+  },
+  {
+   "key": "equality",
+   "bit": 3,
+   "group": "result",
+   "cat": "goals",
+   "weight": "hinting",
+   "dashboard": false,
+   "en": "Equality",
+   "el": "Ισοφάριση",
+   "descEn": "Save a difficult position: find the line that reaches a draw or a balanced game.",
+   "descEl": "Σώσε μια δύσκολη θέση: βρες τη γραμμή που φέρνει ισοπαλία ή ισορροπία."
+  },
+  {
+   "key": "oneMove",
+   "bit": 4,
+   "group": "length",
+   "cat": "lengths",
+   "weight": "hinting",
+   "dashboard": false,
+   "en": "One-move puzzle",
+   "el": "Τακτικό μιας κίνησης",
+   "descEn": "The solution is a single move.",
+   "descEl": "Η λύση είναι μία μόνο κίνηση."
+  },
+  {
+   "key": "short",
+   "bit": 5,
+   "group": "length",
+   "cat": "lengths",
+   "weight": "hinting",
+   "dashboard": false,
+   "en": "Short puzzle",
+   "el": "Σύντομο τακτικό",
+   "descEn": "The solution has two of your moves.",
+   "descEl": "Η λύση έχει δύο δικές σου κινήσεις."
+  },
+  {
+   "key": "long",
+   "bit": 6,
+   "group": "length",
+   "cat": "lengths",
+   "weight": "hinting",
+   "dashboard": false,
+   "en": "Long puzzle",
+   "el": "Μακρύ τακτικό",
+   "descEn": "The solution has three of your moves.",
+   "descEl": "Η λύση έχει τρεις δικές σου κινήσεις."
+  },
+  {
+   "key": "veryLong",
+   "bit": 7,
+   "group": "length",
+   "cat": "lengths",
+   "weight": "hinting",
+   "dashboard": false,
+   "en": "Very long puzzle",
+   "el": "Πολύ μακρύ τακτικό",
+   "descEn": "The solution has four or more of your moves: it needs deep calculation.",
+   "descEl": "Η λύση έχει τέσσερις ή περισσότερες δικές σου κινήσεις: θέλει μέτρημα σε βάθος."
+  },
+  {
+   "key": "mateIn1",
+   "bit": 8,
+   "group": "mate",
+   "cat": "mates",
+   "weight": "obvious",
+   "dashboard": false,
+   "en": "Mate in 1",
+   "el": "Ματ σε 1",
+   "descEn": "Checkmate in one move.",
+   "descEl": "Ματ με μία κίνηση."
+  },
+  {
+   "key": "mateIn2",
+   "bit": 9,
+   "group": "mate",
+   "cat": "mates",
+   "weight": "hinting",
+   "dashboard": false,
+   "en": "Mate in 2",
+   "el": "Ματ σε 2",
+   "descEn": "Checkmate in two moves.",
+   "descEl": "Ματ σε δύο κινήσεις."
+  },
+  {
+   "key": "mateIn3",
+   "bit": 10,
+   "group": "mate",
+   "cat": "mates",
+   "weight": "hinting",
+   "dashboard": false,
+   "en": "Mate in 3",
+   "el": "Ματ σε 3",
+   "descEn": "Checkmate in three moves.",
+   "descEl": "Ματ σε τρεις κινήσεις."
+  },
+  {
+   "key": "mateIn4",
+   "bit": 11,
+   "group": "mate",
+   "cat": "mates",
+   "weight": "hinting",
+   "dashboard": false,
+   "en": "Mate in 4",
+   "el": "Ματ σε 4",
+   "descEn": "Checkmate in four moves.",
+   "descEl": "Ματ σε τέσσερις κινήσεις."
+  },
+  {
+   "key": "mateIn5",
+   "bit": 12,
+   "group": "mate",
+   "cat": "mates",
+   "weight": "hinting",
+   "dashboard": false,
+   "en": "Mate in 5 or more",
+   "el": "Ματ σε 5 ή περισσότερο",
+   "descEn": "Checkmate in five or more moves: a long calculation to the end.",
+   "descEl": "Ματ σε πέντε ή περισσότερες κινήσεις: μακρύς υπολογισμός ως το τέλος."
+  },
+  {
+   "key": "opening",
+   "bit": 13,
+   "group": "phase",
+   "cat": "phases",
+   "weight": "neutral",
+   "dashboard": true,
+   "en": "Opening",
+   "el": "Άνοιγμα",
+   "descEn": "A tactic in the opening, during the first moves of the game.",
+   "descEl": "Τακτικό στο άνοιγμα, στις πρώτες κινήσεις της παρτίδας."
+  },
+  {
+   "key": "middlegame",
+   "bit": 14,
+   "group": "phase",
+   "cat": "phases",
+   "weight": "neutral",
+   "dashboard": true,
+   "en": "Middlegame",
+   "el": "Μέσο παιχνίδι",
+   "descEn": "A tactic in the middlegame, with many pieces still on the board.",
+   "descEl": "Τακτικό στο μέσο παιχνίδι, με πολλά κομμάτια ακόμη στη σκακιέρα."
+  },
+  {
+   "key": "endgame",
+   "bit": 15,
+   "group": "phase",
+   "cat": "phases",
+   "weight": "neutral",
+   "dashboard": true,
+   "en": "Endgame",
+   "el": "Φινάλε",
+   "descEn": "A tactic in the endgame, with few pieces left on the board.",
+   "descEl": "Τακτικό στο φινάλε, με λίγα κομμάτια στη σκακιέρα."
+  },
+  {
+   "key": "rookEndgame",
+   "bit": 16,
+   "group": "endgame",
+   "cat": "phases",
+   "weight": "neutral",
+   "dashboard": true,
+   "en": "Rook endgame",
+   "el": "Φινάλε πύργων",
+   "descEn": "An endgame with only rooks and pawns.",
+   "descEl": "Φινάλε με μόνο πύργους και πιόνια."
+  },
+  {
+   "key": "bishopEndgame",
+   "bit": 17,
+   "group": "endgame",
+   "cat": "phases",
+   "weight": "neutral",
+   "dashboard": true,
+   "en": "Bishop endgame",
+   "el": "Φινάλε αξιωματικών",
+   "descEn": "An endgame with only bishops and pawns.",
+   "descEl": "Φινάλε με μόνο αξιωματικούς και πιόνια."
+  },
+  {
+   "key": "pawnEndgame",
+   "bit": 18,
+   "group": "endgame",
+   "cat": "phases",
+   "weight": "neutral",
+   "dashboard": true,
+   "en": "Pawn endgame",
+   "el": "Φινάλε πιονιών",
+   "descEn": "An endgame with only kings and pawns.",
+   "descEl": "Φινάλε με μόνο βασιλιάδες και πιόνια."
+  },
+  {
+   "key": "knightEndgame",
+   "bit": 19,
+   "group": "endgame",
+   "cat": "phases",
+   "weight": "neutral",
+   "dashboard": true,
+   "en": "Knight endgame",
+   "el": "Φινάλε ίππων",
+   "descEn": "An endgame with only knights and pawns.",
+   "descEl": "Φινάλε με μόνο ίππους και πιόνια."
+  },
+  {
+   "key": "queenEndgame",
+   "bit": 20,
+   "group": "endgame",
+   "cat": "phases",
+   "weight": "neutral",
+   "dashboard": true,
+   "en": "Queen endgame",
+   "el": "Φινάλε βασιλισσών",
+   "descEn": "An endgame with only queens and pawns.",
+   "descEl": "Φινάλε με μόνο βασίλισσες και πιόνια."
+  },
+  {
+   "key": "queenRookEndgame",
+   "bit": 21,
+   "group": "endgame",
+   "cat": "phases",
+   "weight": "neutral",
+   "dashboard": true,
+   "en": "Queen and rook endgame",
+   "el": "Φινάλε βασίλισσας και πύργου",
+   "descEn": "An endgame with only queens, rooks and pawns.",
+   "descEl": "Φινάλε με μόνο βασίλισσες, πύργους και πιόνια."
+  },
+  {
+   "key": "master",
+   "bit": 22,
+   "group": "origin",
+   "cat": "origin",
+   "weight": "neutral",
+   "dashboard": false,
+   "en": "Master games",
+   "el": "Παρτίδες τιτλούχων",
+   "descEn": "Positions from games with at least one titled player.",
+   "descEl": "Θέσεις από παρτίδες όπου έπαιζε τουλάχιστον ένας τιτλούχος."
+  },
+  {
+   "key": "masterVsMaster",
+   "bit": 23,
+   "group": "origin",
+   "cat": "origin",
+   "weight": "neutral",
+   "dashboard": false,
+   "en": "Master vs Master games",
+   "el": "Τιτλούχος εναντίον τιτλούχου",
+   "descEn": "Positions from games between two titled players.",
+   "descEl": "Θέσεις από παρτίδες ανάμεσα σε δύο τιτλούχους."
+  },
+  {
+   "key": "superGM",
+   "bit": 24,
+   "group": "origin",
+   "cat": "origin",
+   "weight": "neutral",
+   "dashboard": true,
+   "en": "Super GM games",
+   "el": "Παρτίδες κορυφαίων GM",
+   "descEn": "Positions from games of the strongest grandmasters.",
+   "descEl": "Θέσεις από παρτίδες των ισχυρότερων γκρανμέτρ."
+  },
+  {
+   "key": "advancedPawn",
+   "bit": 25,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Advanced pawn",
+   "el": "Προχωρημένο πιόνι",
+   "descEn": "A pawn close to promotion decides the position.",
+   "descEl": "Ένα πιόνι κοντά στην προαγωγή κρίνει τη θέση."
+  },
+  {
+   "key": "attackingF2F7",
+   "bit": 26,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Attacking f2 or f7",
+   "el": "Επίθεση στο f2 ή f7",
+   "descEn": "An attack on the weak f2 or f7 square next to the uncastled king.",
+   "descEl": "Επίθεση στο αδύναμο f2 ή f7, δίπλα στον βασιλιά που δεν έχει κάνει ροκέ."
+  },
+  {
+   "key": "capturingDefender",
+   "bit": 27,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Capture the defender",
+   "el": "Κατάργηση της άμυνας",
+   "descEn": "Take or chase away the piece that guards something, then win what it was guarding.",
+   "descEl": "Πάρε ή διώξε το κομμάτι που προστατεύει κάτι και κέρδισε αυτό που προστάτευε."
+  },
+  {
+   "key": "discoveredAttack",
+   "bit": 28,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Discovered attack",
+   "el": "Αποκάλυψη",
+   "descEn": "A piece moves out of another one's line and uncovers an attack behind it.",
+   "descEl": "Ένα κομμάτι φεύγει από τη γραμμή ενός άλλου και ανοίγει επίθεση πίσω του."
+  },
+  {
+   "key": "doubleCheck",
+   "bit": 29,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Double check",
+   "el": "Διπλό σαχ",
+   "descEn": "Check from two pieces at once: the king has to move.",
+   "descEl": "Σαχ από δύο κομμάτια μαζί: ο βασιλιάς πρέπει να κινηθεί."
+  },
+  {
+   "key": "exposedKing",
+   "bit": 30,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Exposed king",
+   "el": "Ευάλωτος βασιλιάς",
+   "descEn": "The king has few defenders and comes under attack.",
+   "descEl": "Ο βασιλιάς έχει λίγους υπερασπιστές και δέχεται επίθεση."
+  },
+  {
+   "key": "fork",
+   "bit": 31,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Fork",
+   "el": "Πιρούνι",
+   "descEn": "One piece attacks two or more targets at the same time.",
+   "descEl": "Ένα κομμάτι επιτίθεται ταυτόχρονα σε δύο ή περισσότερους στόχους."
+  },
+  {
+   "key": "hangingPiece",
+   "bit": 32,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Hanging piece",
+   "el": "Αφύλακτο κομμάτι",
+   "descEn": "An opponent's piece is left undefended or not defended enough.",
+   "descEl": "Ένα κομμάτι του αντιπάλου έμεινε αφύλακτο ή χωρίς αρκετή προστασία."
+  },
+  {
+   "key": "kingsideAttack",
+   "bit": 33,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Kingside attack",
+   "el": "Επίθεση στην πλευρά του βασιλιά",
+   "descEn": "An attack on a king that castled kingside.",
+   "descEl": "Επίθεση στον βασιλιά που έκανε μικρό ροκέ."
+  },
+  {
+   "key": "pin",
+   "bit": 34,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Pin",
+   "el": "Κάρφωμα",
+   "descEn": "A piece cannot move without exposing something more valuable behind it.",
+   "descEl": "Ένα κομμάτι δεν μπορεί να κινηθεί χωρίς να εκθέσει κάτι πολυτιμότερο πίσω του."
+  },
+  {
+   "key": "queensideAttack",
+   "bit": 35,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Queenside attack",
+   "el": "Επίθεση στην πλευρά της βασίλισσας",
+   "descEn": "An attack on a king that castled queenside.",
+   "descEl": "Επίθεση στον βασιλιά που έκανε μεγάλο ροκέ."
+  },
+  {
+   "key": "sacrifice",
+   "bit": 36,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Sacrifice",
+   "el": "Θυσία",
+   "descEn": "Give up material to gain more a few moves later.",
+   "descEl": "Δίνεις υλικό για να πάρεις περισσότερα λίγες κινήσεις αργότερα."
+  },
+  {
+   "key": "skewer",
+   "bit": 37,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Skewer",
+   "el": "Σούβλα",
+   "descEn": "Attack a valuable piece; once it moves, another piece behind it is exposed.",
+   "descEl": "Επίθεση σε πολύτιμο κομμάτι· μόλις φύγει, μένει εκτεθειμένο ένα άλλο πίσω του."
+  },
+  {
+   "key": "trappedPiece",
+   "bit": 38,
+   "group": "motif",
+   "cat": "motifs",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Trapped piece",
+   "el": "Παγιδευμένο κομμάτι",
+   "descEn": "A piece has no safe square left and is lost.",
+   "descEl": "Ένα κομμάτι δεν έχει ασφαλές τετράγωνο και χάνεται."
+  },
+  {
+   "key": "attraction",
+   "bit": 39,
+   "group": "motif",
+   "cat": "advanced",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Attraction",
+   "el": "Έλξη",
+   "descEn": "A sacrifice or exchange that lures an opponent's piece onto a bad square.",
+   "descEl": "Θυσία ή αλλαγή που τραβά ένα κομμάτι του αντιπάλου σε κακό τετράγωνο."
+  },
+  {
+   "key": "clearance",
+   "bit": 40,
+   "group": "motif",
+   "cat": "advanced",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Clearance",
+   "el": "Εκκένωση",
+   "descEn": "A move that vacates a square or line so that another piece can use it.",
+   "descEl": "Κίνηση που αδειάζει τετράγωνο ή γραμμή για να το χρησιμοποιήσει άλλο κομμάτι."
+  },
+  {
+   "key": "collinearMove",
+   "bit": 41,
+   "group": "motif",
+   "cat": "advanced",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Collinear move",
+   "el": "Συγγραμμική κίνηση",
+   "descEn": "Two opposing pieces stand on the same line; one slides along it without capturing the other.",
+   "descEl": "Δύο αντίπαλα κομμάτια στέκονται στην ίδια γραμμή· το ένα γλιστρά πάνω της χωρίς να πάρει το άλλο."
+  },
+  {
+   "key": "discoveredCheck",
+   "bit": 42,
+   "group": "motif",
+   "cat": "advanced",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Discovered check",
+   "el": "Σαχ με αποκάλυψη",
+   "descEn": "A piece moves away and uncovers a check from the piece behind it.",
+   "descEl": "Ένα κομμάτι φεύγει και αποκαλύπτει σαχ από το κομμάτι πίσω του."
+  },
+  {
+   "key": "defensiveMove",
+   "bit": 43,
+   "group": "motif",
+   "cat": "advanced",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Defensive move",
+   "el": "Αμυντική κίνηση",
+   "descEn": "The right move is a defensive one: it stops the threat, otherwise you lose.",
+   "descEl": "Η σωστή κίνηση είναι αμυντική: σταματά την απειλή, αλλιώς χάνεις."
+  },
+  {
+   "key": "deflection",
+   "bit": 44,
+   "group": "motif",
+   "cat": "advanced",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Deflection",
+   "el": "Εκτροπή",
+   "descEn": "Force a piece to abandon an important square or duty.",
+   "descEl": "Αναγκάζεις ένα κομμάτι να εγκαταλείψει ένα σημαντικό τετράγωνο ή καθήκον."
+  },
+  {
+   "key": "interference",
+   "bit": 45,
+   "group": "motif",
+   "cat": "advanced",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Interference",
+   "el": "Παρεμβολή",
+   "descEn": "A piece steps between two enemy pieces and cuts their connection.",
+   "descEl": "Ένα κομμάτι μπαίνει ανάμεσα σε δύο κομμάτια του αντιπάλου και κόβει τη σύνδεσή τους."
+  },
+  {
+   "key": "intermezzo",
+   "bit": 46,
+   "group": "motif",
+   "cat": "advanced",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Intermezzo",
+   "el": "Ενδιάμεση κίνηση",
+   "descEn": "Instead of the expected move, first play another one that forces the opponent.",
+   "descEl": "Αντί για την αναμενόμενη κίνηση, πρώτα μια άλλη που αναγκάζει τον αντίπαλο."
+  },
+  {
+   "key": "quietMove",
+   "bit": 47,
+   "group": "motif",
+   "cat": "advanced",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Quiet move",
+   "el": "Ήσυχη κίνηση",
+   "descEn": "A move without check or capture that prepares a threat that cannot be parried.",
+   "descEl": "Κίνηση χωρίς σαχ ή αλλαγή, που ετοιμάζει απειλή που δεν αποκρούεται."
+  },
+  {
+   "key": "xRayAttack",
+   "bit": 48,
+   "group": "motif",
+   "cat": "advanced",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "X-Ray attack",
+   "el": "Ακτίνες Χ",
+   "descEn": "A piece attacks or defends a square through an enemy piece.",
+   "descEl": "Ένα κομμάτι επιτίθεται ή προστατεύει ένα τετράγωνο μέσα από κομμάτι του αντιπάλου."
+  },
+  {
+   "key": "zugzwang",
+   "bit": 49,
+   "group": "motif",
+   "cat": "advanced",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Zugzwang",
+   "el": "Τσούγκτσβανγκ",
+   "descEn": "The opponent would rather pass: every move makes the position worse.",
+   "descEl": "Ο αντίπαλος θα ήθελε να μην παίξει: κάθε κίνησή του χειροτερεύει τη θέση."
+  },
+  {
+   "key": "castling",
+   "bit": 50,
+   "group": "motif",
+   "cat": "specialMoves",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Castling",
+   "el": "Ροκέ",
+   "descEn": "Castling is part of the solution.",
+   "descEl": "Το ροκέ είναι μέρος της λύσης."
+  },
+  {
+   "key": "enPassant",
+   "bit": 51,
+   "group": "motif",
+   "cat": "specialMoves",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "En passant",
+   "el": "Εν διελεύσει",
+   "descEn": "The solution includes an en passant capture.",
+   "descEl": "Η λύση έχει αλλαγή εν διελεύσει."
+  },
+  {
+   "key": "promotion",
+   "bit": 52,
+   "group": "motif",
+   "cat": "specialMoves",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Promotion",
+   "el": "Προαγωγή",
+   "descEn": "A pawn promotes or threatens to promote.",
+   "descEl": "Ένα πιόνι προάγεται ή απειλεί να προαχθεί."
+  },
+  {
+   "key": "underPromotion",
+   "bit": 53,
+   "group": "motif",
+   "cat": "specialMoves",
+   "weight": "hinting",
+   "dashboard": true,
+   "en": "Underpromotion",
+   "el": "Υποπροαγωγή",
+   "descEn": "Promotion to a knight, bishop or rook instead of a queen.",
+   "descEl": "Προαγωγή σε ίππο, αξιωματικό ή πύργο αντί για βασίλισσα."
+  },
+  {
+   "key": "anastasiaMate",
+   "bit": 54,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Anastasia's mate",
+   "el": "Το ματ της Αναστασίας",
+   "descEn": "A knight and a rook (or queen) trap the king on the edge of the board, behind one of its own pieces.",
+   "descEl": "Ίππος και πύργος (ή βασίλισσα) κλείνουν τον βασιλιά στην άκρη της σκακιέρας, πίσω από δικό του κομμάτι."
+  },
+  {
+   "key": "arabianMate",
+   "bit": 55,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Arabian mate",
+   "el": "Αραβικό ματ",
+   "descEn": "A knight and a rook mate the king in a corner.",
+   "descEl": "Ίππος και πύργος δίνουν ματ στον βασιλιά στη γωνία."
+  },
+  {
+   "key": "backRankMate",
+   "bit": 56,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Back rank mate",
+   "el": "Ματ τελευταίας γραμμής",
+   "descEn": "Mate on the opponent's back rank, where their own pawns box the king in.",
+   "descEl": "Ματ στην πρώτη γραμμή του αντιπάλου, όπου τα δικά του πιόνια κλείνουν τον βασιλιά."
+  },
+  {
+   "key": "balestraMate",
+   "bit": 57,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Balestra mate",
+   "el": "Ματ-βαλλίστρα",
+   "descEn": "The bishop gives mate from a distance and the queen covers the remaining escape squares.",
+   "descEl": "Ο αξιωματικός δίνει ματ από απόσταση και η βασίλισσα κλείνει τα υπόλοιπα τετράγωνα διαφυγής."
+  },
+  {
+   "key": "blindSwineMate",
+   "bit": 58,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Blind Swine mate",
+   "el": "Ματ «γουρούνια στην 7η»",
+   "descEn": "Two rooks work together to mate the king inside a 2×2 area, usually on the seventh rank.",
+   "descEl": "Δύο πύργοι μαζί κλείνουν τον βασιλιά σε χώρο 2×2 και δίνουν ματ, συνήθως στην έβδομη γραμμή."
+  },
+  {
+   "key": "bodenMate",
+   "bit": 59,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Boden's mate",
+   "el": "Ματ του Boden",
+   "descEn": "Two bishops on crossing diagonals mate a king hemmed in by its own pieces.",
+   "descEl": "Δύο αξιωματικοί σε διασταυρούμενες διαγώνιους δίνουν ματ σε βασιλιά που κλείνουν τα δικά του κομμάτια."
+  },
+  {
+   "key": "cornerMate",
+   "bit": 60,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Corner mate",
+   "el": "Ματ στη γωνία",
+   "descEn": "A rook or queen holds the king in the corner and a knight gives the mate.",
+   "descEl": "Πύργος ή βασίλισσα κλείνει τον βασιλιά στη γωνία και ο ίππος δίνει το ματ."
+  },
+  {
+   "key": "doubleBishopMate",
+   "bit": 61,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Double bishop mate",
+   "el": "Ματ με δύο αξιωματικούς",
+   "descEn": "Two bishops on neighbouring diagonals give mate.",
+   "descEl": "Δύο αξιωματικοί σε γειτονικές διαγώνιους δίνουν ματ."
+  },
+  {
+   "key": "dovetailMate",
+   "bit": 62,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Dovetail mate",
+   "el": "Ματ «ουρά περιστεριού»",
+   "descEn": "The queen mates from an adjacent square; the king's two escape squares are taken by its own pieces.",
+   "descEl": "Η βασίλισσα δίνει ματ από γειτονικό τετράγωνο· τα δύο τετράγωνα διαφυγής του βασιλιά τα πιάνουν δικά του κομμάτια."
+  },
+  {
+   "key": "epauletteMate",
+   "bit": 63,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Epaulette mate",
+   "el": "Ματ των επωμίδων",
+   "descEn": "The king's two side escape squares are blocked by its own pieces, like epaulettes.",
+   "descEl": "Τα δύο πλαϊνά τετράγωνα διαφυγής του βασιλιά τα πιάνουν δικά του κομμάτια, σαν επωμίδες."
+  },
+  {
+   "key": "hookMate",
+   "bit": 64,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Hook mate",
+   "el": "Ματ με αγκίστρι",
+   "descEn": "Rook, knight and pawn together; an enemy pawn blocks the king's escape.",
+   "descEl": "Πύργος, ίππος και πιόνι μαζί· ένα πιόνι του αντιπάλου κλείνει τη διαφυγή του βασιλιά."
+  },
+  {
+   "key": "killBoxMate",
+   "bit": 65,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Kill box mate",
+   "el": "Ματ «κουτί»",
+   "descEn": "A rook beside the king, backed by the queen that also covers the escape: the king is caught in a 3×3 box.",
+   "descEl": "Πύργος δίπλα στον βασιλιά, με στήριξη της βασίλισσας που κλείνει και τη διαφυγή: ο βασιλιάς πιάνεται σε κουτί 3×3."
+  },
+  {
+   "key": "pillsburysMate",
+   "bit": 66,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Pillsbury's mate",
+   "el": "Ματ του Pillsbury",
+   "descEn": "The rook gives mate while a bishop helps box the king in.",
+   "descEl": "Ο πύργος δίνει ματ και ο αξιωματικός βοηθά να κλειστεί ο βασιλιάς."
+  },
+  {
+   "key": "morphysMate",
+   "bit": 67,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Morphy's mate",
+   "el": "Ματ του Morphy",
+   "descEn": "The bishop gives mate while a rook helps box the king in.",
+   "descEl": "Ο αξιωματικός δίνει ματ και ο πύργος βοηθά να κλειστεί ο βασιλιάς."
+  },
+  {
+   "key": "operaMate",
+   "bit": 68,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Opera mate",
+   "el": "Ματ της όπερας",
+   "descEn": "A rook mates on the back rank, supported by a bishop.",
+   "descEl": "Πύργος δίνει ματ στην πρώτη γραμμή, με τη στήριξη αξιωματικού."
+  },
+  {
+   "key": "swallowstailMate",
+   "bit": 69,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Swallow's tail mate",
+   "el": "Ματ χελιδονοουράς",
+   "descEn": "A mate where the pieces around the king form a V shape, like a swallow's tail.",
+   "descEl": "Ματ όπου τα κομμάτια γύρω από τον βασιλιά σχηματίζουν ένα «V», σαν ουρά χελιδονιού."
+  },
+  {
+   "key": "triangleMate",
+   "bit": 70,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Triangle mate",
+   "el": "Τριγωνικό ματ",
+   "descEn": "Queen and rook on the same rank or file, one square apart, form a triangle with the king and mate it.",
+   "descEl": "Βασίλισσα και πύργος στην ίδια γραμμή ή στήλη, με ένα τετράγωνο ανάμεσα, σχηματίζουν τρίγωνο με τον βασιλιά και δίνουν ματ."
+  },
+  {
+   "key": "vukovicMate",
+   "bit": 71,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Vuković mate",
+   "el": "Ματ του Vukovic",
+   "descEn": "The rook mates with support from a third piece while the knight covers the escape squares.",
+   "descEl": "Ο πύργος δίνει ματ με στήριξη τρίτου κομματιού και ο ίππος κόβει τα τετράγωνα διαφυγής."
+  },
+  {
+   "key": "smotheredMate",
+   "bit": 72,
+   "group": "mate",
+   "cat": "mateThemes",
+   "weight": "obvious",
+   "dashboard": true,
+   "en": "Smothered mate",
+   "el": "Ματ αποπνιγμού",
+   "descEn": "A knight mates a king surrounded by its own pieces.",
+   "descEl": "Ίππος δίνει ματ σε βασιλιά που τον περικυκλώνουν τα δικά του κομμάτια."
+  },
+  {
+   "key": "mix",
+   "bit": null,
+   "group": "virtual",
+   "cat": "recommended",
+   "weight": "mix",
+   "dashboard": false,
+   "en": "Healthy mix",
+   "el": "Προτεινόμενο μίγμα",
+   "descEn": "A bit of everything, as in real games: you never know which theme comes next.",
+   "descEl": "Λίγο από όλα, όπως στις πραγματικές παρτίδες: δεν ξέρεις ποιο θέμα έρχεται."
+  },
+  {
+   "key": "playerGames",
+   "bit": null,
+   "group": "virtual",
+   "cat": "recommended",
+   "weight": "mix",
+   "dashboard": false,
+   "en": "Player games",
+   "el": "Παρτίδες παίκτη",
+   "descEn": "Positions from one player's games.",
+   "descEl": "Θέσεις από τις παρτίδες ενός παίκτη."
+  }
+ ]
+}

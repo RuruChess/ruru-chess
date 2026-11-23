@@ -1,0 +1,396 @@
+/* «Παίξε με φίλο»: η καρτέλα του Ruru και η σελίδα του φίλου (relay/web). Πάνω στα στυλ του play.css. */
+
+.tx .ol-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-3);
+  opacity: 0.45;
+  flex: none;
+}
+.tx .ol-dot.is-on {
+  background: var(--ok);
+  opacity: 1;
+}
+.tx .ol-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tx .ol-conn {
+  flex: none;
+  color: var(--text-3);
+}
+.tx .ol-warn {
+  color: var(--danger);
+  font-weight: var(--fw-semibold);
+}
+.tx .ol-offer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--accent);
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+  font-weight: var(--fw-semibold);
+}
+.tx .ol-offer > span {
+  flex: 1 1 160px;
+}
+.tx .ol-wait {
+  padding: var(--pad);
+}
+
+/* ---- κοινή ανάλυση (πάνελ στο παράθυρο της παρτίδας και στη σελίδα /a/<id>) ---- */
+.sa-panel {
+  display: grid;
+  gap: 6px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  font-size: 13px;
+}
+.sa-head {
+  display: grid;
+  gap: 6px;
+}
+.sa-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.sa-ic {
+  color: var(--accent);
+  flex: none;
+}
+.sa-panel .ol-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+}
+.sa-spacer {
+  flex: 1;
+}
+.sa-link,
+.sa-input {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+.sa-btn,
+.sa-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.sa-icon-btn {
+  padding: 0 6px;
+  border-color: transparent;
+  background: none;
+}
+.sa-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.sa-status {
+  color: var(--text-2);
+}
+.sa-status.is-error {
+  color: var(--danger);
+  font-weight: 600;
+}
+.sa-follow {
+  cursor: pointer;
+  color: var(--text-2);
+  user-select: none;
+}
+.sa-toggle {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.sa-chat {
+  display: grid;
+  gap: 6px;
+}
+.sa-chat-list {
+  max-height: 140px;
+  overflow: auto;
+  display: grid;
+  align-content: start;
+  gap: 3px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+}
+.sa-msg {
+  overflow-wrap: anywhere;
+}
+.sa-emojis {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+  gap: 2px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+}
+.sa-emoji {
+  height: 32px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.sa-emoji:hover {
+  background: var(--hover, rgba(127, 127, 127, 0.15));
+}
+.sa-emoji-btn {
+  font-size: 16px;
+  line-height: 1;
+}
+.sa-emoji-btn.on {
+  background: var(--hover, rgba(127, 127, 127, 0.15));
+}
+.sa-msg.me b {
+  color: var(--accent);
+}
+.sa-engine {
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  font-size: 13px;
+}
+.sa-line {
+  display: flex;
+  gap: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.sa-line b {
+  min-width: 48px;
+}
+/* σελίδα του καλεσμένου στην κοινή ανάλυση */
+.sa-main {
+  --B: min(calc(100vh - var(--topbar-h, 52px) - 90px), 56vw);
+  display: grid;
+  grid-template-columns: var(--B) minmax(320px, 440px);
+  gap: 20px;
+  justify-content: center;
+  padding: 16px;
+}
+.sa-boardcol {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+.sa-board {
+  width: var(--B);
+  aspect-ratio: 1;
+}
+.sa-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.sa-side {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-width: 0;
+}
+.sa-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.sa-card.sa-panel {
+  border-bottom: 1px solid var(--line);
+}
+.sa-card > .sa-chat {
+  padding: 8px 10px;
+}
+.sa-notes .notation-wrap {
+  max-height: 46vh;
+  border-bottom: 0;
+}
+.sa-players {
+  padding: 8px 14px 0;
+  font-weight: 600;
+}
+.sa-tools {
+  display: flex;
+  gap: 2px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--line);
+}
+.sa-icon-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.sa-board {
+  position: relative;
+}
+.sa-tools {
+  flex-wrap: wrap;
+  align-items: center;
+}
+.sa-sep {
+  width: 1px;
+  height: 18px;
+  margin: 0 4px;
+  background: var(--line);
+}
+.sa-nag {
+  min-width: 28px;
+  height: 26px;
+  padding: 0 5px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.sa-nag:hover:not(:disabled) {
+  background: var(--hover, rgba(127, 127, 127, 0.15));
+}
+.sa-nag.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.sa-nag:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.sa-tools.sa-evals {
+  padding-top: 0;
+}
+@media (max-width: 900px) {
+  .sa-main {
+    --B: min(calc(100vw - 24px), 640px);
+    grid-template-columns: var(--B);
+    padding: 12px;
+  }
+}
+
+/* ---- σελίδα του φίλου ---- */
+.ol-page {
+  height: 100%;
+  overflow: auto;
+  --topbar-h: 52px;
+  --statusbar-h: 0px;
+}
+.ol-page .tx {
+  min-height: 100%;
+}
+.ol-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: var(--topbar-h);
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  font-weight: var(--fw-semibold);
+}
+.ol-top img {
+  width: 26px;
+  height: 26px;
+}
+.ol-top .ol-spacer {
+  flex: 1;
+}
+.ol-join {
+  display: grid;
+  gap: 14px;
+  width: min(420px, 100% - 32px);
+  margin: 48px auto;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.ol-join h1 {
+  margin: 0;
+  font-size: 22px;
+}
+.ol-join .input {
+  height: 38px;
+  font-size: 15px;
+}
+
+/* κινητό / στενό παράθυρο: σκακιέρα πάνω, πλάι από κάτω */
+@media (max-width: 900px) {
+  .ol-page .tx-main {
+    --B: min(calc(100vw - 2 * var(--pad)), calc(100vh - var(--topbar-h) - 2 * var(--pad) - 104px));
+    grid-template-columns: var(--B);
+    gap: 16px;
+  }
+  .ol-page .tx {
+    --pad: 12px;
+  }
+  .ol-page .tx-side {
+    overflow: visible;
+  }
+}
+@media (max-width: 600px) {
+  .ol-page .tx-main {
+    --B: calc(100vw - 2 * var(--pad));
+  }
+}
+
+/* όροι και απόρρητο στη σελίδα του relay */
+.ol-legal {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 16px;
+  line-height: 1.5;
+}
+.ol-legal pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ol-legal details {
+  margin: 8px 0;
+}
+.ol-legal summary {
+  cursor: pointer;
+}
+.ol-legal ul {
+  padding-left: 20px;
+}

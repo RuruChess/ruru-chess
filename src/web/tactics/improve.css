@@ -1,0 +1,457 @@
+/*
+ * «Βελτίωση» στο νέο σχέδιο (21/11/2026): μία σειρά πλοήγησης (σελίδες · τρόποι · εργαλεία) και, στα Τακτικά,
+ * η οθόνη έναρξης και η κάρτα λύσης. Πρόθεμα `imp-` για τη σειρά, `tk-` για τα Τακτικά.
+ * Η ρίζα των Τακτικών είναι `.tx.txk`: κρατά τους κανόνες του `.tx` αλλά παίρνει τα tokens του `styles.css`.
+ */
+
+/* ---- σειρά πλοήγησης ---- */
+.imp-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  height: 56px;
+  padding: 0 var(--sp-6);
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  flex: none;
+  min-width: 0;
+}
+.imp-nav .kb-sgc.imp-sections {
+  flex: none;
+}
+.imp-nav .kb-sgc.imp-sections > button {
+  flex: none;
+  height: 32px;
+}
+.imp-slot {
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  gap: var(--sp-4);
+  flex: 1;
+  min-width: 0;
+}
+.imp-slot:empty {
+  display: none;
+}
+/* ο φάκελος με τα tokens του `.tx` δεν φτιάχνει δικό του κουτί */
+.imp-nav .tx.imp-bar {
+  display: contents;
+}
+.imp-vr {
+  flex: none;
+  width: 1px;
+  height: 28px;
+  background: var(--border);
+}
+.imp-modes {
+  display: flex;
+  align-self: stretch;
+  gap: 2px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.imp-modes > button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 0 12px;
+  border: 0;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: none;
+  color: var(--text-2);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+}
+.imp-modes > button:hover:not(:disabled) {
+  background: none;
+  color: var(--text);
+}
+.imp-modes > button[aria-pressed='true'] {
+  border-bottom-color: var(--accent);
+  color: var(--accent-text);
+}
+.imp-modes > button > svg {
+  width: 14px;
+  height: 14px;
+}
+.imp-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  line-height: 1;
+}
+.imp-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  flex: none;
+  margin-left: auto;
+}
+.imp-tools .kb-btn[aria-pressed='true'] {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+/* μέσα στη σελίδα (Φινάλε → ασκήσεις): χωρίς τον διακόπτη σελίδων */
+.tx .imp-nav.imp-sub {
+  height: var(--txbar);
+  background: var(--bg);
+}
+.imp-sub .imp-vr {
+  display: none;
+}
+/* στη σειρά της «Βελτίωσης» η σελίδα δεν έχει δική της μπάρα */
+.tx.txk.tk-slotted {
+  --txbar: 0px;
+}
+@media (max-width: 1600px) {
+  .imp-tools .imp-lbl {
+    display: none;
+  }
+}
+@media (max-width: 1200px) {
+  .imp-nav {
+    gap: var(--sp-3);
+    padding: 0 var(--sp-4);
+  }
+  .imp-modes > button {
+    padding: 0 8px;
+    font-size: var(--fs-sm);
+  }
+  .imp-modes > button > svg {
+    display: none;
+  }
+  .imp-nav .kb-sgc.imp-sections .imp-lbl {
+    display: none;
+  }
+}
+
+/* ---- Τακτικά: οθόνη έναρξης ---- */
+.txk .tk-start {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--sp-10) var(--sp-8) 56px;
+  line-height: 1.5;
+}
+.tk-start-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--sp-6);
+  align-items: start;
+  max-width: 1176px;
+  margin: 0 auto;
+}
+.tk-start-grid.one {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 812px;
+}
+.txk .tk-start-card .tk-av {
+  width: 48px;
+  height: 48px;
+}
+.tk-start-card .tk-av > svg {
+  width: 24px;
+  height: 24px;
+}
+.txk .tk-start-card .kb-card-head > div > b {
+  font-size: var(--fs-xl);
+}
+.tk-lvh {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sp-3);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-2);
+}
+.tk-lvh > span + span {
+  font-weight: var(--fw-regular);
+  color: var(--muted);
+}
+.tk-levels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.txk .tk-lv {
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  gap: var(--sp-1);
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--panel);
+  color: var(--text);
+  text-align: left;
+  white-space: normal;
+}
+.txk .tk-lv:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--panel);
+}
+.txk .tk-lv[aria-checked='true'],
+.txk .tk-lv[aria-checked='true']:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.tk-lv b {
+  font-weight: var(--fw-semibold);
+}
+.tk-lv > span:last-child {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.tk-lv-std {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+}
+.tk-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+}
+.tk-bars i {
+  width: 5px;
+  border-radius: 2px;
+  background: var(--border-strong);
+}
+.tk-bars i:nth-child(1) { height: 6px; }
+.tk-bars i:nth-child(2) { height: 8px; }
+.tk-bars i:nth-child(3) { height: 11px; }
+.tk-bars i:nth-child(4) { height: 13px; }
+.tk-bars i:nth-child(5) { height: 16px; }
+.tk-bars i.on {
+  background: var(--accent);
+}
+.tk-note {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.txk .tk-filters {
+  margin-left: -10px;
+}
+.tk-due {
+  margin: 0;
+  font-size: var(--fs-lead);
+}
+.txk .kb-card-foot.tk-go {
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.txk .kb-card-foot.tk-go > .kb-btn {
+  flex: none;
+}
+.tk-aside {
+  display: grid;
+  gap: var(--sp-4);
+}
+.txk .tk-rating {
+  padding: 20px 22px;
+}
+.tk-rating-h {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sp-3);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.tk-rating-h .up {
+  font-weight: var(--fw-semibold);
+  color: var(--ok-text);
+}
+.tk-rating-h .down {
+  font-weight: var(--fw-semibold);
+  color: var(--danger-text);
+}
+.tk-big {
+  font-size: 36px;
+  font-weight: var(--fw-semibold);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.txk .tk-rating .spark-wrap {
+  height: 64px;
+  margin-top: var(--sp-3);
+}
+.txk .tk-rating .spark polyline {
+  stroke: var(--accent);
+}
+.tk-today-b {
+  display: grid;
+  gap: 10px;
+  padding: 6px 22px 20px;
+}
+.tk-today-b > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-2);
+}
+.tk-today-b svg {
+  width: 18px;
+  height: 18px;
+}
+.tk-today-b b {
+  font-size: 18px;
+  color: var(--text);
+}
+.tk-today-b .f { color: var(--warn); }
+.tk-today-b .c { color: var(--ok); }
+.tk-today-b .x { color: var(--danger); }
+@media (max-width: 1100px) {
+  .tk-start-grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 812px;
+  }
+  .tk-aside {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  .txk .tk-start {
+    padding: var(--sp-5) var(--sp-4);
+  }
+  .tk-levels,
+  .tk-aside {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- Τακτικά: κάρτα λύσης (κεφαλίδα · σώμα · κουμπιά · σερί) ---- */
+.txk .tx-task.tk-task {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  gap: 0;
+  padding: 0;
+  border-color: var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+.tk-task > :last-child {
+  border-radius: 0 0 var(--r-lg) var(--r-lg);
+}
+.tk-task-h {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.tk-level {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-2);
+}
+.tk-level > svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.txk .tk-level .select {
+  min-width: 0;
+  height: 32px;
+}
+.txk .tk-task-h .tk-stop {
+  margin-left: auto;
+}
+.tk-task-b {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  flex: 1;
+  padding: 20px 22px;
+}
+.txk .tk-task h1 {
+  font-size: 24px;
+}
+.txk .tk-task .tx-prompt {
+  font-size: var(--fs-md);
+  color: var(--text-2);
+}
+.txk .tk-task .ladder .next .step {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.txk .tk-task .ladder .done .step {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.txk .tk-task > .tx-actions {
+  gap: var(--sp-1);
+  margin: 0;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--panel-2);
+}
+.txk .tk-task .tx-verdict {
+  padding: 12px 14px;
+}
+.txk .tk-task .tx-result-t {
+  font-size: var(--fs-lg);
+}
+.tk-task-f {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px var(--sp-4);
+  padding: 12px 22px;
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.tk-task-f > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.tk-task-f svg {
+  width: 14px;
+  height: 14px;
+}
+.tk-task-f b {
+  color: var(--text);
+  font-weight: var(--fw-semibold);
+}
+/* τα πάνελ κάτω από την κάρτα (βαθμός, τράπουλες, της ημέρας, συλλογή) στο ίδιο ύφος */
+.txk .tx-side > .panel {
+  border-color: var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+@media (max-width: 1500px) {
+  .tk-task-b {
+    gap: 10px;
+    padding: 16px;
+  }
+  .txk .tk-task h1 {
+    font-size: 20px;
+  }
+  .tk-task-f {
+    padding: 12px 16px;
+  }
+}
