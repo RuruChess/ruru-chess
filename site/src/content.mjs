@@ -5,9 +5,9 @@ export default {
   en: {
     locale: 'en_US',
     altLocale: 'el_GR',
-    title: 'Ruru Chess — Free Chess Database, Stockfish Analysis & Study for Windows',
+    title: 'Ruru Chess — Free Chess Analysis, Database & Study App for Windows',
     description:
-      'Ruru Chess (Ruru) is a free, open-source chess database for Windows. Analyze games with Stockfish, turn PDF chess books into playable databases, prepare for opponents, train tactics, and study live with friends.',
+      'Ruru Chess (Ruru) is a free, open-source chess desktop app for Windows. Manage game databases, analyze with Stockfish, turn PDF chess books into playable databases, prepare for opponents, and study live with friends.',
     ogAlt: 'Ruru Chess desktop interface showing Stockfish multi-line game analysis on a chess board',
     skip: 'Skip to content',
     menu: 'Menu',
@@ -378,9 +378,9 @@ export default {
   el: {
     locale: 'el_GR',
     altLocale: 'en_US',
-    title: 'Ruru Chess — Δωρεάν βάση σκακιού, ανάλυση Stockfish & μελέτη για Windows',
+    title: 'Ruru Chess — Δωρεάν πρόγραμμα σκακιού: Ανάλυση, Βάσεις & Μελέτη για Windows',
     description:
-      'Το Ruru Chess (Ruru) είναι δωρεάν, ανοιχτού κώδικα βάση σκακιού για Windows. Ανάλυση με Stockfish, μετατροπή βιβλίων PDF σε βάσεις, προετοιμασία αντιπάλου, τακτική και ζωντανή κοινή ανάλυση με φίλους.',
+      'Το Ruru Chess (Ruru) είναι δωρεάν, ανοιχτού κώδικα πρόγραμμα σκακιού για Windows. Διαχείριση βάσεων, ανάλυση με Stockfish, μετατροπή βιβλίων PDF σε βάσεις, προετοιμασία αντιπάλου και ζωντανή κοινή μελέτη με φίλους.',
     ogAlt: 'Το Ruru Chess σε ανάλυση παρτίδας με Stockfish, σκακιέρα με βέλη και σημειογραφία',
     skip: 'Μετάβαση στο περιεχόμενο',
     menu: 'Μενού',
