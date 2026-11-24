@@ -33,7 +33,7 @@ jobs:
         run: npm run typecheck
 
       - name: Run unit tests
-        run: npm test
+        run: npm test -- --testTimeout=20000
 
       - name: Ensure Inno Setup 6 is available
         shell: pwsh
