@@ -61,9 +61,9 @@ Or double-click `Ruru.cmd` on Windows.
 ## Code Signing Policy
 
 - **Status:** Windows release binaries are currently unsigned while applying for free open-source code signing through [SignPath Foundation](https://signpath.org/). Once approved, official Windows releases will be signed via [SignPath.io](https://signpath.io/) with a certificate issued by SignPath Foundation.
-- **Build & Origin:** Official release artifacts are built cleanly from this public repository via GitHub Actions on GitHub-hosted `windows-latest` runners ([`.github/workflows/release.yml`](.github/workflows/release.yml)).
+- **Build & Origin:** Starting with the next release (after `v3.0.0`, which was built locally before CI was added), official release artifacts are built cleanly from this public repository via GitHub Actions on GitHub-hosted `windows-latest` runners ([`.github/workflows/release.yml`](.github/workflows/release.yml)).
 - **Scope:** Only binaries compiled directly from this repository (`Ruru.exe` and `Ruru-Chess-Setup.exe`) will be signed. Bundled third-party runtimes (`node.exe`, `7za.exe`, Electron runtime) are not re-signed.
 - **Team & Approval:** Repository maintainer and signing approver is `@bapoliss` (with 2FA enabled on GitHub and SignPath). Every release signing request requires manual approval.
-- **Privacy & Behavior:** Ruru Chess has no ads, no telemetry, and no background data collection. Databases stay local; all online features are strictly opt-in as documented in [PRIVACY.md](PRIVACY.md).
+- **Privacy & Behavior:** Ruru Chess has no ads, no analytics, and no telemetry. Databases stay local; all network connections (including default features such as update checks and tablebase queries, and how to disable them) are documented in [PRIVACY.md](PRIVACY.md).
 
 Ruru Chess is licensed under **[GPL-3.0-or-later](LICENSE)**, with components under **[AGPL-3.0](licenses/AGPL-3.0.txt)** from Lichess, provided with no warranty. Ruru Chess is not affiliated with ChessBase GmbH, Lichess, Chess.com, FIDE, YouTube, Twitch, Kick, Stockfish, GitHub, or any other mentioned service; all trademarks belong to their respective owners.
