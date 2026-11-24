@@ -58,4 +58,12 @@ Or double-click `Ruru.cmd` on Windows.
 - **Terms of Use:** [TERMS.md](TERMS.md) (English & Greek)
 - **Third-Party Credits & Notices:** [CREDITS.md](CREDITS.md) · [licenses/NOTICES.txt](licenses/NOTICES.txt)
 
+## Code Signing Policy
+
+- **Status:** Windows release binaries are currently unsigned while applying for free open-source code signing through [SignPath Foundation](https://signpath.org/). Once approved, official Windows releases will be signed via [SignPath.io](https://signpath.io/) with a certificate issued by SignPath Foundation.
+- **Build & Origin:** Official release artifacts are built cleanly from this public repository via GitHub Actions on GitHub-hosted `windows-latest` runners ([`.github/workflows/release.yml`](.github/workflows/release.yml)).
+- **Scope:** Only binaries compiled directly from this repository (`Ruru.exe` and `Ruru-Chess-Setup.exe`) will be signed. Bundled third-party runtimes (`node.exe`, `7za.exe`, Electron runtime) are not re-signed.
+- **Team & Approval:** Repository maintainer and signing approver is `@bapoliss` (with 2FA enabled on GitHub and SignPath). Every release signing request requires manual approval.
+- **Privacy & Behavior:** Ruru Chess has no ads, no telemetry, and no background data collection. Databases stay local; all online features are strictly opt-in as documented in [PRIVACY.md](PRIVACY.md).
+
 Ruru Chess is licensed under **[GPL-3.0-or-later](LICENSE)**, with components under **[AGPL-3.0](licenses/AGPL-3.0.txt)** from Lichess, provided with no warranty. Ruru Chess is not affiliated with ChessBase GmbH, Lichess, Chess.com, FIDE, YouTube, Twitch, Kick, Stockfish, GitHub, or any other mentioned service; all trademarks belong to their respective owners.

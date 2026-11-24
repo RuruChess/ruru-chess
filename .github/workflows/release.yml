@@ -1,0 +1,80 @@
+name: Build Windows Release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build & Test (Windows x64)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Ensure Inno Setup 6 is available
+        shell: pwsh
+        run: |
+          $paths = @(
+            "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
+            "$env:ProgramFiles\Inno Setup 6\ISCC.exe"
+          )
+          $iscc = $paths | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if (-not $iscc) {
+            choco install innosetup -y --no-progress
+            $iscc = $paths | Where-Object { Test-Path $_ } | Select-Object -First 1
+          }
+          if (-not $iscc) {
+            Write-Error "Inno Setup 6 (ISCC.exe) not found."
+            exit 1
+          }
+          Write-Host "Using ISCC: $iscc"
+          "ISCC=$iscc" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Build Windows installer & portable package
+        run: node scripts/make-release.mjs
+
+      - name: Verify release outputs
+        shell: pwsh
+        run: |
+          foreach ($f in @('Ruru-Chess-Setup.exe', 'Ruru-Chess-Portable.zip', 'SHA256SUMS.txt', 'Ruru/Ruru.exe')) {
+            $p = Join-Path 'release/ruru' $f
+            if (-not (Test-Path $p)) {
+              Write-Error "Missing expected output: $p"
+              exit 1
+            }
+          }
+          Get-Content release/ruru/SHA256SUMS.txt
+
+      - name: Upload Windows release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ruru-chess-windows-x64
+          path: |
+            release/ruru/Ruru-Chess-Setup.exe
+            release/ruru/Ruru-Chess-Portable.zip
+            release/ruru/SHA256SUMS.txt
+          retention-days: 30
