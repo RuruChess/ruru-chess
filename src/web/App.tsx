@@ -3,15 +3,16 @@
  * ξεχωριστά παράθυρα (προεπιλογή) το κύριο κρατά τη Βιβλιοθήκη και κάθε άλλο έχει μία καρτέλα.
  */
 import { useEffect, useRef, useState } from 'react';
-import { BookOpen, Bot, Database, LayoutGrid, Settings as SettingsIcon, X, Swords, FilePlus2, GraduationCap, TrendingUp, Users, Radio, Eye, Target } from 'lucide-react';
+import { BookOpen, Bot, Database, LayoutGrid, Settings as SettingsIcon, X, Swords, FilePlus2, GraduationCap, TrendingUp, Users, Radio, Eye, Target, Sparkles } from 'lucide-react';
 import { START_FEN } from '../core/chess.ts';
 import { L, language } from './i18n.ts';
-import { FIXED_TABS, OPEN_KEY, newTabId, reportError, useApp, type Tab } from './store.ts';
+import { FIXED_TABS, NOTES_TAB, OPEN_KEY, newTabId, reportError, useApp, type Tab } from './store.ts';
 import { api, onServerEvent } from './api.ts';
 import { dropController } from './gameModel.ts';
 import { Toasts } from './components/ui.tsx';
 import { Guide, restartGuide } from './components/Guide.tsx';
 import { HelpButton } from './components/HelpMenu.tsx';
+import { ReleaseNotesWindow, useReleaseNotesAutoOpen, useUnseenReleaseNotes } from './components/ReleaseNotes.tsx';
 import { SoundButton } from './components/SoundControl.tsx';
 import { setSoundConfig, soundConfig } from './sounds.ts';
 import { LibraryWindow } from './windows/LibraryWindow.tsx';
@@ -57,6 +58,8 @@ function fixedTitle(t: Tab): string {
       return L('Ζωντανά', 'Watch Live');
     case 'prep':
       return L('Προετοιμασία', 'Prepare for opponent');
+    case 'notes':
+      return L('Εκδόσεις', 'Patch Notes');
     default:
       return t.title;
   }
@@ -74,6 +77,7 @@ function TabIcon({ tab }: { tab: Tab }) {
   if (tab.kind === 'share') return <Radio size={15} />;
   if (tab.kind === 'watch') return <Eye size={15} />;
   if (tab.kind === 'prep') return <Target size={15} />;
+  if (tab.kind === 'notes') return <Sparkles size={15} />;
   return <Swords size={15} />;
 }
 
@@ -112,6 +116,8 @@ function useNewVersion(): boolean {
 export function App() {
   const newVersion = useNewVersion();
   const { tabs, active, activate, closeTab, openTab, settings, loadSettings, refreshLibrary } = useApp();
+  const unseenNotes = useUnseenReleaseNotes();
+  useReleaseNotesAutoOpen(() => activate('notes'));
 
   useEffect(() => {
     loadSettings().catch(reportError);
@@ -266,6 +272,7 @@ export function App() {
               <TabIcon tab={t} />
               <span className="tab-title">{fixedTitle(t)}</span>
               {t.kind === 'watch' && bigEvents && <span className="tab-dot" title={L(`Live τώρα: ${bigEvents}`, `Live now: ${bigEvents}`)} aria-label={L(`Live τώρα: ${bigEvents}`, `Live now: ${bigEvents}`)} />}
+              {t.kind === 'notes' && unseenNotes && <span className="tab-dot" title={L('Νέα έκδοση — δες τι άλλαξε', 'New version — see what changed')} aria-label={L('Νέα έκδοση', 'New version')} />}
               {t.kind !== 'library' && !(FIXED_TABS.includes(t.id) && !OPEN_KEY) && (
                 <button
                   className="tab-close"
@@ -292,6 +299,7 @@ export function App() {
               restartGuide();
               activate('library');
             }}
+            onOpenReleaseNotes={() => openTab(NOTES_TAB)}
             onOpenSettings={() => openTab({ id: 'settings', kind: 'settings', title: 'Settings' })}
           />
           <button className="icon-btn" title={L('Ρυθμίσεις', 'Settings')} onClick={() => openTab({ id: 'settings', kind: 'settings', title: 'Settings' })}>
@@ -322,6 +330,7 @@ export function App() {
             {t.kind === 'share' && visited.current.has(t.id) && <ShareWindow active={t.id === active} />}
             {t.kind === 'watch' && visited.current.has(t.id) && <WatchWindow active={t.id === active} />}
             {t.kind === 'prep' && visited.current.has(t.id) && <PrepWindow active={t.id === active} />}
+            {t.kind === 'notes' && visited.current.has(t.id) && <ReleaseNotesWindow active={t.id === active} />}
           </section>
         ))}
       </main>

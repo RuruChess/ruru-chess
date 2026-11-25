@@ -4,7 +4,7 @@
  * μηχανής): μετά φαίνεται τι παίχτηκε και τι γράφει ο σχολιαστής.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, BookOpen, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, CircleCheck, FlipVertical2, GraduationCap, HelpCircle, Play, SkipForward } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, CircleCheck, FlipVertical2, GraduationCap, HelpCircle, Play, RotateCcw, SkipForward } from 'lucide-react';
 import type { GameNode } from '../../core/game.ts';
 import { Board } from '../components/Board.tsx';
 import { useDrawnShapes } from '../components/drawnShapes.ts';
@@ -16,7 +16,7 @@ import { L, fmtNum } from '../i18n.ts';
 import { playMoveSound } from '../sounds.ts';
 import { reportError, useApp } from '../store.ts';
 import { useBoardSettings, useScreenKeys } from './common.tsx';
-import { bookTitle, gamesApi, saveGameProgress, tr, useGameProgress, type GameLesson, type GameLessonInfo, type GameQuestion } from './gameLessons.ts';
+import { bookTitle, canReviewLesson, gamesApi, saveGameProgress, tr, useGameProgress, type GameLesson, type GameLessonInfo, type GameLessonMode, type GameQuestion } from './gameLessons.ts';
 import { moveText } from './logic.ts';
 import { setUiLater } from './store.ts';
 import './strategy.css';
@@ -28,9 +28,15 @@ export function GameLessons({ active }: { active: boolean }) {
   const openId = useApp((s) => (s.settings?.ui as Record<string, unknown> | undefined)?.gameLessonOpen as string | undefined) ?? null;
   const [list, setList] = useState<Array<GameLessonInfo & { questions: number; fen: string }> | null>(null);
   const [lesson, setLesson] = useState<GameLesson | null>(null);
+  const [mode, setMode] = useState<GameLessonMode>('lesson');
+  const [runKey, setRunKey] = useState(0);
   const progress = useGameProgress();
   const bs = useBoardSettings();
-  const open = (id: string | null) => setUiLater({ gameLessonOpen: id });
+  const open = (id: string | null, nextMode: GameLessonMode = 'lesson') => {
+    setMode(nextMode);
+    if (id) setRunKey((k) => k + 1);
+    setUiLater({ gameLessonOpen: id });
+  };
   // φίλτρο: ένα βιβλίο-πηγή (null: όλα)
   const [book, setBook] = useState<string | null>(null);
   const books = useMemo(() => {
@@ -78,7 +84,17 @@ export function GameLessons({ active }: { active: boolean }) {
     }
     const i = list?.findIndex((x) => x.id === openId) ?? -1;
     const nextId = list && i >= 0 && i + 1 < list.length ? list[i + 1].id : null;
-    return <GameLessonView key={lesson.id} lesson={lesson} active={active} onBack={() => open(null)} onNext={nextId ? () => open(nextId) : null} />;
+    return (
+      <GameLessonView
+        key={`${lesson.id}-${mode}-${runKey}`}
+        lesson={lesson}
+        mode={mode}
+        active={active}
+        onBack={() => open(null)}
+        onAgain={() => open(lesson.id, 'again')}
+        onNext={nextId ? () => open(nextId, 'lesson') : null}
+      />
+    );
   }
   return (
     <div className="kb-wrap sl">
@@ -133,6 +149,7 @@ export function GameLessons({ active }: { active: boolean }) {
                     {items.map((g) => {
                       const p = progress[g.id];
                       const answered = p ? Object.keys(p.answers).length : 0;
+                      const reviewable = canReviewLesson(p, g.questions);
                       const white = g.fen.split(' ')[1] !== 'b';
                       return (
                         <li key={g.id} className="kb-card sl-card">
@@ -158,10 +175,30 @@ export function GameLessons({ active }: { active: boolean }) {
                               {answered > 0 && !p?.done ? L(` · απάντησες ${answered}`, ` · answered ${answered}`) : ''}
                             </span>
                             <div className="sl-foot">
-                              <button type="button" className={`kb-btn sm${p && !p.done ? ' primary' : ''}`} onClick={() => open(g.id)}>
-                                <Play size={14} aria-hidden />
+                              <button
+                                type="button"
+                                className={`kb-btn sm${p && !p.done ? ' primary' : ''}`}
+                                onClick={() => open(g.id, p?.done ? 'again' : 'lesson')}
+                                title={
+                                  p?.done
+                                    ? L('Πέρασε ξανά την παρτίδα από την αρχή με όλες τις ασκήσεις', 'Play through the game again from the start with all exercises')
+                                    : undefined
+                                }
+                              >
+                                {p?.done ? <RotateCcw size={14} aria-hidden /> : <Play size={14} aria-hidden />}
                                 {p?.done ? L('Ξανά', 'Again') : p ? L('Συνέχισε', 'Continue') : L('Ξεκίνα', 'Start')}
                               </button>
+                              {reviewable && (
+                                <button
+                                  type="button"
+                                  className="kb-btn ghost sm"
+                                  onClick={() => open(g.id, 'review')}
+                                  title={L('Απλή περιήγηση της παρτίδας και των σχολίων χωρίς ασκήσεις', 'Browse the game and notes freely without exercises')}
+                                >
+                                  <BookOpen size={14} aria-hidden />
+                                  {L('Περιήγηση', 'Review')}
+                                </button>
+                              )}
                             </div>
                           </div>
                         </li>
@@ -183,7 +220,21 @@ export function GameLessons({ active }: { active: boolean }) {
   );
 }
 
-function GameLessonView({ lesson, active, onBack, onNext }: { lesson: GameLesson; active: boolean; onBack: () => void; onNext: (() => void) | null }) {
+function GameLessonView({
+  lesson,
+  mode,
+  active,
+  onBack,
+  onAgain,
+  onNext,
+}: {
+  lesson: GameLesson;
+  mode: GameLessonMode;
+  active: boolean;
+  onBack: () => void;
+  onAgain: () => void;
+  onNext: (() => void) | null;
+}) {
   const bs = useBoardSettings();
   const style = (((useApp((s) => s.settings?.ui) as Record<string, unknown> | undefined)?.notation as NotationStyle | undefined) ?? 'figurine') as NotationStyle;
   const ctrl = useMemo(() => {
@@ -197,8 +248,8 @@ function GameLessonView({ lesson, active, onBack, onNext }: { lesson: GameLesson
     return out;
   }, [ctrl]);
   const saved = useGameProgress()[lesson.id];
-  const [revealed, setRevealed] = useState(() => Math.min(saved?.revealed ?? 0, main.length));
-  const [answers, setAnswers] = useState<Record<string, string>>(() => saved?.answers ?? {});
+  const [revealed, setRevealed] = useState(() => (mode === 'again' ? 0 : mode === 'review' ? main.length : Math.min(saved?.revealed ?? 0, main.length)));
+  const [answers, setAnswers] = useState<Record<string, string>>(() => (mode === 'again' ? {} : (saved?.answers ?? {})));
   const [asking, setAsking] = useState<GameQuestion | null>(null);
   const [pending, setPending] = useState<{ fen: string; move: number; san: string } | null>(null);
   // → σε διακλάδωση: οι υποψήφιες κινήσεις (η κίνηση της παρτίδας και οι βαριάντες του σχολιαστή)
@@ -207,16 +258,25 @@ function GameLessonView({ lesson, active, onBack, onNext }: { lesson: GameLesson
   const timers = useRef<number[]>([]);
   useEffect(() => () => timers.current.forEach((t) => clearTimeout(t)), []);
 
-  // συνέχεια από εκεί που σταμάτησε ο χρήστης
+  // συνέχεια από εκεί που σταμάτησε ο χρήστης (στο «Ξανά» και στην «Περιήγηση» ξεκινά από την αρχή της παρτίδας)
   useEffect(() => {
-    if (revealed > 0) ctrl.goTo(main[revealed - 1]);
+    if (mode === 'lesson' && revealed > 0) ctrl.goTo(main[revealed - 1]);
     // μόνο στο άνοιγμα
   }, [ctrl]);
 
   const done = revealed >= main.length;
+  const allQuestionsAnswered = lesson.questions.length > 0 ? lesson.questions.every((q) => answers[q.ply] !== undefined) : done;
   useEffect(() => {
-    saveGameProgress(lesson.id, { revealed, answers, ...(done ? { done: true } : {}) });
-  }, [lesson.id, revealed, answers, done]);
+    // στην «Περιήγηση» δεν αλλοιώνουμε την αποθηκευμένη πρόοδο· στο «Ξανά» δεν σβήνουμε παλιό done/allAnswered μέχρι να ολοκληρωθεί
+    if (mode === 'review') return;
+    if (mode === 'again' && saved?.done && !done) return;
+    saveGameProgress(lesson.id, {
+      revealed,
+      answers,
+      ...(done || saved?.done ? { done: true } : {}),
+      ...(allQuestionsAnswered || saved?.allAnswered ? { allAnswered: true } : {}),
+    });
+  }, [lesson.id, mode, revealed, answers, done, allQuestionsAnswered, saved?.done, saved?.allAnswered]);
 
   const node = ctrl.node;
   useEffect(() => {
@@ -513,6 +573,10 @@ function GameLessonView({ lesson, active, onBack, onNext }: { lesson: GameLesson
                       {L('Επόμενο μάθημα', 'Next lesson')}
                     </button>
                   )}
+                  <button type="button" className="kb-btn" onClick={onAgain} title={L('Πέρασε ξανά την παρτίδα από την αρχή με όλες τις ασκήσεις', 'Play through the game again from the start with all exercises')}>
+                    <RotateCcw aria-hidden />
+                    {L('Ξανά', 'Again')}
+                  </button>
                   <button type="button" className="kb-btn ghost" onClick={onBack}>
                     {L('Όλα τα μαθήματα', 'All lessons')}
                   </button>

@@ -520,3 +520,65 @@
   margin: 0;
   padding: 6px 16px;
 }
+
+/* διάλογος αποχώρησης host (Leave vs End for everyone) */
+.sa-leave-dlg {
+  display: grid;
+  gap: 10px;
+}
+.sa-leave-intro {
+  margin: 0 0 2px;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+.sa-leave-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--panel);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.sa-leave-opt:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.sa-leave-opt.danger {
+  border-color: color-mix(in srgb, var(--danger) 45%, var(--border));
+}
+.sa-leave-opt.danger:hover {
+  border-color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, var(--panel));
+}
+.sa-leave-opt.danger .sa-leave-ic,
+.sa-leave-opt.danger b {
+  color: var(--danger);
+}
+.sa-leave-ic {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--accent);
+}
+.sa-leave-opt.danger .sa-leave-ic {
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+}
+.sa-leave-txt {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.sa-leave-txt b {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+}

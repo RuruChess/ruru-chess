@@ -38,10 +38,16 @@ export function ShareWindow({ active }: { active: boolean }) {
   const title = L('Κοινή ανάλυση', 'Shared analysis');
 
   const [session, setSession] = useState<{ key: number; title: string; start: ShareStart; pgn?: string; fen?: string; live?: LiveSource; orientation?: 'white' | 'black' } | null>(null);
+  const [leaveSignal, setLeaveSignal] = useState(0);
   const begin = (s: { start: ShareStart; pgn?: string; fen?: string; live?: LiveSource; orientation?: 'white' | 'black'; title?: string }) => {
     const h = s.pgn ? parseGames(s.pgn)[0]?.game.headers : undefined;
     const players = h && h.White && h.White !== '?' ? `${h.White} – ${h.Black}` : (s.title ?? title);
     setSession({ key: Date.now(), ...s, title: players });
+  };
+  const forceCloseSession = () => {
+    if (!session) return;
+    dropController(`share-${session.key}`);
+    setSession(null);
   };
   /**
    * Κλείνει την ανάλυση που είναι ανοιχτή: ερώτηση `dirty` αν δεν αποθηκεύτηκε, αλλιώς `clean` (αν δοθεί).
@@ -164,7 +170,7 @@ export function ShareWindow({ active }: { active: boolean }) {
   if (session) {
     // το κανονικό παράθυρο ανάλυσης (βαριάντες, σύμβολα, σχόλια, μηχανή, αποθήκευση), μέσα σε αυτή την καρτέλα
     const tabId = `share-${session.key}`;
-    const leave = () => closeSession(L('Η ανάλυση δεν αποθηκεύτηκε σε βάση. Να βγεις χωρίς αποθήκευση;', 'The analysis is not saved to a database. Leave without saving?'));
+    const leaveGuest = () => closeSession(L('Η ανάλυση δεν αποθηκεύτηκε σε βάση. Να βγεις χωρίς αποθήκευση;', 'The analysis is not saved to a database. Leave without saving?'));
     return (
       <div className="share-embed">
         <div className="share-embed-bar">
@@ -174,7 +180,12 @@ export function ShareWindow({ active }: { active: boolean }) {
             {session.title !== title && <span className="share-embed-sub"> · {session.title}</span>}
           </span>
           <span className="kb-pill plain share-embed-hint">{L('Ό,τι αλλάζεις το βλέπουν και οι άλλοι. Αποθήκευση με Ctrl+S.', 'The others see what you change. Save with Ctrl+S.')}</span>
-          <button type="button" className="kb-btn sm share-exit" onClick={leave} title={L('Έξοδος από την κοινή ανάλυση (πίσω στην επιλογή παρτίδας)', 'Leave the shared analysis (back to choosing a game)')}>
+          <button
+            type="button"
+            className="kb-btn sm share-exit"
+            onClick={() => setLeaveSignal((n) => n + 1)}
+            title={L('Έξοδος από την κοινή ανάλυση (πίσω στην επιλογή παρτίδας)', 'Leave the shared analysis (back to choosing a game)')}
+          >
             <LogOut size={14} aria-hidden />
             {L('Έξοδος από την ανάλυση', 'Leave analysis')}
           </button>
@@ -184,6 +195,9 @@ export function ShareWindow({ active }: { active: boolean }) {
             key={session.key}
             tab={{ id: tabId, kind: 'game', title: session.title, pgn: session.pgn, fen: session.fen, live: session.live, orientation: session.orientation, share: session.start }}
             active={active}
+            shareLeaveSignal={leaveSignal}
+            onShareExit={leaveGuest}
+            onShareEnded={forceCloseSession}
           />
         </div>
       </div>

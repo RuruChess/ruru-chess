@@ -3,10 +3,10 @@
  * server (package.json)· όσοι δεν έχουν οριστεί δεν εμφανίζονται.
  */
 import { useEffect, useState } from 'react';
-import { Download, Globe, Heart, RefreshCw, X } from 'lucide-react';
+import { Download, Globe, Heart, RefreshCw, Sparkles, X } from 'lucide-react';
 import { api, type AppInfo, type UpdateInfo } from '../api.ts';
 import { L } from '../i18n.ts';
-import { reportError, useApp } from '../store.ts';
+import { NOTES_TAB, reportError, useApp } from '../store.ts';
 
 let infoRequest: Promise<AppInfo> | null = null;
 
@@ -68,6 +68,7 @@ export function UpdateBanner() {
 /** Η ενότητα «Σχετικά» των ρυθμίσεων. */
 export function AboutSection({ databasesDir }: { databasesDir: string }) {
   const info = useAppInfo();
+  const openTab = useApp((s) => s.openTab);
   const [upd, setUpd] = useState<UpdateInfo | null>(null);
   const [checking, setChecking] = useState(false);
   const links = info?.links;
@@ -92,21 +93,22 @@ export function AboutSection({ databasesDir }: { databasesDir: string }) {
         <br />
         {L('Ούτε με το Lichess, το Chess.com ή τη FIDE. Τα σήματα ανήκουν στους κατόχους τους.', 'Nor with Lichess, Chess.com or FIDE. Trademarks belong to their owners.')}
       </p>
-      {links && (links.releases || links.site || links.support) && (
-        <div className="row gap wrap">
-          {links.releases && (
-            <button disabled={checking} onClick={() => void check()}>
-              <RefreshCw size={14} /> {L('Έλεγχος για νέα έκδοση', 'Check for updates')}
-            </button>
-          )}
-          {links.site && (
-            <button onClick={() => void openLink(links.site!)}>
-              <Globe size={14} /> {L('Ιστοσελίδα', 'Website')}
-            </button>
-          )}
-          <SupportButton />
-        </div>
-      )}
+      <div className="row gap wrap">
+        <button onClick={() => openTab(NOTES_TAB)}>
+          <Sparkles size={14} /> {L('Τι νέο υπάρχει (Patch Notes)', 'What’s new (Patch Notes)')}
+        </button>
+        {links?.releases && (
+          <button disabled={checking} onClick={() => void check()}>
+            <RefreshCw size={14} /> {L('Έλεγχος για νέα έκδοση', 'Check for updates')}
+          </button>
+        )}
+        {links?.site && (
+          <button onClick={() => void openLink(links.site!)}>
+            <Globe size={14} /> {L('Ιστοσελίδα', 'Website')}
+          </button>
+        )}
+        <SupportButton />
+      </div>
       {upd && (
         <p className="small">
           {upd.newer ? (

@@ -4,17 +4,19 @@
  * στην ίδια την παρτίδα, άρα αποθηκεύονται κανονικά στη βάση με την «Αποθήκευση».
  */
 import { useEffect, useRef, useState } from 'react';
+import { LogOut, Power } from 'lucide-react';
 import type { PvLine } from '../api.ts';
 import type { GameController } from '../gameModel.ts';
 import { L } from '../i18n.ts';
 import { useApp } from '../store.ts';
+import { Dialog } from '../components/ui.tsx';
 import { playServer, serverBusy, serverDown } from '../online/server.ts';
 import { ShareChat, ShareHead } from './SharePanel.tsx';
 import { sharePgn, useShare } from './useShare.ts';
 import { accountOf, setActivity } from '../social/social.ts';
 import { ShareInvite } from '../social/FriendPick.tsx';
 import { SHARE_CHAT } from '../../core/features.ts';
-import type { ShareLiveInfo } from '../../core/share.ts';
+import type { Pid, ShareLiveInfo } from '../../core/share.ts';
 import { liveRemaining, type LiveState } from '../watch/useLive.ts';
 import type { ShareVideoControl } from './ShareMembers.tsx';
 
@@ -50,6 +52,15 @@ export function rememberShare(r: ShareRoom & { title: string }): void {
   }
 }
 
+export function forgetShare(id: string): void {
+  try {
+    const r = JSON.parse(localStorage.getItem(SHARE_LAST_KEY) ?? 'null') as { id?: string } | null;
+    if (r?.id === id) localStorage.removeItem(SHARE_LAST_KEY);
+  } catch {
+    // αγνοούμε
+  }
+}
+
 function toShareLive(st: LiveState | null | undefined): ShareLiveInfo | null {
   if (!st) return null;
   const now = Date.now();
@@ -66,8 +77,10 @@ export function ShareHost({
   live,
   onLive,
   video,
+  leaveSignal,
   onRoom,
   onStop,
+  onEnded,
 }: {
   ctrl: GameController;
   start: ShareStart;
@@ -78,8 +91,11 @@ export function ShareHost({
   live?: LiveState | null;
   onLive?: (info: ShareLiveInfo | null) => void;
   video?: ShareVideoControl;
+  /** αύξων αριθμός όταν ο χρήστης πατάει «Έξοδος» από τη μπάρα του ShareWindow */
+  leaveSignal?: number;
   onRoom: (r: ShareRoom) => void;
   onStop: () => void;
+  onEnded?: () => void;
 }) {
   const settings = useApp((s) => s.settings);
   const ui = (settings?.ui ?? {}) as Record<string, unknown>;
@@ -118,6 +134,14 @@ export function ShareHost({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [start, waitingLive]);
 
+  const initLeaveSignal = useRef(leaveSignal ?? 0);
+  useEffect(() => {
+    if (start !== 'new' || !leaveSignal || leaveSignal === initLeaveSignal.current) return;
+    initLeaveSignal.current = leaveSignal;
+    onStop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [start, leaveSignal]);
+
   if (start === 'new') {
     return (
       <div className="sa-panel">
@@ -148,7 +172,9 @@ export function ShareHost({
       live={live}
       onLive={onLive}
       video={video}
+      leaveSignal={leaveSignal}
       onStop={onStop}
+      onEnded={onEnded}
     />
   );
 }
@@ -163,7 +189,9 @@ function ShareLive({
   live,
   onLive,
   video,
+  leaveSignal,
   onStop,
+  onEnded,
 }: {
   ctrl: GameController;
   room: ShareRoom;
@@ -174,10 +202,13 @@ function ShareLive({
   live?: LiveState | null;
   onLive?: (info: ShareLiveInfo | null) => void;
   video?: ShareVideoControl;
+  leaveSignal?: number;
   onStop: () => void;
+  onEnded?: () => void;
 }) {
   const conn = useShare(ctrl, room.server, room.id, room.token || null, { name: room.name });
   const [chatOpen, setChatOpen] = useState(true);
+  const [leaveDialog, setLeaveDialog] = useState(false);
   const toast = useApp((s) => s.toast);
 
   // κάποιος μπήκε (π.χ. ο φίλος που δέχτηκε την πρόσκληση): μήνυμα
@@ -192,6 +223,32 @@ function ShareLive({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conn.presence, conn.pid]);
 
+  // αλλαγή host: ειδοποίηση στους συμμετέχοντες
+  const prevHost = useRef<Pid | null>(null);
+  useEffect(() => {
+    if (!conn.pid || conn.status !== 'open') return;
+    if (prevHost.current && prevHost.current !== conn.host) {
+      if (conn.host === conn.pid) toast(L('Έγινες host της κοινής ανάλυσης.', 'You are now the host of the shared analysis.'), 'ok');
+      else {
+        const who = conn.presence.names[conn.host] ?? conn.host;
+        toast(L(`Ο/Η ${who} είναι πλέον host της κοινής ανάλυσης.`, `${who} is now the host of the shared analysis.`), 'info');
+      }
+    }
+    prevHost.current = conn.host;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conn.host, conn.pid, conn.status]);
+
+  // ο host τερμάτισε τη συνεδρία για όλους: έξοδος στην αρχική οθόνη της Κοινής ανάλυσης
+  const endedHandled = useRef(false);
+  useEffect(() => {
+    if (conn.status !== 'ended' || endedHandled.current) return;
+    endedHandled.current = true;
+    forgetShare(room.id);
+    toast(L('Ο οικοδεσπότης τερμάτισε την κοινή ανάλυση.', 'The host ended the shared analysis.'), 'info');
+    (onEnded ?? onStop)();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conn.status]);
+
   // Φίλοι: «σε κοινή ανάλυση» (με το δωμάτιο, για να μπορούν να μπουν)
   useEffect(() => {
     const source = `share:${room.id}`;
@@ -205,7 +262,7 @@ function ShareLive({
   const sent = useRef('');
   const open = conn.status === 'open';
   useEffect(() => {
-    if (!open) return;
+    if (!open || conn.role !== 'host') return;
     const t = setTimeout(() => {
       const info = lines?.length ? { fen, depth: lines[0].depth, lines: lines.slice(0, 3).map((l) => ({ cp: l.cp, mate: l.mate, san: l.san.slice(0, 10) })) } : null;
       const key = JSON.stringify(info);
@@ -215,7 +272,7 @@ function ShareLive({
     }, 600);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lines, fen, open]);
+  }, [lines, fen, open, conn.role]);
 
   // κατάσταση Watch Live: ο οικοδεσπότης τη στέλνει στο δωμάτιο, οι καλεσμένοι τη λαμβάνουν για live ρολόγια
   const sentLive = useRef('');
@@ -236,14 +293,37 @@ function ShareLive({
   }, [conn.live, conn.role]);
 
   const stop = () => {
-    if (!window.confirm(L('Να τελειώσει η κοινή ανάλυση; Η παρτίδα με όλες τις αλλαγές μένει σε αυτό το παράθυρο.', 'Stop sharing? The game with all changes stays in this window.'))) return;
-    if (conn.role === 'host') {
-      conn.send({ t: 'engine', info: null });
-      conn.send({ t: 'live', info: null });
-      conn.send({ t: 'video', id: null });
+    if (conn.role === 'host' && conn.status === 'open') {
+      setLeaveDialog(true);
+      return;
     }
+    if (!onEnded && !window.confirm(L('Να βγεις από την κοινή ανάλυση; Η παρτίδα με όλες τις αλλαγές μένει σε αυτό το παράθυρο.', 'Leave the shared analysis? The game with all changes stays in this window.'))) return;
     onStop();
   };
+
+  // «Έξοδος από την ανάλυση» από την πάνω μπάρα του ShareWindow
+  const lastLeaveSignal = useRef(leaveSignal ?? 0);
+  useEffect(() => {
+    if (!leaveSignal || leaveSignal === lastLeaveSignal.current) return;
+    lastLeaveSignal.current = leaveSignal;
+    stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leaveSignal]);
+
+  const leaveAsHost = () => {
+    setLeaveDialog(false);
+    conn.send({ t: 'leave' });
+    (onEnded ?? onStop)();
+  };
+
+  const endForEveryone = () => {
+    setLeaveDialog(false);
+    conn.send({ t: 'end' });
+    forgetShare(room.id);
+    (onEnded ?? onStop)();
+  };
+
+  const othersOnline = conn.presence.online.filter((p) => p !== conn.pid).length;
 
   return (
     <div className="sa-panel">
@@ -253,6 +333,53 @@ function ShareLive({
         {chatOpen ? '▾' : '▸'} {L('Συνομιλία', 'Chat')}{conn.chat.length ? ` (${conn.chat.length})` : ''}
       </button>}
       {SHARE_CHAT && chatOpen && <ShareChat conn={conn} />}
+      {leaveDialog && (
+        <Dialog
+          title={L('Αποχώρηση από την κοινή ανάλυση', 'Leave shared analysis')}
+          onClose={() => setLeaveDialog(false)}
+          width={440}
+          footer={
+            <button type="button" onClick={() => setLeaveDialog(false)}>
+              {L('Άκυρο', 'Cancel')}
+            </button>
+          }
+        >
+          <div className="sa-leave-dlg">
+            <p className="sa-leave-intro">
+              {L('Είσαι host σε αυτή τη συνεδρία. Διάλεξε τι θέλεις να γίνει:', 'You are the host of this session. Choose what you want to do:')}
+            </p>
+            <button type="button" className="sa-leave-opt" onClick={leaveAsHost}>
+              <span className="sa-leave-ic">
+                <LogOut size={18} aria-hidden />
+              </span>
+              <span className="sa-leave-txt">
+                <b>{L('Αποχώρηση (Leave session)', 'Leave session')}</b>
+                <span className="faint small">
+                  {othersOnline > 0
+                    ? L('Φεύγεις εσύ και ο ρόλος του host μεταφέρεται αυτόματα στον παλαιότερο συμμετέχοντα.', 'You leave and the host role automatically transfers to the oldest remaining participant.')
+                    : L('Φεύγεις από το δωμάτιο· η ανάλυση μένει ανοιχτή αν μπουν άλλοι.', 'You leave the room; the analysis stays open if others join.')}
+                </span>
+              </span>
+            </button>
+            <button type="button" className="sa-leave-opt danger" onClick={endForEveryone}>
+              <span className="sa-leave-ic">
+                <Power size={18} aria-hidden />
+              </span>
+              <span className="sa-leave-txt">
+                <b>{L('Τερματισμός για όλους', 'End session for everyone')}</b>
+                <span className="faint small">
+                  {L('Κλείνει το δωμάτιο για όλους τους συμμετέχοντες και τους επιστρέφει στην αρχική οθόνη.', 'Closes the room for all participants and returns them to the start screen.')}
+                </span>
+              </span>
+            </button>
+            {ctrl.dirty && (
+              <p className="faint small" style={{ margin: 0 }}>
+                {L('Σημείωση: η παρτίδα έχει μη αποθηκευμένες αλλαγές (Ctrl+S για αποθήκευση σε βάση).', 'Note: the game has unsaved changes (Ctrl+S to save to a database).')}
+              </p>
+            )}
+          </div>
+        </Dialog>
+      )}
     </div>
   );
 }

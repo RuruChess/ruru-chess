@@ -254,7 +254,7 @@ async function main() {
     animationMs: 0,
     onlineLookups: false,
     watchLive: false,
-    ui: { windows: 'tabs', guide: { off: true }, library: { welcomeOff: true } },
+    ui: { windows: 'tabs', guide: { off: true }, library: { welcomeOff: true }, releaseNotesOff: true },
   });
   try {
     browser = await chromium.launch({ channel: 'msedge' });

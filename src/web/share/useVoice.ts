@@ -130,6 +130,7 @@ function storage(fn: () => void): void {
 export function useVoice(o: {
   id: string;
   pid: Pid | null;
+  host: Pid;
   v: number;
   status: string;
   voices: Record<Pid, VoiceState>;
@@ -138,7 +139,7 @@ export function useVoice(o: {
   rtcRef: MutableRefObject<((by: Pid, data: RtcSignal) => void) | null>;
   fetchIceServers?: () => Promise<RTCIceServer[] | null>;
 }): VoiceConn {
-  const { id, pid, v, status, voices, rules } = o;
+  const { id, pid, host, v, status, voices, rules } = o;
   const supported = VOICE && v >= 2 && typeof RTCPeerConnection !== 'undefined';
   const [joined, setJoined] = useState(false);
   const [mic, setMic] = useState(false);
@@ -151,7 +152,7 @@ export function useVoice(o: {
   const [prefs, setPrefs] = useState(() => loadPrefs(id));
   const silenced = !!pid && !!rules?.silenced.includes(pid);
   const camSupported = supported && v >= 3;
-  const camAllowed = canCam(rules, pid);
+  const camAllowed = canCam(rules, pid, host);
   const [cam, setCam] = useState(false);
   const [camStream, setCamStream] = useState<MediaStream | null>(null);
   const [camError, setCamError] = useState<string | null>(null);
@@ -169,7 +170,7 @@ export function useVoice(o: {
   // ποια κάμερα φαίνεται, και ποιου την κάμερα ζητάμε (όχι τη δική μας, όχι όταν το παράθυρο είναι μαζεμένο)
   const mine = pid && voices[pid] ? { ...voices, [pid]: { ...voices[pid], cam } } : voices;
   const order = Object.keys(voices).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-  const shown = camSupported && joined ? pickCamera({ me: pid, pinned, voices: mine, rules, order }) : null;
+  const shown = camSupported && joined ? pickCamera({ me: pid, pinned, voices: mine, rules, order, host }) : null;
   const watch = shown && shown !== pid && !collapsed ? shown : undefined;
 
   const peers = useRef(new Map<Pid, Peer>());
@@ -185,8 +186,8 @@ export function useVoice(o: {
   const wasMic = useRef(false);
   const announced = useRef(false);
   // τα τελευταία στοιχεία για τα callbacks του WebRTC (που ζουν έξω από το React)
-  const live = useRef({ joined, deaf, mic, pid, voices, rules, prefs, send: o.send, fetchIceServers: o.fetchIceServers });
-  live.current = { joined, deaf, mic, pid, voices, rules, prefs, send: o.send, fetchIceServers: o.fetchIceServers };
+  const live = useRef({ joined, deaf, mic, pid, host, voices, rules, prefs, send: o.send, fetchIceServers: o.fetchIceServers });
+  live.current = { joined, deaf, mic, pid, host, voices, rules, prefs, send: o.send, fetchIceServers: o.fetchIceServers };
 
   const ensureIce = (refresh = false): Promise<RTCIceServer[]> => {
     if (!refresh && icePromise.current) return icePromise.current;
@@ -443,7 +444,7 @@ export function useVoice(o: {
       const stream = await navigator.mediaDevices.getUserMedia({ video: CAM_VIDEO });
       const t = stream.getVideoTracks()[0];
       const l = live.current;
-      if (!t || !l.joined || !canCam(l.rules, l.pid)) {
+      if (!t || !l.joined || !canCam(l.rules, l.pid, l.host)) {
         for (const x of stream.getTracks()) x.stop();
         return;
       }

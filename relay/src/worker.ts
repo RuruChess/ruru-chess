@@ -36,6 +36,7 @@ import {
 import {
   RTC_MAX,
   SHARE_CHAT_KEEP,
+  SHARE_ENDED,
   SHARE_KICKED,
   SHARE_LOCKED,
   SHARE_MAX_CHAT,
@@ -47,7 +48,10 @@ import {
   canEdit,
   cleanLive,
   cleanVideoId,
+  cleanVideoSync,
   cleanVoice,
+  pickNextHost,
+  videoSyncTime,
   type ChatMsg,
   type EngineInfo,
   type Pid,
@@ -55,6 +59,7 @@ import {
   type ShareLiveInfo,
   type ShareRules,
   type ShareServerMsg,
+  type VideoSyncState,
   type VoiceState,
 } from '../../src/core/share.ts';
 import { PGN_MIME, readCapped } from '../../src/core/pgnFile.ts';
@@ -584,6 +589,10 @@ interface ShareMeta {
   guests: number;
   /** μόνο σε δωμάτια από KnightBase ≥ 2.4.0 (αλλιώς αλλάζουν όλοι) */
   rules?: ShareRules;
+  /** τρέχων οικοδεσπότης (προεπιλογή `'h'`) */
+  host?: Pid;
+  /** σειρά εισόδου συμμετεχόντων (για αυτόματη μεταφορά host στον παλαιότερο) */
+  order?: Pid[];
   /** κλειδιά όσων έβγαλε ο οικοδεσπότης */
   kicked?: string[];
 }
@@ -606,6 +615,7 @@ export class AnalysisRoom extends DurableObject<Env> {
   private live: ShareLiveInfo | null = null;
   private liveAt = 0;
   private video: string | null = null;
+  private videoSync: VideoSyncState | null = null;
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
@@ -621,7 +631,7 @@ export class AnalysisRoom extends DurableObject<Env> {
   async create(id: string, name: string, pgn: string, rules = false): Promise<string | null> {
     if (this.meta || pgn.length > SHARE_MAX_PGN) return null;
     const token = randomId(24);
-    this.meta = { id, seq: 1, names: { h: name }, tokens: { [token]: 'h' }, guests: 0, ...(rules ? { rules: { editors: [], silenced: [], cams: [] } } : {}) };
+    this.meta = { id, seq: 1, names: { h: name }, tokens: { [token]: 'h' }, guests: 0, host: 'h', order: ['h'], ...(rules ? { rules: { editors: [], silenced: [], cams: [] } } : {}) };
     this.pgn = pgn;
     this.chat = [];
     await this.ctx.storage.put({ meta: this.meta, pgn: this.pgn, chat: this.chat });
@@ -669,8 +679,26 @@ export class AnalysisRoom extends DurableObject<Env> {
     return { ...l, [l.turn]: v === null ? null : Math.max(0, v - elapsed), at: Date.now() };
   }
 
-  private presence() {
-    const online = [...new Set(this.open().map((w) => (w.deserializeAttachment() as ShareAttach | null)?.pid).filter((p): p is Pid => Boolean(p)))];
+  /** Τρέχουσα θέση συγχρονισμού βίντεο YouTube (χωρίς απόκλιση ώρας host/guest). */
+  private currentVideoSync(): VideoSyncState | null {
+    const s = this.videoSync;
+    if (!s || s.id !== this.video) return null;
+    return { ...s, time: Math.round(videoSyncTime(s) * 100) / 100, at: Date.now() };
+  }
+
+  private hostPid(): Pid {
+    return this.meta?.host ?? 'h';
+  }
+
+  private presence(except?: WebSocket) {
+    const online = [
+      ...new Set(
+        this.open()
+          .filter((w) => w !== except)
+          .map((w) => (w.deserializeAttachment() as ShareAttach | null)?.pid)
+          .filter((p): p is Pid => Boolean(p)),
+      ),
+    ];
     return { online, names: this.meta?.names ?? {} };
   }
 
@@ -685,8 +713,63 @@ export class AnalysisRoom extends DurableObject<Env> {
     return out;
   }
 
-  private socketsOf(pid: Pid): WebSocket[] {
-    return this.open().filter((w) => (w.deserializeAttachment() as ShareAttach | null)?.pid === pid);
+  private socketsOf(pid: Pid, except?: WebSocket): WebSocket[] {
+    return this.open().filter((w) => w !== except && (w.deserializeAttachment() as ShareAttach | null)?.pid === pid);
+  }
+
+  /** Ενημερώνει τον ρόλο σε όλα τα ανοιχτά WebSockets μετά από αλλαγή οικοδεσπότη. */
+  private syncRoles(): void {
+    const host = this.hostPid();
+    for (const w of this.open()) {
+      const a = w.deserializeAttachment() as ShareAttach | null;
+      if (!a) continue;
+      const role = a.pid === host ? 'host' : 'guest';
+      if (a.role !== role) w.serializeAttachment({ ...a, role } satisfies ShareAttach);
+    }
+  }
+
+  /** Μεταφορά ρόλου οικοδεσπότη στον `next` (χειροκίνητα ή αυτόματα κατά την αποχώρηση). */
+  private async transferHost(next: Pid, keepOldAsEditor: boolean, except?: WebSocket): Promise<void> {
+    const meta = this.meta;
+    if (!meta) return;
+    const prev = this.hostPid();
+    if (next === prev) return;
+    meta.host = next;
+    if (meta.rules) {
+      const editors = meta.rules.editors.filter((p) => p !== next);
+      const cams = (meta.rules.cams ?? []).filter((p) => p !== next);
+      const silenced = meta.rules.silenced.filter((p) => p !== next);
+      if (keepOldAsEditor) {
+        if (!editors.includes(prev)) editors.push(prev);
+        if (!cams.includes(prev)) cams.push(prev);
+      }
+      meta.rules = { ...meta.rules, editors, cams, silenced };
+    }
+    await this.save({ meta: true });
+    this.syncRoles();
+    this.broadcast({ t: 'host', pid: next }, except);
+    if (meta.rules) this.broadcast({ t: 'rules', rules: meta.rules }, except);
+  }
+
+  /** Τερματισμός της κοινής ανάλυσης για όλους: σβήνει το δωμάτιο και κλείνει όλα τα sockets. */
+  private async endRoom(): Promise<void> {
+    const sockets = this.open();
+    this.meta = null;
+    this.pgn = '';
+    this.chat = [];
+    this.engine = null;
+    this.live = null;
+    this.liveAt = 0;
+    this.video = null;
+    this.videoSync = null;
+    await this.ctx.storage.deleteAll();
+    for (const w of sockets) {
+      try {
+        w.close(SHARE_ENDED, 'ended');
+      } catch {
+        // ήδη κλειστό
+      }
+    }
   }
 
   /** Κλείνει το μικρόφωνο ή την κάμερα κάποιου (σίγαση ή άδεια που πάρθηκε πίσω), και το λέει σε όλους. */
@@ -756,20 +839,26 @@ export class AnalysisRoom extends DurableObject<Env> {
       fresh = TOKEN_RE.test(token) ? token : randomId(24);
       meta.tokens[fresh] = pid;
       meta.names[pid] = cleanName(url.searchParams.get('name'), 'Guest');
+      meta.order = [...(meta.order ?? ['h']).filter((p) => p !== pid), pid];
+      await this.save({ meta: true });
+    } else if (meta.order && !meta.order.includes(pid)) {
+      meta.order = [...meta.order, pid];
       await this.save({ meta: true });
     }
-    const role = pid === 'h' ? 'host' : 'guest';
+    const host = this.hostPid();
+    const role = pid === host ? 'host' : 'guest';
     this.ctx.acceptWebSocket(server);
     server.serializeAttachment({ pid, role } satisfies ShareAttach);
     const cursors: Record<Pid, string[]> = {};
     for (const w of this.open()) {
       const a = w.deserializeAttachment() as ShareAttach | null;
       // όποιος μόνο βλέπει δεν τραβά τους άλλους στη θέση του
-      if (a?.cursor && canEdit(meta.rules, a.pid)) cursors[a.pid] = a.cursor;
+      if (a?.cursor && canEdit(meta.rules, a.pid, host)) cursors[a.pid] = a.cursor;
     }
     this.send(server, { t: 'welcome', pid, role, v: 3, ...(fresh ? { token: fresh } : {}) });
     const liveInit = this.currentLive();
-    this.send(server, { t: 'init', pgn: this.pgn, seq: meta.seq, chat: this.chat, presence: this.presence(), cursors, engine: this.engine, voice: this.voices(), ...(liveInit ? { live: liveInit } : {}), ...(this.video ? { video: this.video } : {}), ...(meta.rules ? { rules: meta.rules } : {}) });
+    const syncInit = this.currentVideoSync();
+    this.send(server, { t: 'init', pgn: this.pgn, seq: meta.seq, chat: this.chat, presence: this.presence(), cursors, engine: this.engine, voice: this.voices(), host, ...(liveInit ? { live: liveInit } : {}), ...(this.video ? { video: this.video } : {}), ...(syncInit ? { videoSync: syncInit } : {}), ...(meta.rules ? { rules: meta.rules } : {}) });
     this.broadcast({ t: 'presence', presence: this.presence() }, server);
     return new Response(null, { status: 101, webSocket: client });
   }
@@ -785,12 +874,14 @@ export class AnalysisRoom extends DurableObject<Env> {
     }
     const at = ws.deserializeAttachment() as ShareAttach | null;
     if (!at || typeof m !== 'object' || !m) return;
+    const host = this.hostPid();
+    const isHost = at.pid === host;
     switch (m.t) {
       case 'pgn': {
         if (typeof m.pgn !== 'string' || m.pgn.length > SHARE_MAX_PGN || m.pgn === this.pgn) return;
-        if (!canEdit(meta.rules, at.pid)) {
+        if (!canEdit(meta.rules, at.pid, host)) {
           // χωρίς άδεια: η αλλαγή δεν περνά, και ο ίδιος γυρίζει στην ανάλυση όπως είναι
-          this.send(ws, { t: 'pgn', pgn: this.pgn, seq: meta.seq, by: 'h' });
+          this.send(ws, { t: 'pgn', pgn: this.pgn, seq: meta.seq, by: host });
           return;
         }
         this.pgn = m.pgn;
@@ -803,7 +894,7 @@ export class AnalysisRoom extends DurableObject<Env> {
         const path = m.path;
         if (!Array.isArray(path) || path.length > 2000 || !path.every((x) => typeof x === 'string' && UCI_RE.test(x))) return;
         ws.serializeAttachment({ ...at, cursor: path.length <= CURSOR_KEEP ? path : undefined } satisfies ShareAttach);
-        if (canEdit(meta.rules, at.pid)) this.broadcast({ t: 'cursor', by: at.pid, path }, ws);
+        if (canEdit(meta.rules, at.pid, host)) this.broadcast({ t: 'cursor', by: at.pid, path }, ws);
         return;
       }
       case 'chat': {
@@ -816,29 +907,39 @@ export class AnalysisRoom extends DurableObject<Env> {
         return;
       }
       case 'engine': {
-        if (at.role !== 'host') return;
+        if (!isHost) return;
         const info = m.info;
         this.engine = info && typeof info.fen === 'string' && Array.isArray(info.lines) ? { fen: info.fen, depth: Number(info.depth) || 0, lines: info.lines.slice(0, 5) } : null;
         this.broadcast({ t: 'engine', info: this.engine }, ws);
         return;
       }
       case 'live': {
-        if (at.role !== 'host') return;
+        if (!isHost) return;
         this.live = cleanLive(m.info);
         this.liveAt = this.live ? Date.now() : 0;
         this.broadcast({ t: 'live', info: this.live }, ws);
         return;
       }
       case 'video': {
-        if (!canEdit(meta.rules, at.pid)) return;
-        this.video = cleanVideoId(m.id);
+        if (!canEdit(meta.rules, at.pid, host)) return;
+        const next = cleanVideoId(m.id);
+        if (next !== this.video) this.videoSync = null;
+        this.video = next;
         this.broadcast({ t: 'video', id: this.video });
+        return;
+      }
+      case 'videoSync': {
+        if (!canEdit(meta.rules, at.pid, host)) return;
+        const sync = cleanVideoSync(m.sync, this.video);
+        if (!sync) return;
+        this.videoSync = { ...sync, by: at.pid };
+        this.broadcast({ t: 'videoSync', sync: this.videoSync }, ws);
         return;
       }
       case 'voice': {
         let state = cleanVoice(m.state);
         if (state && meta.rules?.silenced.includes(at.pid)) state = { ...state, mic: false };
-        if (state?.cam && !canCam(meta.rules, at.pid)) state = { ...state, cam: false };
+        if (state?.cam && !canCam(meta.rules, at.pid, host)) state = { ...state, cam: false };
         if (state && !at.voice && Object.keys(this.voices(ws)).filter((p) => p !== at.pid).length >= VOICE_MAX) state = null;
         ws.serializeAttachment({ ...at, voice: state ?? undefined } satisfies ShareAttach);
         this.broadcast({ t: 'voice', by: at.pid, state });
@@ -851,24 +952,58 @@ export class AnalysisRoom extends DurableObject<Env> {
         return;
       }
       case 'lock': {
-        if (at.role !== 'host' || !meta.rules || typeof m.on !== 'boolean') return;
+        if (!isHost || !meta.rules || typeof m.on !== 'boolean') return;
         meta.rules = applyRule(meta.rules, m, []);
         await this.save({ meta: true });
         this.broadcast({ t: 'rules', rules: meta.rules });
+        return;
+      }
+      case 'transfer': {
+        if (!isHost || typeof m.pid !== 'string' || m.pid === host) return;
+        if (!this.socketsOf(m.pid).length) return;
+        await this.transferHost(m.pid, true);
+        return;
+      }
+      case 'leave': {
+        if (meta.order) meta.order = meta.order.filter((p) => p !== at.pid);
+        if (isHost && this.socketsOf(at.pid, ws).length === 0) {
+          this.engine = null;
+          this.live = null;
+          this.liveAt = 0;
+          this.broadcast({ t: 'engine', info: null }, ws);
+          this.broadcast({ t: 'live', info: null }, ws);
+          const next = pickNextHost(this.presence(ws).online, host, meta.order ?? []);
+          if (next) await this.transferHost(next, false, ws);
+          else await this.save({ meta: true });
+        } else {
+          await this.save({ meta: true });
+        }
+        try {
+          ws.close(1000, 'left');
+        } catch {
+          // ήδη κλειστό
+        }
+        await this.left(ws, false);
+        return;
+      }
+      case 'end': {
+        if (!isHost) return;
+        await this.endRoom();
         return;
       }
       case 'perm':
       case 'silence':
       case 'cam':
       case 'kick': {
-        if (at.role !== 'host' || !meta.rules || typeof m.pid !== 'string' || m.pid === 'h') return;
+        if (!isHost || !meta.rules || typeof m.pid !== 'string' || m.pid === host) return;
         if ((m.t === 'perm' && typeof m.edit !== 'boolean') || ((m.t === 'silence' || m.t === 'cam') && typeof m.on !== 'boolean')) return;
-        const guests = this.presence().online.filter((p) => p !== 'h');
+        const guests = this.presence().online.filter((p) => p !== host);
         meta.rules = applyRule(meta.rules, m, guests);
         if (m.t === 'kick') {
           const gone = Object.keys(meta.tokens).filter((k) => meta.tokens[k] === m.pid);
           for (const k of gone) delete meta.tokens[k];
           meta.kicked = [...(meta.kicked ?? []), ...gone].slice(-200);
+          if (meta.order) meta.order = meta.order.filter((p) => p !== m.pid);
         }
         await this.save({ meta: true });
         this.broadcast({ t: 'rules', rules: meta.rules });
@@ -904,17 +1039,29 @@ export class AnalysisRoom extends DurableObject<Env> {
     } catch {
       // ήδη κλειστό
     }
-    this.left(ws);
+    await this.left(ws, code === 1000);
   }
 
   async webSocketError(ws: WebSocket): Promise<void> {
-    this.left(ws);
+    await this.left(ws, false);
   }
 
-  /** Κάποιος έφυγε: ποιοι μένουν, και η φωνή του (αν δεν είναι μέσα από άλλη σύνδεση). */
-  private left(ws: WebSocket): void {
+  /** Κάποιος έφυγε: ποιοι μένουν, η φωνή του, και αυτόματη μεταφορά host σε καθαρή αποχώρηση. */
+  private async left(ws: WebSocket, clean = false): Promise<void> {
     const at = ws.deserializeAttachment() as ShareAttach | null;
     if (at?.voice) this.broadcast({ t: 'voice', by: at.pid, state: this.voices(ws)[at.pid] ?? null }, ws);
-    this.broadcast({ t: 'presence', presence: this.presence() }, ws);
+    const meta = this.meta;
+    if (clean && meta && at?.pid === this.hostPid() && this.socketsOf(at.pid, ws).length === 0) {
+      if (meta.order) meta.order = meta.order.filter((p) => p !== at.pid);
+      this.engine = null;
+      this.live = null;
+      this.liveAt = 0;
+      this.broadcast({ t: 'engine', info: null }, ws);
+      this.broadcast({ t: 'live', info: null }, ws);
+      const next = pickNextHost(this.presence(ws).online, at.pid, meta.order ?? []);
+      if (next) await this.transferHost(next, false, ws);
+      else await this.save({ meta: true });
+    }
+    this.broadcast({ t: 'presence', presence: this.presence(ws) }, ws);
   }
 }

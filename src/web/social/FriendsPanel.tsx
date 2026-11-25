@@ -11,7 +11,7 @@ import { setUiLater } from '../tactics/store.ts';
 import { ContextMenu, Dialog, type MenuItem } from '../components/ui.tsx';
 import { openLink } from '../components/About.tsx';
 import { DEFAULT_PLAY_SERVER, playServer } from '../online/server.ts';
-import { acceptInvite, accountOf, declineInvite, downloadMyData, fullName, inviteFriend, inviteTeamAnalysis, joinRoom, openChat, openReport, openSend, recoverSocial, registerSocial, setAccounts, signOutSocial, socialSend, teamKey, useSocial, type SocialAccount } from './social.ts';
+import { acceptInvite, accountOf, clearAddResult, declineInvite, downloadMyData, fullName, inviteFriend, inviteTeamAnalysis, joinRoom, openChat, openReport, openSend, recoverSocial, registerSocial, setAccounts, signOutSocial, socialSend, teamKey, useSocial, type SocialAccount } from './social.ts';
 import { chesscomProfile, lichessGameText, lichessProfile, loadGameInfo, useLichessFriends, useLichessPoll, useMyLichess, watchLichessGame, type LichessGame } from './lichess.ts';
 import '../tactics/tactics.css';
 import '../play/play.css';
@@ -209,7 +209,7 @@ function FriendList({ acc }: { acc: SocialAccount }) {
     const nt = parseNameTag(add);
     if (!nt) return setAddError(L('Γράψε όνομα και αριθμό, π.χ. Μαρία#4821.', 'Type a name and number, e.g. Maria#4821.'));
     setAddError(null);
-    useSocial.setState({ addResult: null });
+    clearAddResult();
     if (socialSend({ t: 'add', name: nt.name, tag: nt.tag })) setAdd('');
   };
 
@@ -565,6 +565,7 @@ function FriendList({ acc }: { acc: SocialAccount }) {
           onChange={(e) => {
             setAdd(e.target.value);
             setAddError(null);
+            if (addResult) clearAddResult();
           }}
         />
         <button type="submit" className="btn btn-secondary btn-sm" disabled={!ok || !add.trim()} title={L('Αποστολή αιτήματος φιλίας', 'Send a friend request')}>

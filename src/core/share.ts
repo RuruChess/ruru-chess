@@ -34,6 +34,15 @@ export interface ShareLiveInfo {
   plies: number;
 }
 
+/** Κατάσταση συγχρονισμού κοινού βίντεο YouTube (play/pause + δευτερόλεπτο). */
+export interface VideoSyncState {
+  id: string;
+  time: number;
+  playing: boolean;
+  at: number;
+  by?: Pid;
+}
+
 export interface Presence {
   online: Pid[];
   names: Record<Pid, string>;
@@ -76,6 +85,7 @@ export type ShareClientMsg =
   | { t: 'engine'; info: EngineInfo | null }
   | { t: 'live'; info: ShareLiveInfo | null }
   | { t: 'video'; id: string | null }
+  | { t: 'videoSync'; sync: { id: string; time: number; playing: boolean } }
   | { t: 'name'; name: string }
   | { t: 'voice'; state: VoiceState | null }
   | { t: 'rtc'; to: Pid; data: RtcSignal }
@@ -85,12 +95,18 @@ export type ShareClientMsg =
   | { t: 'cam'; pid: Pid; on: boolean }
   | { t: 'kick'; pid: Pid }
   | { t: 'lock'; on: boolean }
+  /** ο οικοδεσπότης παραδίδει τον ρόλο σε άλλον συμμετέχοντα */
+  | { t: 'transfer'; pid: Pid }
+  /** ο οικοδεσπότης αποχωρεί (μεταφέρει τον ρόλο στον παλαιότερο ενεργό) */
+  | { t: 'leave' }
+  /** ο οικοδεσπότης τερματίζει τη συνεδρία για όλους */
+  | { t: 'end' }
   | { t: 'ping' };
 
 export type ShareServerMsg =
   /** `v` 2: το relay ξέρει φωνή, δικαιώματα και αποβολή· 3: και κάμερα */
   | { t: 'welcome'; pid: Pid; role: 'host' | 'guest'; token?: string; v?: number }
-  | { t: 'init'; pgn: string; seq: number; chat: ChatMsg[]; presence: Presence; cursors: Record<Pid, string[]>; engine: EngineInfo | null; live?: ShareLiveInfo | null; video?: string | null; rules?: ShareRules; voice?: Record<Pid, VoiceState> }
+  | { t: 'init'; pgn: string; seq: number; chat: ChatMsg[]; presence: Presence; cursors: Record<Pid, string[]>; engine: EngineInfo | null; live?: ShareLiveInfo | null; video?: string | null; videoSync?: VideoSyncState | null; host?: Pid; rules?: ShareRules; voice?: Record<Pid, VoiceState> }
   | { t: 'pgn'; pgn: string; seq: number; by: Pid }
   | { t: 'cursor'; by: Pid; path: string[] }
   | { t: 'chat'; msg: ChatMsg }
@@ -98,6 +114,8 @@ export type ShareServerMsg =
   | { t: 'engine'; info: EngineInfo | null }
   | { t: 'live'; info: ShareLiveInfo | null }
   | { t: 'video'; id: string | null }
+  | { t: 'videoSync'; sync: VideoSyncState | null }
+  | { t: 'host'; pid: Pid }
   | { t: 'rules'; rules: ShareRules }
   | { t: 'voice'; by: Pid; state: VoiceState | null }
   | { t: 'rtc'; by: Pid; data: RtcSignal }
@@ -105,6 +123,8 @@ export type ShareServerMsg =
 
 /** Ο κωδικός κλεισίματος του WebSocket όταν ο οικοδεσπότης βγάζει κάποιον. */
 export const SHARE_KICKED = 4403;
+/** …όταν ο οικοδεσπότης τερματίζει τη συνεδρία για όλους. */
+export const SHARE_ENDED = 4410;
 /** …και όταν νέος καλεσμένος βρίσκει το δωμάτιο κλειδωμένο. */
 export const SHARE_LOCKED = 4423;
 /** Φωνή: ο καθένας στέλνει σε όλους, άρα ως 8 άτομα μαζί. */
@@ -112,10 +132,20 @@ export const VOICE_MAX = 8;
 export const RTC_MAX = 32_000;
 
 /** Αλλάζει την ανάλυση; Ο οικοδεσπότης πάντα· χωρίς κανόνες (παλιό δωμάτιο) όλοι. */
-export const canEdit = (rules: ShareRules | null | undefined, pid: Pid | null | undefined): boolean => !rules || pid === 'h' || (!!pid && rules.editors.includes(pid));
+export const canEdit = (rules: ShareRules | null | undefined, pid: Pid | null | undefined, host: Pid = 'h'): boolean =>
+  !rules || (!!pid && (pid === host || rules.editors.includes(pid)));
 
 /** Ανοίγει κάμερα; Ο οικοδεσπότης πάντα, οι καλεσμένοι με την άδειά του· χωρίς κανόνες (παλιό δωμάτιο) όλοι. */
-export const canCam = (rules: ShareRules | null | undefined, pid: Pid | null | undefined): boolean => !rules || pid === 'h' || (!!pid && !!rules.cams?.includes(pid));
+export const canCam = (rules: ShareRules | null | undefined, pid: Pid | null | undefined, host: Pid = 'h'): boolean =>
+  !rules || (!!pid && (pid === host || !!rules.cams?.includes(pid)));
+
+/** Επιλογή νέου οικοδεσπότη όταν φεύγει ο τωρινός: ο παλαιότερος ενεργός συμμετέχων. */
+export function pickNextHost(online: readonly Pid[], leavingHost: Pid, joinedOrder: readonly Pid[]): Pid | null {
+  const alive = new Set(online.filter((p) => p !== leavingHost));
+  if (!alive.size) return null;
+  for (const p of joinedOrder) if (alive.has(p)) return p;
+  return [...alive].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))[0] ?? null;
+}
 
 /** Μια ενέργεια του οικοδεσπότη πάνω στους κανόνες (`guests`: όσοι είναι τώρα μέσα, για το «όλοι»). */
 export function applyRule(
@@ -248,13 +278,29 @@ export function parseVideoUrl(raw: string): string | null {
   return null;
 }
 
+/** Καθαρή κατάσταση συγχρονισμού YouTube βίντεο από το δίκτυο (ή null). */
+export function cleanVideoSync(v: unknown, expectedId: string | null): VideoSyncState | null {
+  if (!expectedId || !expectedId.startsWith('yt:') || !v || typeof v !== 'object') return null;
+  const o = v as Record<string, unknown>;
+  const id = cleanVideoId(o.id);
+  if (id !== expectedId) return null;
+  if (typeof o.time !== 'number' || !Number.isFinite(o.time) || o.time < 0 || o.time > 604_800) return null;
+  if (typeof o.playing !== 'boolean') return null;
+  return { id, time: Math.round(o.time * 100) / 100, playing: o.playing, at: Date.now() };
+}
+
+/** Τρέχον δευτερόλεπτο αναπαραγωγής από μια κατάσταση συγχρονισμού (προχωρά μόνο όταν παίζει). */
+export function videoSyncTime(s: VideoSyncState, now = Date.now()): number {
+  return s.playing ? s.time + Math.max(0, (now - s.at) / 1000) : s.time;
+}
+
 /** URLs ενσωμάτωσης και εξωτερικού ανοίγματος για ένα έγκυρο αναγνωριστικό βίντεο. */
 export function videoInfo(raw: string | null | undefined, parentHost = '127.0.0.1'): VideoInfo | null {
   const ref = cleanVideoId(raw);
   if (!ref) return null;
   if (ref.startsWith('yt:')) {
     const id = ref.slice(3);
-    return { provider: 'youtube', label: 'YouTube', embedUrl: `https://www.youtube-nocookie.com/embed/${id}?rel=0`, watchUrl: `https://www.youtube.com/watch?v=${id}` };
+    return { provider: 'youtube', label: 'YouTube', embedUrl: `https://www.youtube-nocookie.com/embed/${id}?rel=0&enablejsapi=1`, watchUrl: `https://www.youtube.com/watch?v=${id}` };
   }
   const host = /^[a-z0-9.-]+$/i.test(parentHost) ? parentHost : '127.0.0.1';
   if (ref.startsWith('tw:')) {
@@ -273,10 +319,11 @@ export function videoInfo(raw: string | null | undefined, parentHost = '127.0.0.
  * Ποια κάμερα φαίνεται στο ένα παράθυρο: όποιον καρφίτσωσες, αλλιώς ο οικοδεσπότης, αλλιώς ο πρώτος άλλος με
  * ανοιχτή κάμερα, και τελευταία η δική σου. Μετρούν μόνο όσοι έχουν κάμερα ανοιχτή και άδεια· null: καμία.
  */
-export function pickCamera(o: { me: Pid | null; pinned: Pid | null; voices: Record<Pid, VoiceState>; rules: ShareRules | null; order: readonly Pid[] }): Pid | null {
-  const on = (p: Pid | null): p is Pid => !!p && !!o.voices[p]?.cam && canCam(o.rules, p);
+export function pickCamera(o: { me: Pid | null; pinned: Pid | null; voices: Record<Pid, VoiceState>; rules: ShareRules | null; order: readonly Pid[]; host?: Pid }): Pid | null {
+  const host = o.host ?? 'h';
+  const on = (p: Pid | null): p is Pid => !!p && !!o.voices[p]?.cam && canCam(o.rules, p, host);
   if (on(o.pinned)) return o.pinned;
-  if (o.me !== 'h' && on('h')) return 'h';
+  if (o.me !== host && on(host)) return host;
   const other = o.order.find((p) => p !== o.me && on(p));
   if (other) return other;
   return on(o.me) ? o.me : null;

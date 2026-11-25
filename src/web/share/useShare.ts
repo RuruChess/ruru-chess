@@ -7,20 +7,22 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Game } from '../../core/game.ts';
 import { parseGames, writeGame } from '../../core/pgn.ts';
-import { canEdit, nodeAt, pathOf, samePath, SHARE_KICKED, SHARE_LOCKED, type ChatMsg, type EngineInfo, type Pid, type Presence, type RtcSignal, type ShareClientMsg, type ShareLiveInfo, type ShareRules, type ShareServerMsg, type VoiceState } from '../../core/share.ts';
+import { canEdit, nodeAt, pathOf, samePath, SHARE_ENDED, SHARE_KICKED, SHARE_LOCKED, type ChatMsg, type EngineInfo, type Pid, type Presence, type RtcSignal, type ShareClientMsg, type ShareLiveInfo, type ShareRules, type ShareServerMsg, type VideoSyncState, type VoiceState } from '../../core/share.ts';
 import type { GameController } from '../gameModel.ts';
 import { socketUrl } from '../online/useRoom.ts';
 import { useVoice, type VoiceConn } from './useVoice.ts';
 
 export interface ShareConn {
-  status: 'connecting' | 'open' | 'retrying' | 'gone' | 'full' | 'kicked' | 'locked';
+  status: 'connecting' | 'open' | 'retrying' | 'gone' | 'full' | 'kicked' | 'locked' | 'ended';
   pid: Pid | null;
+  host: Pid;
   role: 'host' | 'guest' | null;
   presence: Presence;
   chat: ChatMsg[];
   engine: EngineInfo | null;
   live: ShareLiveInfo | null;
   video: string | null;
+  videoSync: VideoSyncState | null;
   cursors: Record<Pid, string[]>;
   follow: boolean;
   setFollow: (on: boolean) => void;
@@ -44,12 +46,15 @@ export function useShare(ctrl: GameController, server: string, id: string, token
   const [status, setStatus] = useState<ShareConn['status']>('connecting');
   const [pid, setPid] = useState<Pid | null>(null);
   const pidRef = useRef<Pid | null>(null);
-  const [role, setRole] = useState<'host' | 'guest' | null>(null);
+  const [host, setHost] = useState<Pid>('h');
+  const hostRef = useRef<Pid>('h');
+  const role: 'host' | 'guest' | null = pid ? (pid === host ? 'host' : 'guest') : null;
   const [presence, setPresence] = useState<Presence>({ online: [], names: {} });
   const [chat, setChat] = useState<ChatMsg[]>([]);
   const [engine, setEngine] = useState<EngineInfo | null>(null);
   const [live, setLive] = useState<ShareLiveInfo | null>(null);
   const [video, setVideo] = useState<string | null>(null);
+  const [videoSync, setVideoSync] = useState<VideoSyncState | null>(null);
   const [cursors, setCursors] = useState<Record<Pid, string[]>>({});
   const [follow, setFollowState] = useState(true);
   const [v, setV] = useState(0);
@@ -129,7 +134,10 @@ export function useShare(ctrl: GameController, server: string, id: string, token
           case 'welcome':
             pidRef.current = m.pid;
             setPid(m.pid);
-            setRole(m.role);
+            if (m.role === 'host') {
+              hostRef.current = m.pid;
+              setHost(m.pid);
+            }
             setV(m.v ?? 0);
             if (m.token) {
               tokenRef.current = m.token;
@@ -137,10 +145,13 @@ export function useShare(ctrl: GameController, server: string, id: string, token
             }
             break;
           case 'init': {
+            const initHost = m.host ?? 'h';
+            hostRef.current = initHost;
+            setHost(initHost);
             const mine = sharePgn(ctrl.game);
             // αν ο οικοδεσπότης έχει ήδη κινήσεις (π.χ. ήρθαν από Watch Live) ενώ το δωμάτιο φτιάχτηκε άδειο, κρατάμε τις δικές του
             const serverEmpty = !m.pgn || !parseGames(m.pgn)[0]?.game.root.children.length;
-            const hostHasLive = pidRef.current === 'h' && ctrl.game.root.children.length > 0 && serverEmpty;
+            const hostHasLive = pidRef.current === initHost && ctrl.game.root.children.length > 0 && serverEmpty;
             if (m.pgn && m.pgn !== mine && !hostHasLive) applyPgn(m.pgn);
             else synced.current = hostHasLive ? '' : m.pgn || mine;
             // ξανασύνδεση με αλλαγές που δεν έφυγαν: τις στέλνουμε τώρα
@@ -154,6 +165,7 @@ export function useShare(ctrl: GameController, server: string, id: string, token
             setEngine(m.engine);
             setLive(m.live ? { ...m.live, at: Date.now() } : null);
             setVideo(m.video ?? null);
+            setVideoSync(m.videoSync ? { ...m.videoSync, at: Date.now() } : null);
             setRules(m.rules ?? null);
             setVoices(m.voice ?? {});
             // μπαίνουμε στη θέση όπου βρίσκεται ήδη ο άλλος
@@ -183,6 +195,14 @@ export function useShare(ctrl: GameController, server: string, id: string, token
             break;
           case 'video':
             setVideo(m.id);
+            setVideoSync(null);
+            break;
+          case 'videoSync':
+            setVideoSync(m.sync ? { ...m.sync, at: Date.now() } : null);
+            break;
+          case 'host':
+            hostRef.current = m.pid;
+            setHost(m.pid);
             break;
           case 'rules':
             setRules(m.rules);
@@ -207,6 +227,7 @@ export function useShare(ctrl: GameController, server: string, id: string, token
         if (ev.code === 4404) return setStatus('gone');
         if (ev.code === 4429) return setStatus('full');
         if (ev.code === SHARE_KICKED) return setStatus('kicked');
+        if (ev.code === SHARE_ENDED) return setStatus('ended');
         if (ev.code === SHARE_LOCKED) return setStatus('locked');
         setStatus('retrying');
         timer = setTimeout(connect, Math.min(10_000, 1000 * 2 ** retry++));
@@ -258,7 +279,7 @@ export function useShare(ctrl: GameController, server: string, id: string, token
   }, [ctrl]);
 
   // χωρίς άδεια: η παρτίδα εδώ κλειδώνει (μόνο πλοήγηση)· τα ίδια ελέγχει και το relay
-  const editable = canEdit(rules, pid);
+  const editable = canEdit(rules, pid, host);
   useEffect(() => {
     ctrl.locked = !editable;
     ctrl.onLocked = () => setBlockedAt(Date.now());
@@ -281,7 +302,8 @@ export function useShare(ctrl: GameController, server: string, id: string, token
 
   /** Ποιον ακολουθούμε: πρώτα τον οικοδεσπότη, μετά όποιον άλλον αλλάζει την ανάλυση. */
   function leader(all: Record<Pid, string[]>): string[] | undefined {
-    if (pidRef.current !== 'h' && all.h) return all.h;
+    const h = hostRef.current;
+    if (pidRef.current !== h && all[h]) return all[h];
     return Object.entries(all).find(([p]) => p !== pidRef.current)?.[1];
   }
 
@@ -304,7 +326,7 @@ export function useShare(ctrl: GameController, server: string, id: string, token
     }
   };
 
-  const voice = useVoice({ id, pid, v, status, voices, rules, send, rtcRef, fetchIceServers });
+  const voice = useVoice({ id, pid, host, v, status, voices, rules, send, rtcRef, fetchIceServers });
 
-  return { status, pid, role, presence, chat, engine, live, video, cursors, follow, setFollow, send, v, rules, canEdit: editable, blockedAt, voices, voice };
+  return { status, pid, host, role, presence, chat, engine, live, video, videoSync, cursors, follow, setFollow, send, v, rules, canEdit: editable, blockedAt, voices, voice };
 }

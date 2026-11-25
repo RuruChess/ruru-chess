@@ -1,0 +1,259 @@
+/* Σελίδα «Εκδόσεις / Patch Notes» (τύπου LoL Patch Notes, Light & Dark mode) */
+
+.rn-page {
+  display: grid;
+  gap: 22px;
+  max-width: 960px;
+}
+
+.rn-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 26px;
+  border-radius: var(--r-lg, 14px);
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--border));
+  background:
+    radial-gradient(circle at 92% 15%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 55%),
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 9%, var(--panel)), var(--panel-2));
+}
+
+.rn-logo {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  object-fit: contain;
+  box-shadow: 0 6px 18px color-mix(in srgb, #000 18%, transparent);
+}
+
+.rn-hero-text {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.rn-hero-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.rn-ver {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.rn-date {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.rn-headline {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.rn-sub {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.rn-versions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rn-vbtn {
+  height: 30px;
+  padding: 0 13px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rn-vbtn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.rn-vbtn.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text, var(--accent));
+}
+
+.rn-highlights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 680px) {
+  .rn-highlights {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rn-hi {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--r-md, 10px);
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.rn-hi-ic {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.rn-hi-body {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.rn-hi-body b {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.rn-hi-body span {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-2);
+}
+
+.rn-sections {
+  display: grid;
+  gap: 16px;
+}
+
+.rn-sec-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px 20px;
+}
+
+.rn-sec-h {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.rn-sec-ic {
+  color: var(--accent);
+  flex: none;
+}
+
+.rn-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rn-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 9px;
+  background: var(--panel-2);
+  border: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+}
+
+.rn-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  padding: 3px 8px;
+  margin-top: 1px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.rn-tag.is-new {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent-text, var(--accent));
+}
+
+.rn-tag.is-improved {
+  background: color-mix(in srgb, var(--ok) 16%, transparent);
+  color: var(--ok);
+}
+
+.rn-tag.is-fix {
+  background: color-mix(in srgb, var(--warn) 18%, transparent);
+  color: var(--warn-text, var(--warn));
+}
+
+.rn-item-body {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.rn-item-body b {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.rn-item-body p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.52;
+  color: var(--text-2);
+}
+
+.rn-foot-bar {
+  padding-top: 4px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--muted);
+}

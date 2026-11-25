@@ -98,7 +98,7 @@ export interface SocialState {
   /** οι παρτίδες που είναι ανοιχτές στα ξεχωριστά παράθυρα (`win`: το παράθυρο), για το «Κοινή ανάλυση με…» */
   openGames: OpenGame[];
   /** αποτέλεσμα της τελευταίας «Προσθήκης φίλου» */
-  addResult: { ok: boolean; text: string } | null;
+  addResult: { ok: boolean; text: string; target?: string } | null;
   /** μόλις φτιάχτηκε ο λογαριασμός: δείξε τον κωδικό ανάκτησης */
   showCode: boolean;
   /** παράθυρα του Safety.tsx */
@@ -126,6 +126,26 @@ const EMPTY = {
   report: null,
   reported: null,
 } satisfies Partial<SocialState>;
+
+/** Αυτόματο σβήσιμο του μηνύματος «Αίτημα φιλίας στάλθηκε / σφάλμα» ώστε να μη μένει κολλημένο. */
+let addResultTimer: ReturnType<typeof setTimeout> | undefined;
+function setAddResult(res: SocialState['addResult'], autoClearMs = 8000): void {
+  if (addResultTimer) clearTimeout(addResultTimer);
+  addResultTimer = undefined;
+  useSocial.setState({ addResult: res });
+  if (res && autoClearMs > 0) {
+    addResultTimer = setTimeout(() => {
+      addResultTimer = undefined;
+      if (useSocial.getState().addResult === res) useSocial.setState({ addResult: null });
+    }, autoClearMs);
+  }
+}
+
+export function clearAddResult(): void {
+  setAddResult(null, 0);
+}
+
+const nameTagKey = (name: string, tag: string) => `${name.toLowerCase()}#${tag}`;
 
 export const useSocial = create<SocialState>(() => ({ status: 'off', joinGame: null, joinAnalysis: null, hostGame: null, gameDialog: null, analysisDialog: null, shareTab: null, shareStart: null, openGames: [], teamView: null, newTeam: false, sendDialog: null, showCode: false, legal: null, ...EMPTY }));
 
@@ -445,9 +465,12 @@ function handle(m: SocialServerMsg): void {
       upsertFriend(m.f);
       if (m.f.state === 'in' && !old) playChime();
       if (m.f.state === 'friend' && old?.state === 'out') toast(L(`Ο/Η ${fullName(m.f)} δέχτηκε το αίτημά σου.`, `${fullName(m.f)} accepted your request.`), 'ok');
+      if (m.f.state === 'friend' && s.addResult?.target === nameTagKey(m.f.name, m.f.tag)) clearAddResult();
       return;
     }
-    case 'unfriend':
+    case 'unfriend': {
+      const removed = s.friends.find((f) => f.id === m.id);
+      if (removed && s.addResult?.target === nameTagKey(removed.name, removed.tag)) clearAddResult();
       set({
         friends: s.friends.filter((f) => f.id !== m.id),
         chats: s.chats.filter((c) => c.peer !== m.id),
@@ -455,6 +478,7 @@ function handle(m: SocialServerMsg): void {
         files: s.files.filter((i) => i.team || i.peer !== m.id),
       });
       return;
+    }
     case 'presence':
       set({ friends: s.friends.map((f) => (f.id === m.id ? { ...f, p: m.p } : f)) });
       return;
@@ -519,13 +543,12 @@ function handle(m: SocialServerMsg): void {
       set({ friends: s.friends.map((f) => (f.id === m.peer ? { ...f, unread: 0 } : f)) });
       return;
     case 'added':
-      set({
-        addResult: {
-          ok: true,
-          text: m.friends
-            ? L(`Είστε πια φίλοι με τον/την ${m.name}#${m.tag}.`, `You are now friends with ${m.name}#${m.tag}.`)
-            : L(`Στάλθηκε αίτημα φιλίας στον/στην ${m.name}#${m.tag}.`, `Friend request sent to ${m.name}#${m.tag}.`),
-        },
+      setAddResult({
+        ok: true,
+        target: nameTagKey(m.name, m.tag),
+        text: m.friends
+          ? L(`Είστε πια φίλοι με τον/την ${m.name}#${m.tag}.`, `You are now friends with ${m.name}#${m.tag}.`)
+          : L(`Στάλθηκε αίτημα φιλίας στον/στην ${m.name}#${m.tag}.`, `Friend request sent to ${m.name}#${m.tag}.`),
       });
       return;
     case 'reply': {
@@ -560,7 +583,7 @@ function handle(m: SocialServerMsg): void {
       return;
     }
     case 'error':
-      if (['notfound', 'self', 'already', 'limit', 'blocked'].includes(m.code)) set({ addResult: { ok: false, text: ERR[m.code]() } });
+      if (['notfound', 'self', 'already', 'limit', 'blocked'].includes(m.code)) setAddResult({ ok: false, text: ERR[m.code]() }, 6000);
       else toast(ERR[m.code](), 'error');
       return;
     default:

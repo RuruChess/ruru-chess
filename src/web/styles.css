@@ -1720,7 +1720,7 @@ button:focus-visible,
   background: var(--border);
 }
 
-@container bwtools (max-width: 940px) {
+@container bwtools (max-width: 1120px) {
   .bw-tools .bw-tb > span,
   .bw-tools .bw-tb > .chev {
     display: none;

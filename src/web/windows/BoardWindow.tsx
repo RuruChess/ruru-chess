@@ -61,7 +61,19 @@ function fmtClock(ms: number, pgn = false): string {
   return s < 10 ? s.toFixed(1) : mmss(s);
 }
 
-export function BoardWindow({ tab, active }: { tab: GameTab; active: boolean }) {
+export function BoardWindow({
+  tab,
+  active,
+  shareLeaveSignal,
+  onShareExit,
+  onShareEnded,
+}: {
+  tab: GameTab;
+  active: boolean;
+  shareLeaveSignal?: number;
+  onShareExit?: () => void;
+  onShareEnded?: () => void;
+}) {
   const ctrl = controllerFor(tab.id, () => {
     if (tab.pgn) {
       const c = GameController.fromPgn(tab.pgn).ctrl;
@@ -1295,8 +1307,20 @@ export function BoardWindow({ tab, active }: { tab: GameTab; active: boolean }) 
             live={live.state}
             onLive={setRemoteLive}
             video={{ open: videoOpen, localId: videoId, onLocalId: setVideoId, onOpenChange: setVideoOpen }}
+            leaveSignal={shareLeaveSignal}
             onRoom={setShare}
-            onStop={() => setShare(null)}
+            onStop={() => {
+              if (onShareExit) onShareExit();
+              else setShare(null);
+            }}
+            onEnded={
+              onShareEnded
+                ? () => {
+                    setShare(null);
+                    onShareEnded();
+                  }
+                : undefined
+            }
           />
         ) : (
           videoOpen && (

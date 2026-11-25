@@ -8,6 +8,7 @@ import { Router } from '../../src/server/http.ts';
 import type { Library } from '../../src/server/library.ts';
 import { readGameLessons } from '../../src/server/tactics/collections.ts';
 import { registerTactics } from '../../src/server/tactics/index.ts';
+import { canReviewLesson } from '../../src/core/strategy.ts';
 import { apiJson, tempTactics } from './helpers.ts';
 
 function tree(pgn: string): { error: string | null; root: GameNode; shape: string[] } {
@@ -97,5 +98,15 @@ describe('μαθήματα στρατηγικής: διαδρομές', () => {
     expect(one.json.pgn.el).toMatch(/^1\. d4 d5 2\. Nf3/);
     expect(one.json.questions[2]).toMatchObject({ ply: 39, best: ['Nf5'] });
     expect((await apiJson(port, 'GET', '/api/tactics/games/xyz')).status).toBe(404);
+  });
+
+  it('το Περιήγηση (Review) εμφανίζεται μόνο όταν έχουν απαντηθεί όλες οι ασκήσεις', () => {
+    expect(canReviewLesson(undefined, 4)).toBe(false);
+    expect(canReviewLesson({ revealed: 20, answers: { '15': 'Nf3', '25': '' } }, 4)).toBe(false);
+    expect(canReviewLesson({ revealed: 80, answers: { '15': 'Nf3', '25': '' }, done: true }, 4)).toBe(false);
+    // σωστές ή λάθος / «δείξε μου» — αρκεί να έχουν απαντηθεί όλες
+    expect(canReviewLesson({ revealed: 60, answers: { '15': 'Nf3', '25': '', '39': 'h3', '51': 'Qd2' } }, 4)).toBe(true);
+    expect(canReviewLesson({ revealed: 0, answers: {}, done: true, allAnswered: true }, 4)).toBe(true);
+    expect(canReviewLesson({ revealed: 40, answers: {}, done: true }, 0)).toBe(true);
   });
 });

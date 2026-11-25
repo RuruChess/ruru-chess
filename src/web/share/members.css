@@ -43,7 +43,8 @@
   line-height: 1.3;
 }
 .yt-scope {
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 4px;
   font-size: 12px;
@@ -108,12 +109,17 @@
   align-items: center;
   gap: 6px;
 }
+.sa-panel .yt-consent-act .sa-btn.yt-play,
 .yt-consent-act .yt-play {
   border-color: var(--accent);
   background: var(--accent);
   color: #fff;
 }
-.yt-consent-act .yt-play:hover {
+.sa-panel .yt-consent-act .sa-btn.yt-play:hover:not(:disabled),
+.yt-consent-act .yt-play:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
   filter: brightness(1.06);
 }
 .sa-panel.video-panel {

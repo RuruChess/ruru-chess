@@ -25,15 +25,16 @@ const initial = (name: string) => [...name.trim()][0]?.toUpperCase() ?? '?';
 
 export function ShareMembers({ conn, video }: { conn: ShareConn; video?: ShareVideoControl }) {
   const { voice, rules, presence } = conn;
-  const host = conn.pid === 'h';
+  const hostPid = conn.host;
+  const host = conn.pid !== null && conn.pid === hostPid;
   const canShareVideo = conn.canEdit;
-  const guests = presence.online.filter((p) => p !== 'h');
+  const guests = presence.online.filter((p) => p !== hostPid);
   // ο οικοδεσπότης πρώτος, μετά εμείς, μετά οι άλλοι με τη σειρά που μπήκαν
   const order = [...presence.online].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b, undefined, { numeric: true }));
   function rank(p: Pid) {
-    return p === 'h' ? 0 : p === conn.pid ? 1 : 2;
+    return p === hostPid ? 0 : p === conn.pid ? 1 : 2;
   }
-  const editors = guests.filter((p) => canEdit(rules, p)).length;
+  const editors = guests.filter((p) => canEdit(rules, p, hostPid)).length;
 
   // βίντεο στην κοινή ανάλυση:
   // - αν υπάρχει κοινό βίντεο δωματίου (conn.video), φαίνεται μόνο εκείνο (χωρίς 2η τοπική επιλογή)
@@ -46,18 +47,33 @@ export function ShareMembers({ conn, video }: { conn: ShareConn; video?: ShareVi
   const setLocalOpen = video ? video.onOpenChange : setOwnOpen;
   const setLocalId = video ? video.onLocalId : setOwnLocalId;
   const [draftScope, setDraftScope] = useState<VideoScope>(() => (localId ? 'local' : host ? 'room' : 'local'));
+  /** κοινό βίντεο που έκρυψε ο καλεσμένος (ώστε να μπορεί να ανοίξει δικό του τοπικό βίντεο) */
+  const [dismissedRoom, setDismissedRoom] = useState<string | null>(null);
+  /** συγχρονισμός YouTube (play/pause + δευτερόλεπτο) στο δωμάτιο */
+  const [videoSyncOn, setVideoSyncOn] = useState(true);
   /** το id του κοινού βίντεο που βάλαμε εμείς οι ίδιοι (ώστε να μη μας ζητά «Προβολή») */
   const iSharedRef = useRef<string | null>(null);
 
   const roomVideo = conn.video;
+  useEffect(() => {
+    if (!roomVideo || (dismissedRoom && dismissedRoom !== roomVideo)) setDismissedRoom(null);
+  }, [roomVideo, dismissedRoom]);
+
+  const showRoomVideo = Boolean(roomVideo && dismissedRoom !== roomVideo);
+  const roomIsYouTube = Boolean(roomVideo?.startsWith('yt:'));
   let videoBox: ReactNode = null;
-  if (roomVideo) {
+  if (showRoomVideo && roomVideo) {
     videoBox = (
       <VideoEmbed
         videoId={roomVideo}
         editable={canShareVideo}
         requireConsent={iSharedRef.current !== roomVideo}
         scope={canShareVideo ? 'room' : undefined}
+        syncEnabled={roomIsYouTube ? videoSyncOn : undefined}
+        onSyncToggle={roomIsYouTube ? setVideoSyncOn : undefined}
+        remoteSync={conn.videoSync}
+        myPid={conn.pid}
+        onSyncEmit={canShareVideo ? (sync) => conn.send({ t: 'videoSync', sync }) : undefined}
         onScopeChange={
           canShareVideo
             ? (next) => {
@@ -88,6 +104,7 @@ export function ShareMembers({ conn, video }: { conn: ShareConn; video?: ShareVi
               }
             : undefined
         }
+        onDismiss={!canShareVideo ? () => setDismissedRoom(roomVideo) : undefined}
       />
     );
   } else if (localOpen || localId) {
@@ -140,7 +157,18 @@ export function ShareMembers({ conn, video }: { conn: ShareConn; video?: ShareVi
           {L('Μέσα', 'Here')} · {presence.online.length}
         </span>
         <span className="sa-spacer" />
-        {!roomVideo && !localOpen && !localId && (
+        {roomVideo && !showRoomVideo && !localOpen && !localId && (
+          <button
+            type="button"
+            className="sm-vid-btn"
+            title={L('Επανεμφάνιση του κοινού βίντεο του δωματίου', 'Show the room’s shared video again')}
+            onClick={() => setDismissedRoom(null)}
+          >
+            <Tv size={12} aria-hidden />
+            {L('Κοινό βίντεο', 'Room video')}
+          </button>
+        )}
+        {!showRoomVideo && !localOpen && !localId && (
           <button
             type="button"
             className="sm-vid-btn"
@@ -150,7 +178,7 @@ export function ShareMembers({ conn, video }: { conn: ShareConn; video?: ShareVi
                 : L('Άνοιγμα τοπικού βίντεο (μόνο για σένα)', 'Open a local video (only for you)')
             }
             onClick={() => {
-              setDraftScope(host ? 'room' : 'local');
+              setDraftScope(host && !roomVideo ? 'room' : 'local');
               setLocalOpen(true);
             }}
           >
@@ -195,6 +223,7 @@ export function ShareMembers({ conn, video }: { conn: ShareConn; video?: ShareVi
 
 function Member({ conn, pid }: { conn: ShareConn; pid: Pid }) {
   const { voice, rules } = conn;
+  const hostPid = conn.host;
   const me = pid === conn.pid;
   const name = conn.presence.names[pid] ?? pid;
   const vs = conn.voices[pid];
@@ -202,11 +231,11 @@ function Member({ conn, pid }: { conn: ShareConn; pid: Pid }) {
   const mutedByMe = !!voice.muted[pid];
   const link = voice.links[pid];
   const speaking = !!voice.speaking[pid] && !(me ? false : mutedByMe || voice.deaf);
-  const editor = canEdit(rules, pid);
-  const hostView = conn.pid === 'h' && !!rules && pid !== 'h';
+  const editor = canEdit(rules, pid, hostPid);
+  const hostView = conn.pid !== null && conn.pid === hostPid && !!rules && pid !== hostPid;
   const [menu, setMenu] = useState(false);
   // κάμερα: ανοιχτή (και με άδεια) → κλικ στο όνομα την καρφιτσώνει στο παράθυρο
-  const camOn = voice.camSupported && voice.joined && !!vs?.cam && canCam(rules, pid);
+  const camOn = voice.camSupported && voice.joined && !!vs?.cam && canCam(rules, pid, hostPid);
   const pinned = voice.pinned === pid;
   const camOk = !!rules?.cams?.includes(pid);
   const who = (
@@ -216,7 +245,7 @@ function Member({ conn, pid }: { conn: ShareConn; pid: Pid }) {
       </span>
       <span className="sm-name">
         <span className="sm-name-text">{name}</span>
-        {pid === 'h' && <Crown size={13} className="sm-crown" aria-label={L('Host', 'Host')} />}
+        {pid === hostPid && <Crown size={13} className="sm-crown" aria-label={L('Host', 'Host')} />}
         {me && <span className="faint"> ({L('εσύ', 'you')})</span>}
       </span>
     </>
@@ -253,7 +282,7 @@ function Member({ conn, pid }: { conn: ShareConn; pid: Pid }) {
           {who}
         </span>
       )}
-      {rules && pid !== 'h' && (
+      {rules && pid !== hostPid && (
         hostView ? (
           <button
             type="button"
@@ -323,10 +352,11 @@ function Member({ conn, pid }: { conn: ShareConn; pid: Pid }) {
 function MemberMenu({ conn, pid, name, onClose }: { conn: ShareConn; pid: Pid; name: string; onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const { voice, rules } = conn;
-  const hostView = conn.pid === 'h' && !!rules;
+  const hostPid = conn.host;
+  const hostView = conn.pid !== null && conn.pid === hostPid && !!rules && pid !== hostPid;
   const inVoice = !!conn.voices[pid] && voice.joined;
   const silenced = !!rules?.silenced.includes(pid);
-  const editor = canEdit(rules, pid);
+  const editor = canEdit(rules, pid, hostPid);
   const camOk = !!rules?.cams?.includes(pid);
   const vol = Math.round((voice.volume[pid] ?? 1) * 100);
 
@@ -376,6 +406,20 @@ function MemberMenu({ conn, pid, name, onClose }: { conn: ShareConn; pid: Pid; n
               {camOk ? L('Να μην ανοίγει κάμερα', 'Forbid the camera') : L('Να μπορεί να ανοίξει κάμερα', 'Allow the camera')}
             </button>
           )}
+          <div className="sm-menu-sep" />
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              onClose();
+              if (window.confirm(L(`Να γίνει host ο/η ${name}; Θα παραμείνεις στην ανάλυση ως συμμετέχων.`, `Make ${name} the host? You will stay in the analysis as a participant.`))) {
+                conn.send({ t: 'transfer', pid });
+              }
+            }}
+          >
+            <Crown size={15} className="sm-crown" />
+            {L('Κάνε host (παράδοση ρόλου)', 'Make host (transfer role)')}
+          </button>
           <button
             type="button"
             role="menuitem"
@@ -530,13 +574,13 @@ export function ShareViewOnly({ conn }: { conn: ShareConn }) {
   useEffect(() => {
     const was = prev.current;
     prev.current = conn.canEdit;
-    if (!conn.rules || conn.pid === 'h' || was === conn.canEdit || !conn.canEdit) return;
+    if (!conn.rules || conn.pid === conn.host || was === conn.canEdit || !conn.canEdit) return;
     setGranted(true);
     const t = setTimeout(() => setGranted(false), 5000);
     return () => clearTimeout(t);
-  }, [conn.canEdit, conn.rules, conn.pid]);
+  }, [conn.canEdit, conn.rules, conn.pid, conn.host]);
 
-  if (!conn.rules || conn.pid === 'h' || conn.status !== 'open') return null;
+  if (!conn.rules || conn.pid === conn.host || conn.status !== 'open') return null;
   if (conn.canEdit)
     return granted ? (
       <div className="sm-note ok">

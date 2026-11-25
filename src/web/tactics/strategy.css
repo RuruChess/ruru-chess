@@ -127,6 +127,9 @@
   color: var(--muted);
 }
 .sl-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   margin-top: 8px;
 }
 .sl-credit {

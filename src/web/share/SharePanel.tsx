@@ -30,6 +30,7 @@ function statusText(c: ShareConn): string | null {
   if (c.status === 'gone') return L('Η κοινή ανάλυση δεν υπάρχει πια (το link έληξε).', 'This shared analysis no longer exists (the link has expired).');
   if (c.status === 'full') return L('Η κοινή ανάλυση είναι γεμάτη.', 'This shared analysis is full.');
   if (c.status === 'kicked') return L('Ο οικοδεσπότης σε έβγαλε από την κοινή ανάλυση.', 'The host removed you from the shared analysis.');
+  if (c.status === 'ended') return L('Ο οικοδεσπότης τερμάτισε την κοινή ανάλυση.', 'The host ended the shared analysis.');
   if (c.status === 'locked') return L('Η κοινή ανάλυση είναι κλειδωμένη. Ζήτα από τον οικοδεσπότη να την ξεκλειδώσει και ανανέωσε τη σελίδα.', 'This shared analysis is locked. Ask the host to unlock it, then reload the page.');
   return null;
 }
@@ -56,10 +57,10 @@ export function ShareHead({ conn, link, video, onStop }: { conn: ShareConn; link
           </button>
         )}
       </div>
-      {st && <div className={`sa-status${conn.status === 'kicked' ? ' is-error' : ''}`}>{st}</div>}
-      {conn.status !== 'kicked' && conn.presence.online.length > 0 && <ShareMembers conn={conn} video={video} />}
+      {st && <div className={`sa-status${conn.status === 'kicked' || conn.status === 'ended' ? ' is-error' : ''}`}>{st}</div>}
+      {conn.status !== 'kicked' && conn.status !== 'ended' && conn.presence.online.length > 0 && <ShareMembers conn={conn} video={video} />}
       <ShareViewOnly conn={conn} />
-      {link && conn.status !== 'kicked' && (
+      {link && conn.status !== 'kicked' && conn.status !== 'ended' && (
         <div className="sa-row">
           <input className="sa-link" readOnly value={link} onFocus={(e) => e.currentTarget.select()} aria-label="Link" />
           <button

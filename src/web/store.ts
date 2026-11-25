@@ -69,7 +69,8 @@ export type Tab =
   | { id: string; kind: 'friend'; title: string }
   | { id: string; kind: 'share'; title: string }
   | { id: string; kind: 'watch'; title: string }
-  | { id: string; kind: 'prep'; title: string };
+  | { id: string; kind: 'prep'; title: string }
+  | { id: string; kind: 'notes'; title: string };
 
 /** Η Βελτίωση (Τακτικά, Φινάλε, Στρατηγικά): μόνιμη καρτέλα του κύριου παραθύρου, δίπλα στις Βάσεις. */
 export const TACTICS_TAB: Tab = { id: 'tactics', kind: 'tactics', title: 'Βελτίωση' };
@@ -92,8 +93,11 @@ export const WATCH_TAB: Tab = { id: 'watch', kind: 'watch', title: 'Watch Live' 
 /** «Προετοιμασία για αντίπαλο» (παρτίδες ενός παίκτη από Lichess, Chess.com και τις βάσεις): μόνιμη καρτέλα, δίπλα στο Watch Live. */
 export const PREP_TAB: Tab = { id: 'prep', kind: 'prep', title: 'Prepare for opponent' };
 
+/** «Εκδόσεις / Patch Notes» (σημειώσεις εκδόσεων τύπου LoL): μόνιμη καρτέλα, δίπλα στην Προετοιμασία. */
+export const NOTES_TAB: Tab = { id: 'notes', kind: 'notes', title: 'Patch Notes' };
+
 /** Οι μόνιμες καρτέλες του κύριου παραθύρου (δεν κλείνουν). */
-export const FIXED_TABS = ['library', 'tactics', 'bots', 'books', 'friend', 'share', 'watch', 'prep'];
+export const FIXED_TABS = ['library', 'tactics', 'bots', 'books', 'friend', 'share', 'watch', 'prep', 'notes'];
 
 export interface Toast {
   id: number;
@@ -143,7 +147,7 @@ export function newTabId(prefix: string): string {
 }
 
 export const useApp = create<AppState>((set, get) => ({
-  tabs: OPEN_KEY ? [] : [{ id: 'library', kind: 'library', title: 'Βάσεις' }, TACTICS_TAB, BOTS_TAB, BOOKS_TAB, FRIEND_TAB, SHARE_TAB, WATCH_TAB, PREP_TAB],
+  tabs: OPEN_KEY ? [] : [{ id: 'library', kind: 'library', title: 'Βάσεις' }, TACTICS_TAB, BOTS_TAB, BOOKS_TAB, FRIEND_TAB, SHARE_TAB, WATCH_TAB, PREP_TAB, NOTES_TAB],
   active: OPEN_KEY ? '' : 'library',
   closeRequest: null,
   settings: null,

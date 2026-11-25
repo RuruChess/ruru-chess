@@ -11,10 +11,11 @@ interface HelpButtonProps {
   /** εμφάνιση της επιλογής «Δείξε ξανά τον Οδηγό» (μόνο στο κύριο παράθυρο) */
   canRestartGuide: boolean;
   onRestartGuide: () => void;
+  onOpenReleaseNotes: () => void;
   onOpenSettings: () => void;
 }
 
-export function HelpButton({ canRestartGuide, onRestartGuide, onOpenSettings }: HelpButtonProps) {
+export function HelpButton({ canRestartGuide, onRestartGuide, onOpenReleaseNotes, onOpenSettings }: HelpButtonProps) {
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
   const [shortcuts, setShortcuts] = useState(false);
 
@@ -24,6 +25,7 @@ export function HelpButton({ canRestartGuide, onRestartGuide, onOpenSettings }: 
   };
 
   const items: MenuItem[] = [
+    { label: L('Τι νέο υπάρχει (Release Notes)', 'What’s new (Release Notes)'), onClick: onOpenReleaseNotes },
     { label: L('Συντομεύσεις πληκτρολογίου & ποντικιού', 'Keyboard & mouse shortcuts'), onClick: () => setShortcuts(true) },
     ...(canRestartGuide ? [{ label: L('Ξεκίνα ξανά τον Οδηγό', 'Restart the Guide'), onClick: onRestartGuide }] : []),
     { separator: true, label: '' },

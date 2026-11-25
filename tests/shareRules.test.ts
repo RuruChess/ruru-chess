@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyRule, canCam, canEdit, cleanLive, cleanVideoId, cleanVoice, parseVideoUrl, parseYouTubeId, pickCamera, videoInfo, type ShareRules, type VoiceState } from '../src/core/share.ts';
+import { applyRule, canCam, canEdit, cleanLive, cleanVideoId, cleanVideoSync, cleanVoice, parseVideoUrl, parseYouTubeId, pickCamera, pickNextHost, videoInfo, videoSyncTime, type ShareRules, type VoiceState } from '../src/core/share.ts';
 
 const empty: ShareRules = { editors: [], silenced: [], cams: [] };
 
@@ -99,8 +99,35 @@ describe('shared analysis rules', () => {
     expect(cleanVideoId('kick:xqc')).toBe('kick:xqc');
     expect(cleanVideoId('short')).toBeNull();
     expect(cleanVideoId('<script>123')).toBeNull();
+    expect(videoInfo('yt:dQw4w9WgXcQ')?.embedUrl).toBe('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0&enablejsapi=1');
     expect(videoInfo('tw:gmhikaru', 'ruru.example')?.embedUrl).toBe('https://player.twitch.tv/?channel=gmhikaru&parent=ruru.example');
     expect(videoInfo('kick:xqc')?.embedUrl).toBe('https://player.kick.com/xqc');
+  });
+
+  it('validates YouTube video sync state and advances playback time only while playing', () => {
+    const s = cleanVideoSync({ id: 'yt:dQw4w9WgXcQ', time: 123.456, playing: true }, 'yt:dQw4w9WgXcQ');
+    expect(s).not.toBeNull();
+    expect(s?.time).toBe(123.46);
+    expect(s?.playing).toBe(true);
+    expect(videoSyncTime({ id: 'yt:dQw4w9WgXcQ', time: 100, playing: true, at: 1000 }, 6000)).toBe(105);
+    expect(videoSyncTime({ id: 'yt:dQw4w9WgXcQ', time: 100, playing: false, at: 1000 }, 6000)).toBe(100);
+    // απορρίπτει άλλο βίντεο, μη-YouTube ή αρνητικό χρόνο
+    expect(cleanVideoSync({ id: 'yt:other123456', time: 10, playing: true }, 'yt:dQw4w9WgXcQ')).toBeNull();
+    expect(cleanVideoSync({ id: 'tw:gmhikaru', time: 10, playing: true }, 'tw:gmhikaru')).toBeNull();
+    expect(cleanVideoSync({ id: 'yt:dQw4w9WgXcQ', time: -5, playing: true }, 'yt:dQw4w9WgXcQ')).toBeNull();
+    expect(cleanVideoSync({ id: 'yt:dQw4w9WgXcQ', time: 10, playing: 'yes' }, 'yt:dQw4w9WgXcQ')).toBeNull();
+  });
+  it('supports transferred host role for edit, camera, and picking next oldest host', () => {
+    expect(canEdit(empty, 'g2', 'g2')).toBe(true);
+    expect(canEdit(empty, 'h', 'g2')).toBe(false);
+    expect(canCam(empty, 'g2', 'g2')).toBe(true);
+    expect(canCam(empty, 'h', 'g2')).toBe(false);
+    expect(pickNextHost(['h', 'g2', 'g1'], 'h', ['h', 'g1', 'g2'])).toBe('g1');
+    expect(pickNextHost(['h', 'g2', 'g3'], 'h', ['h', 'g1', 'g2', 'g3'])).toBe('g2');
+    // fallback χωρίς joinedOrder
+    expect(pickNextHost(['h', 'g10', 'g2'], 'h', [])).toBe('g2');
+    // μόνος του: κανένας επόμενος
+    expect(pickNextHost(['h'], 'h', ['h'])).toBeNull();
   });
 });
 
@@ -131,5 +158,7 @@ describe('which camera the one window shows', () => {
     const voices = { h: v(false), g3: v(true) };
     expect(pickCamera({ me: 'g1', pinned: 'g3', voices, rules, order })).toBeNull();
     expect(pickCamera({ me: 'g1', pinned: null, voices, rules: null, order })).toBe('g3');
+    // αν γίνει host ο g3, έχει αυτόματα άδεια κάμερας και προηγείται
+    expect(pickCamera({ me: 'g1', pinned: null, voices, rules, order, host: 'g3' })).toBe('g3');
   });
 });

@@ -3,6 +3,9 @@ import { api } from '../api.ts';
 import { language } from '../i18n.ts';
 import { useApp } from '../store.ts';
 import { setUiLater } from './store.ts';
+import { canReviewLesson, type GameLessonMode, type GameProgress } from '../../core/strategy.ts';
+
+export { canReviewLesson, type GameLessonMode, type GameProgress };
 
 type Text2 = { el: string; en: string };
 
@@ -47,13 +50,6 @@ export const gamesApi = {
 
 /** Κείμενο στη γλώσσα του χρήστη. */
 export const tr = (t: Text2): string => (language() === 'en' ? t.en : t.el);
-
-/** Πρόοδος σε ένα μάθημα: ως ποια ημικίνηση φάνηκε η παρτίδα, οι απαντήσεις (ημικίνηση → SAN, '' = «δείξε μου»). */
-export interface GameProgress {
-  revealed: number;
-  answers: Record<string, string>;
-  done?: boolean;
-}
 
 type ProgressMap = Record<string, GameProgress>;
 // σταθερό αντικείμενο: ο selector πρέπει να επιστρέφει το ίδιο όταν δεν υπάρχει πρόοδος
