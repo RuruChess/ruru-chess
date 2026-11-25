@@ -78,7 +78,7 @@ export default {
       ],
     },
     facts: [
-      ['Free forever', 'Open source (GPL / AGPL). No subscriptions, no paywalls, no ads, and no telemetry.'],
+      ['Free and open source', 'GPL / AGPL. No subscriptions, no paywalls, no ads, and no telemetry.'],
       ['Your formats, untouched', 'Opens PGN, ChessBase (.cbh, .cbv) and Scid (.si4), even inside .7z or .zip archives.'],
       ['Built for big databases', 'Handles millions of games locally in fast SQLite indexes directly on your PC.'],
       ['Offline first', 'Databases, engines, PDF books and tactics work offline. Online tools connect only when you ask.'],

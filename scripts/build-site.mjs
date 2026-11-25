@@ -236,12 +236,12 @@ if (site) {
 - Website (Greek / Ελληνικά): ${site}el/
 - Latest Release: v${pkg.version} (${lastmod})
 - License: Free & open source (GPL-3.0-or-later, with parts under AGPL-3.0)
-- Cost: Free forever — no subscriptions, no ads, no telemetry
+- Cost: Free and open source — no subscriptions, no ads, no telemetry
 - Live Shared Analysis Server: https://play.ruruchess.com/
 ${gh ? `- GitHub Repository: ${gh}\n- Windows Installer: ${links.full}\n- Portable ZIP: ${links.portable}\n` : ''}
 ## Key Capabilities
 
-- **Chess Databases (ChessBase & Scid compatible):** Opens PGN, ChessBase (.cbh, .cbv), and Scid (.si4) files directly, including inside .7z and .zip archives. Handles millions of games locally in SQLite indexes.
+- **Chess Databases (opens ChessBase & Scid files, read-only):** Opens PGN, ChessBase (.cbh, .cbv), and Scid (.si4) files directly, including inside .7z and .zip archives. Handles millions of games locally in SQLite indexes.
 - **PDF Chess Book to Playable Database:** Converts PDF chess books into searchable, interactive games with variations, commentary, and tactical exercises.
 - **Engine Analysis & Blunder Check:** Supports Stockfish, Leela Chess Zero (Lc0), and Maia human-like engines with multi-PV lines, board arrows, evaluation graph, accuracy, and full-game blunder checks.
 - **Opponent Preparation:** Combines FIDE/OTB databases with Lichess and Chess.com games into an opponent dossier and opening repertoire tree.

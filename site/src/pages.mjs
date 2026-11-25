@@ -270,7 +270,7 @@ export default [
         ['Millions of games offline on your PC', 'Requires internet & storage limits', 'Fast local SQLite indexes, 100% offline'],
         ['Opens .pgn, .cbh, .cbv & .si4 files', 'Usually PGN only with size caps', 'Opens all four formats, even inside .7z/.zip'],
         ['Deep position & material search', 'Often limited or paywalled', 'Full local search + duplicate cleanup'],
-        ['Price & ownership', 'Recurring subscriptions', 'Free forever (GPL / AGPL open source)'],
+        ['Price & ownership', 'Recurring subscriptions', 'Free and open source (GPL / AGPL)'],
         ['Privacy & telemetry', 'Accounts & tracking', 'Zero ads, zero cookies, zero telemetry'],
       ],
       faqEyebrow: 'Questions & Answers',
@@ -362,7 +362,7 @@ export default [
         ['Εκατομμύρια παρτίδες offline στο PC σου', 'Θέλει ίντερνετ & όρια αποθήκευσης', 'Γρήγορα τοπικά ευρετήρια SQLite, 100% offline'],
         ['Άνοιγμα .pgn, .cbh, .cbv & .si4', 'Συνήθως μόνο μικρά PGN', 'Ανοίγει και τις 4 μορφές, ακόμα και σε .7z/.zip'],
         ['Βαθιά αναζήτηση θέσης & υλικού', 'Περιορισμένη ή επί πληρωμή', 'Πλήρης τοπική αναζήτηση + καθαρισμός διπλότυπων'],
-        ['Κόστος & ιδιοκτησία', 'Μηνιαίες συνδρομές', 'Δωρεάν για πάντα (GPL / AGPL ανοιχτός κώδικας)'],
+        ['Κόστος & ιδιοκτησία', 'Μηνιαίες συνδρομές', 'Δωρεάν και ανοιχτός κώδικας (GPL / AGPL)'],
         ['Ιδιωτικότητα', 'Λογαριασμοί & tracking', 'Χωρίς διαφημίσεις, cookies ή τηλεμετρία'],
       ],
       faqEyebrow: 'Συχνές Ερωτήσεις',
@@ -472,7 +472,7 @@ export default [
         ],
         [
           'Can I convert .cbh or .cbv files to PGN for free?',
-          'Yes. Open your .cbh or .cbv database in Ruru Chess and export the games you need to standard .pgn format at no cost and with no game limits.',
+          'Yes. Open your .cbh or .cbv database in Ruru Chess and export the games you need to standard .pgn format at no cost and with no game limits. Use it with databases you own or are allowed to use: commercial databases keep their own licence terms.',
         ],
         [
           'Will Ruru Chess modify my original .cbh files?',
@@ -564,7 +564,7 @@ export default [
         ],
         [
           'Μπορώ να μετατρέψω αρχεία .cbh ή .cbv σε PGN δωρεάν;',
-          'Ναι. Ανοίγεις τη βάση .cbh ή .cbv στο Ruru Chess και εξάγεις όσες παρτίδες θέλεις σε στάνταρ .pgn δωρεάν και χωρίς όριο.',
+          'Ναι. Ανοίγεις τη βάση .cbh ή .cbv στο Ruru Chess και εξάγεις όσες παρτίδες θέλεις σε στάνταρ .pgn δωρεάν και χωρίς όριο. Χρησιμοποίησέ το με βάσεις που σου ανήκουν ή έχεις δικαίωμα να χρησιμοποιείς: οι εμπορικές βάσεις έχουν τους δικούς τους όρους άδειας.',
         ],
         [
           'Θα τροποποιήσει το Ruru Chess τα αρχικά μου αρχεία .cbh;',
@@ -651,7 +651,7 @@ export default [
         ['Analyze opponent lines with local Stockfish', 'Limited depth or paid', 'Full local Stockfish, Lc0 & Maia'],
         ['Keep your preparation private on your PC', 'Stored on third-party servers', '100% local on your Windows computer'],
         ['Train your prep lines before the round', 'Separate tool needed', 'Built-in spaced-repetition repertoire trainer'],
-        ['Cost & game limits', 'Monthly subscriptions / caps', 'Free forever, open source'],
+        ['Cost & game limits', 'Monthly subscriptions / caps', 'Free and open source'],
       ],
       faqEyebrow: 'Questions & Answers',
       faqTitle: 'Chess opponent preparation FAQ',
@@ -743,7 +743,7 @@ export default [
         ['Ανάλυση γραμμών με τοπικό Stockfish', 'Περιορισμένο βάθος ή συνδρομή', 'Πλήρες τοπικό Stockfish, Lc0 & Maia'],
         ['Ιδιωτικότητα προετοιμασίας στο PC σου', 'Αποθηκευμένη σε ξένους servers', '100% τοπικά στον υπολογιστή σου'],
         ['Εξάσκηση στις γραμμές πριν τον γύρο', 'Θέλει ξεχωριστό εργαλείο', 'Ενσωματωμένη προπόνηση ρεπερτορίου'],
-        ['Κόστος & όρια', 'Μηνιαίες συνδρομές / όρια', 'Δωρεάν για πάντα, ανοιχτός κώδικας'],
+        ['Κόστος & όρια', 'Μηνιαίες συνδρομές / όρια', 'Δωρεάν και ανοιχτός κώδικας'],
       ],
       faqEyebrow: 'Συχνές Ερωτήσεις',
       faqTitle: 'Απορίες για την προετοιμασία αντιπάλου',
@@ -1059,6 +1059,10 @@ export default [
           'Can I edit and export the imported book to standard PGN?',
           'Yes. You can edit moves, comments, or variations right inside Ruru Chess, analyze with Stockfish, and export standard PGN files anytime.',
         ],
+        [
+          'Can I share the databases I make from books?',
+          'Use Ruru Chess with books you own, for your own study. The text and annotations of a book belong to its author and publisher, so do not share the converted database unless you have the right to.',
+        ],
       ],
       ctaTitle: 'Study your digital PDF chess books on a live board.',
       ctaLead: 'Free, open source, and 100% offline on Windows 10 & 11 — along with databases, Stockfish, opponent prep, and live shared study.',
@@ -1156,6 +1160,10 @@ export default [
         [
           'Μπορώ να διορθώσω και να εξάγω το βιβλίο σε στάνταρ PGN;',
           'Ναι. Μπορείς να επεξεργαστείς κινήσεις, σχόλια και βαριάντες μέσα στο Ruru Chess, να αναλύσεις με Stockfish και να εξάγεις σε στάνταρ PGN.',
+        ],
+        [
+          'Μπορώ να μοιραστώ τις βάσεις που φτιάχνω από βιβλία;',
+          'Χρησιμοποίησε το Ruru Chess με βιβλία που σου ανήκουν, για τη δική σου μελέτη. Το κείμενο και τα σχόλια ενός βιβλίου ανήκουν στον συγγραφέα και στον εκδότη του, γι’ αυτό μη μοιράζεσαι τη βάση που προκύπτει, εκτός αν έχεις το δικαίωμα.',
         ],
       ],
       ctaTitle: 'Μελέτησε τα ψηφιακά σκακιστικά σου PDF πάνω σε ζωντανή σκακιέρα.',
