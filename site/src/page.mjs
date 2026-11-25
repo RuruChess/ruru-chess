@@ -7,6 +7,29 @@ const escAttr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').
 
 const THEME_INIT = `<script>(function(){try{var t=localStorage.getItem('ruru-theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}})();</script>`;
 
+function renderNavGuides(lang, c, icon, prefix = '', currentSlug = null) {
+  if (!c.guides?.length) return '';
+  const label = lang === 'el' ? 'Οδηγοί' : 'Guides';
+  return `<details class="nav-dd">
+        <summary><span>${label}</span>${icon('chevron-down')}</summary>
+        <div class="nav-dd-menu" role="menu">
+          ${c.guides
+            .map(
+              (g) => `<a href="${prefix}${g.slug}/"${g.slug === currentSlug ? ' aria-current="page"' : ''}>${g[lang].navLabel}</a>`,
+            )
+            .join('\n          ')}
+        </div>
+      </details>`;
+}
+
+function renderSectionGuides(lang, c, icon, section) {
+  const list = (c.guides ?? []).filter((g) => g.homeSection === section);
+  if (!list.length) return '';
+  return `<div class="section-guides">
+        ${list.map((g) => `<a class="related-pill" href="${g.slug}/">${g[lang].navLabel} ${icon('arrow-right')}</a>`).join('\n        ')}
+      </div>`;
+}
+
 export function render(lang, t, c, icon) {
   const fill = (s) =>
     String(s).replace(/\{(\w+)\}/g, (m, k) => {
@@ -200,7 +223,7 @@ ${
 <meta property="og:title" content="${escAttr(t.title)}">
 <meta property="og:description" content="${escAttr(t.description)}">
 ${THEME_INIT}
-<link rel="stylesheet" href="${r}assets/style.css?v=${c.rev}">
+<link rel="stylesheet" href="${r}assets/style.css?v=${c.assetVer ?? c.rev}">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
 <body>
@@ -215,9 +238,9 @@ ${c.preview ? `<div class="preview-bar">${t.preview}</div>` : ''}
     </a>
     <nav class="nav" id="menu" aria-label="${escAttr(t.menu)}">
       <a href="#analysis">${t.nav.overview}</a>
-      <a href="#books">${t.nav.books}</a>
       <a href="#study">${t.nav.study}</a>
       <a href="#training">${t.nav.train}</a>
+      ${renderNavGuides(lang, c, icon, '')}
       <a href="#faq">${t.nav.faq}</a>
       ${c.kofi ? `<a href="#support">${t.nav.support}</a>` : ''}
       <a class="nav-lang" href="${c.otherLangHref}" hreflang="${c.otherLang}" lang="${c.otherLang}">${t.otherLang}</a>
@@ -301,6 +324,7 @@ ${c.preview ? `<div class="preview-bar">${t.preview}</div>` : ''}
         <p class="ch-lead">${t.ch1.lead}</p>
       </header>
       ${renderShowcaseTabs(t.ch1.eyebrow, t.ch1.tabs)}
+      ${renderSectionGuides(lang, c, icon, 'analysis')}
     </div>
   </section>
 
@@ -378,6 +402,7 @@ ${c.preview ? `<div class="preview-bar">${t.preview}</div>` : ''}
           )
           .join('\n        ')}
       </div>
+      ${renderSectionGuides(lang, c, icon, 'study')}
     </div>
   </section>
 
@@ -577,7 +602,7 @@ ${c.preview ? `<div class="preview-bar">${t.preview}</div>` : ''}
   <button type="button" class="lightbox-close" aria-label="Close">${icon('x')}</button>
   <img alt="">
 </dialog>
-<script src="${r}assets/site.js?v=${c.rev}" defer></script>
+<script src="${r}assets/site.js?v=${c.assetVer ?? c.rev}" defer></script>
 </body>
 </html>
 `;
@@ -638,7 +663,7 @@ ${
     : ''
 }
 ${THEME_INIT}
-<link rel="stylesheet" href="${c.root}assets/style.css?v=${c.rev}">
+<link rel="stylesheet" href="${c.root}assets/style.css?v=${c.assetVer ?? c.rev}">
 ${breadcrumb ? `<script type="application/ld+json">${JSON.stringify(breadcrumb)}</script>` : ''}
 </head>
 <body>
@@ -787,7 +812,7 @@ ${
 <meta property="og:title" content="${escAttr(p.title)}">
 <meta property="og:description" content="${escAttr(p.description)}">
 ${THEME_INIT}
-<link rel="stylesheet" href="${r}assets/style.css?v=${c.rev}">
+<link rel="stylesheet" href="${r}assets/style.css?v=${c.assetVer ?? c.rev}">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
 <body>
@@ -801,9 +826,9 @@ ${THEME_INIT}
     </a>
     <nav class="nav" id="menu" aria-label="${escAttr(t.menu)}">
       <a href="${homeHref}#analysis">${t.nav.overview}</a>
-      <a href="${homeHref}#books">${t.nav.books}</a>
       <a href="${homeHref}#study">${t.nav.study}</a>
       <a href="${homeHref}#training">${t.nav.train}</a>
+      ${renderNavGuides(lang, c, icon, '../', page.slug)}
       <a href="#faq">${t.nav.faq}</a>
       <a class="nav-lang" href="${otherHref}" hreflang="${c.otherLang}" lang="${c.otherLang}">${t.otherLang}</a>
     </nav>
@@ -1038,7 +1063,7 @@ ${THEME_INIT}
   <button type="button" class="lightbox-close" aria-label="Close">${icon('x')}</button>
   <img alt="">
 </dialog>
-<script src="${r}assets/site.js?v=${c.rev}" defer></script>
+<script src="${r}assets/site.js?v=${c.assetVer ?? c.rev}" defer></script>
 </body>
 </html>
 `;

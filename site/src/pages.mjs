@@ -393,6 +393,7 @@ export default [
   {
     slug: 'open-cbh-cbv-files',
     img: 'reference',
+    homeSection: 'analysis',
     en: {
       navLabel: 'Open .cbh & .cbv Files Free',
       title: 'How to Open .cbh and .cbv Chess Files for Free on Windows | Ruru Chess',
@@ -582,6 +583,7 @@ export default [
   {
     slug: 'chess-opponent-preparation',
     img: 'prep',
+    homeSection: 'study',
     en: {
       navLabel: 'Chess Opponent Preparation',
       title: 'Free Chess Opponent Preparation (FIDE, Lichess & Chess.com) | Ruru Chess',
@@ -771,6 +773,7 @@ export default [
   {
     slug: 'stockfish-gui-windows',
     img: 'blunder',
+    homeSection: 'analysis',
     en: {
       navLabel: 'Offline Analysis & Stockfish GUI',
       title: 'Modern Offline Chess Analysis & Stockfish GUI for Windows | Ruru Chess',

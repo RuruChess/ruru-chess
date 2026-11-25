@@ -3,6 +3,7 @@
 // `funding`, `bugs.email`), μεγέθη και SHA-256 από το release/ (node scripts/make-release.mjs).
 // Χωρίς σύνδεσμο GitHub βγαίνει προεπισκόπηση με σχετική ένδειξη στην κορυφή· χωρίς Ko-fi λείπει η «Στήριξε».
 // Χρήση: node scripts/build-site.mjs [--check: σφάλμα αν λείπει κάτι για τη δημοσίευση]
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -88,6 +89,12 @@ fs.copyFileSync(path.join(root, 'Ruru.ico'), path.join(out, 'favicon.ico'));
 fs.writeFileSync(path.join(out, '.nojekyll'), '');
 
 const lastmod = builtAt.toISOString().slice(0, 10);
+const assetVer = `${pkg.version}-${crypto
+  .createHash('sha1')
+  .update(fs.readFileSync(path.join(src, 'style.css')))
+  .update(fs.readFileSync(path.join(src, 'site.js')))
+  .digest('hex')
+  .slice(0, 8)}`;
 
 for (const [i, { lang, dir }] of LANGS.entries()) {
   const t = content[lang];
@@ -109,8 +116,9 @@ for (const [i, { lang, dir }] of LANGS.entries()) {
     kofi,
     email,
     year: new Date().getFullYear(),
-    // ακατέργαστη έκδοση για ?v= και schema.org· στο κείμενο «1.1.0 BETA» όπως στην εφαρμογή
+    // ακατέργαστη έκδοση για schema.org· assetVer (με hash) για ?v= ώστε να σπάει η cache αυτόματα
     rev: pkg.version,
+    assetVer,
     vars: {
       version: pkg.version.replace(/-(\w+)$/, (m, s) => ` ${s.toUpperCase()}`),
       setupMB: mb(FULL),

@@ -11,6 +11,17 @@
   menuBtn?.addEventListener('click', () => setOpen(!menu?.classList.contains('open')));
   menu?.addEventListener('click', (e) => e.target.closest('a') && setOpen(false));
 
+  // Κλείσιμο dropdown «Οδηγοί / Guides» με κλικ έξω ή Escape
+  const navDd = document.querySelector('.nav-dd');
+  if (navDd) {
+    document.addEventListener('click', (e) => {
+      if (navDd.open && !navDd.contains(e.target)) navDd.open = false;
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navDd.open) navDd.open = false;
+    });
+  }
+
   // Εναλλαγή θέματος (χωρίς cookies, μόνο τοπικό localStorage)
   const themeBtn = document.getElementById('theme-toggle');
   const isDark = () => {
