@@ -36,6 +36,139 @@ export interface ReleaseNote {
 
 export const RELEASE_NOTES: readonly ReleaseNote[] = [
   {
+    version: '3.1.0',
+    date: { el: 'Νοέμβριος 2026', en: 'November 2026' },
+    headline: { el: 'Ruru Chess 3.1 — Καλύτερη Κοινή Ανάλυση, Βίντεο & Εκδόσεις', en: 'Ruru Chess 3.1 — Better Shared Analysis, Video & Patch Notes' },
+    subtitle: {
+      el: 'Συγχρονισμένο YouTube βίντεο στην Κοινή Ανάλυση, έξυπνη αποχώρηση & παράδοση Host, επιλογές «Ξανά» και «Περιήγηση» στα Στρατηγικά μαθήματα, νέα καρτέλα Εκδόσεις και σημαντικές διορθώσεις UI.',
+      en: 'Synced YouTube video in Shared Analysis, smart Host leave & role transfer, “Again” and “Review” modes in Strategy lessons, the new Patch Notes tab, and key UI fixes.',
+    },
+    highlights: [
+      {
+        icon: 'share',
+        title: { el: 'Συγχρονισμός YouTube & ελεύθερη προβολή', en: 'YouTube Sync & flexible viewing' },
+        desc: {
+          el: 'Προαιρετικός συγχρονισμός play/pause και λεπτού για YouTube, συν δυνατότητα να κλείσεις του host και να ανοίξεις δικό σου βίντεο.',
+          en: 'Optional play/pause and timestamp sync for YouTube, plus guests can hide the room video and open their own.',
+        },
+      },
+      {
+        icon: 'share',
+        title: { el: 'Αποχώρηση vs Τερματισμός Host', en: 'Host Leave vs End Session' },
+        desc: {
+          el: 'Ο host διαλέγει αποχώρηση (αυτόματη μεταφορά στον παλαιότερο), χειροκίνητη παράδοση host ή τερματισμό για όλους.',
+          en: 'The host can leave (auto-transferring host to the oldest member), hand off host manually, or end the session for everyone.',
+        },
+      },
+      {
+        icon: 'training',
+        title: { el: 'Στρατηγικά: «Ξανά» & «Περιήγηση»', en: 'Strategy: “Again” & “Review”' },
+        desc: {
+          el: 'Ξαναπαίξε ένα μάθημα από την αρχή με όλες τις ασκήσεις ή άνοιξέ το σε ελεύθερη περιήγηση μόλις τις ολοκληρώσεις.',
+          en: 'Replay a lesson from move 1 with all exercises fresh, or browse it freely in Review mode once all exercises are completed.',
+        },
+      },
+      {
+        icon: 'app',
+        title: { el: 'Καρτέλα Εκδόσεις (Patch Notes)', en: 'Patch Notes Tab' },
+        desc: {
+          el: 'Δες καθαρά τι νέο υπάρχει σε κάθε έκδοση στα Ελληνικά & Αγγλικά — ανοίγει αυτόματα 1 φορά μετά από αναβάθμιση.',
+          en: 'See every update clearly in English & Greek — opens automatically once after updating.',
+        },
+      },
+    ],
+    sections: [
+      {
+        category: 'share',
+        title: { el: 'Κοινή Ανάλυση & Βίντεο', en: 'Shared Analysis & Video' },
+        items: [
+          {
+            kind: 'new',
+            title: { el: 'Συγχρονισμός YouTube (play/pause & λεπτό)', en: 'YouTube sync (play/pause & timestamp)' },
+            desc: {
+              el: 'Στα κοινά YouTube βίντεο το κουμπί «Συγχρονισμός / Sync» κρατά όλους στο ίδιο σημείο — και όποιος θέλει να πάει μόνος του το απενεργοποιεί με ένα κλικ.',
+              en: 'A “Sync” toggle on shared YouTube videos keeps everyone on the same second — turn it off anytime to pause or scrub on your own.',
+            },
+          },
+          {
+            kind: 'new',
+            title: { el: '2 επιλογές αποχώρησης Host & χειροκίνητη παράδοση', en: 'Host leave options & manual transfer' },
+            desc: {
+              el: 'Όταν φεύγει ο host επιλέγει «Αποχώρηση» (μεταφορά host στον παλαιότερο συμμετέχοντα) ή «Τερματισμός για όλους» (κλείνει το δωμάτιο και επιστρέφει όλους στην αρχή). Προστέθηκε και «Κάνε host» στο μενού (⋮) κάθε μέλους.',
+              en: 'When leaving, the host chooses “Leave session” (auto-transferring host to the oldest member) or “End session for everyone” (closes the room and returns everyone to the start screen). Also adds “Make host” in each member’s menu (⋮).',
+            },
+          },
+          {
+            kind: 'fix',
+            title: { el: 'Κουμπί «Προβολή» & δικό σου βίντεο για καλεσμένους', en: 'Visible “Watch” button & guest local video' },
+            desc: {
+              el: 'Διορθώθηκε το λευκό-σε-λευκό κουμπί «Προβολή / Watch» και πλέον όταν ένας καλεσμένος κλείσει (×) το κοινό βίντεο μπορεί να ανοίξει δικό του τοπικό βίντεο ή να επαναφέρει το κοινό.',
+              en: 'Fixed the white-on-white “Watch” button, and guests who close (×) the room video can now open their own local video or restore the room video.',
+            },
+          },
+        ],
+      },
+      {
+        category: 'training',
+        title: { el: 'Στρατηγικά Μαθήματα', en: 'Strategy Lessons' },
+        items: [
+          {
+            kind: 'new',
+            title: { el: 'Ξεχωριστά κουμπιά «Ξανά» και «Περιήγηση»', en: 'Separate “Again” and “Review” buttons' },
+            desc: {
+              el: 'Το «Ξανά / Again» ξεκινά την παρτίδα από την αρχή με όλες τις ασκήσεις ξανά σαν να μην την έκανες ποτέ, ενώ το «Περιήγηση / Review» εμφανίζεται δίπλα μόλις ολοκληρώσεις όλες τις ασκήσεις για ελεύθερη μελέτη.',
+              en: '“Again” restarts the game from the beginning with all exercises fresh, while “Review” appears beside it once all exercises have been completed for free browsing.',
+            },
+          },
+        ],
+      },
+      {
+        category: 'social',
+        title: { el: 'Φίλοι & Αποστολή PGN', en: 'Friends & PGN Sharing' },
+        items: [
+          {
+            kind: 'fix',
+            title: { el: 'Αυτόματο καθάρισμα ειδοποίησης αιτήματος φιλίας', en: 'Friend request notice auto-cleanup' },
+            desc: {
+              el: 'Το πράσινο μήνυμα «Στάλθηκε αίτημα φιλίας…» σβήνει πλέον αυτόματα μόλις γίνει αποδοχή/απόρριψη ή μετά από λίγα δευτερόλεπτα αντί να μένει κολλημένο.',
+              en: 'The green “Friend request sent…” notice now clears automatically on accept/decline or after a few seconds instead of staying stuck.',
+            },
+          },
+          {
+            kind: 'fix',
+            title: { el: 'Καθαρά checkboxes στην αποστολή βάσεων PGN', en: 'Crisp checkboxes in PGN send dialog' },
+            desc: {
+              el: 'Διορθώθηκε το μικροσκοπικό checkbox πνευματικών δικαιωμάτων στο παράθυρο αποστολής PGN σε φίλο ή ομάδα — πλέον είναι ευδιάκριτο, με σωστό μέγεθος και hover/checked πλαίσιο.',
+              en: 'Fixed the tiny copyright checkbox in the Send PGN dialog so both checkboxes are crisp, properly sized, and clearly clickable.',
+            },
+          },
+        ],
+      },
+      {
+        category: 'app',
+        title: { el: 'Εφαρμογή & Διεπαφή', en: 'App & Interface' },
+        items: [
+          {
+            kind: 'new',
+            title: { el: 'Νέα καρτέλα «Εκδόσεις / Patch Notes»', en: 'New “Patch Notes” tab' },
+            desc: {
+              el: 'Παρουσιάζει καθαρά όλες τις αλλαγές ανά έκδοση στα Ελληνικά & Αγγλικά, με κουκκίδα ειδοποίησης και αυτόματο άνοιγμα 1 φορά μετά από αναβάθμιση.',
+              en: 'Shows every release’s changes clearly in English & Greek, with an unread dot and one-time auto-open after updating.',
+            },
+          },
+          {
+            kind: 'fix',
+            title: { el: 'Καλύτερη προσαρμογή της γραμμής εργαλείων σκακιέρας', en: 'Improved board toolbar responsiveness' },
+            desc: {
+              el: 'Διορθώθηκε το κόψιμο του κουμπιού «Περισσότερα» στα Ελληνικά σε οθόνες 1920×1080.',
+              en: 'Fixed right-edge clipping of the “More” toolbar button on Greek 1920×1080 screens.',
+            },
+          },
+        ],
+      },
+    ],
+  },
+  {
     version: '3.0.0',
     date: { el: 'Νοέμβριος 2026', en: 'November 2026' },
     headline: { el: 'Καλώς ήρθες στο Ruru Chess 3.0', en: 'Welcome to Ruru Chess 3.0' },
@@ -102,16 +235,16 @@ export const RELEASE_NOTES: readonly ReleaseNote[] = [
             kind: 'new',
             title: { el: 'Πάνελ βίντεο YouTube, Twitch & Kick', en: 'YouTube, Twitch & Kick video panel' },
             desc: {
-              el: 'Άνοιξε βίντεο ή live μετάδοση δίπλα στη σκακιέρα σε απλές παρτίδες ή στην Κοινή Ανάλυση («Για όλους» ή «Μόνο για μένα») — με συγχρονισμό play/pause & λεπτού για YouTube.',
-              en: 'Watch broadcasts or lessons right next to the board in solo games or Shared Analysis (“For everyone” or “Only for me”) — with optional YouTube play/pause & timestamp sync.',
+              el: 'Άνοιξε βίντεο ή live μετάδοση δίπλα στη σκακιέρα σε απλές παρτίδες ή στην Κοινή Ανάλυση («Για όλους» ή «Μόνο για μένα»).',
+              en: 'Watch broadcasts or lessons right next to the board in solo games or Shared Analysis (“For everyone” or “Only for me”).',
             },
           },
           {
             kind: 'new',
-            title: { el: 'Αποχώρηση host, παράδοση ρόλου & τερματισμός', en: 'Host leave, role transfer & end session' },
+            title: { el: 'Σύνδεση Ζωντανών (Watch Live) ↔ Κοινή Ανάλυση', en: 'Watch Live ↔ Shared Analysis' },
             desc: {
-              el: 'Όταν φεύγει ο host μπορεί να αποχωρήσει μεταφέροντας αυτόματα τον ρόλο στον παλαιότερο συμμετέχοντα, να παραδώσει τον ρόλο χειροκίνητα ή να τερματίσει τη συνεδρία για όλους.',
-              en: 'When leaving, the host can transfer host automatically to the oldest member, hand off host manually from the member menu, or end the session for everyone.',
+              el: 'Διάλεξε οποιαδήποτε live παρτίδα τουρνουά και άνοιξέ την κατευθείαν σε Κοινή Ανάλυση με συγχρονισμένα ζωντανά ρολόγια.',
+              en: 'Pick any live tournament game and open it directly in Shared Analysis with synchronized live clocks.',
             },
           },
         ],
@@ -206,8 +339,8 @@ export const RELEASE_NOTES: readonly ReleaseNote[] = [
             kind: 'new',
             title: { el: 'Τακτική, Στρατηγική & Φινάλε', en: 'Tactics, Strategy & Endgames' },
             desc: {
-              el: 'Προσαρμοστική τακτική Glicko-2 (επανάληψη, χρονομετρημένα, streak, ημερήσιο puzzle), 50 διαδραστικά μαθήματα στρατηγικής με επιλογές «Ξανά» και «Περιήγηση», και 36 μαθήματα φινάλε με drills.',
-              en: 'Adaptive Glicko-2 tactics (spaced repetition, timed runs, streaks, daily puzzle), 50 interactive strategy lessons with “Again” and “Review” modes, and 36 endgame lessons & drills.',
+              el: 'Προσαρμοστική τακτική Glicko-2 (επανάληψη, χρονομετρημένα, streak, ημερήσιο puzzle), 50 διαδραστικά μαθήματα στρατηγικής και 36 μαθήματα φινάλε με drills.',
+              en: 'Adaptive Glicko-2 tactics (spaced repetition, timed runs, streaks, daily puzzle), 50 interactive strategy lessons, and 36 endgame lessons & drills.',
             },
           },
           {
@@ -236,8 +369,8 @@ export const RELEASE_NOTES: readonly ReleaseNote[] = [
             kind: 'improved',
             title: { el: 'Δωρεάν, ανοιχτού κώδικα & με σεβασμό στο απόρρητο', en: 'Free, open-source & privacy-first' },
             desc: {
-              el: 'Χωρίς διαφημίσεις, συνδρομές ή τηλεμετρία. Οι βάσεις σου μένουν στον υπολογιστή σου και οι σημειώσεις εκδόσεων εμφανίζονται μία φορά μετά από κάθε αναβάθμιση.',
-              en: 'No ads, subscriptions, or telemetry. Your databases stay on your computer, and Release Notes appear once automatically after each update.',
+              el: 'Χωρίς διαφημίσεις, συνδρομές ή τηλεμετρία. Οι βάσεις σου μένουν τοπικά στον υπολογιστή σου.',
+              en: 'No ads, subscriptions, or telemetry. Your databases stay locally on your computer.',
             },
           },
         ],
