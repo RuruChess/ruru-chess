@@ -197,7 +197,7 @@ fs.writeFileSync(
 );
 
 if (site) {
-  const staticPages = ['', 'privacy', 'terms'];
+  const staticPages = [''];
   const urls = [];
   for (const p of staticPages) {
     const enUrl = `${site}${p}`;

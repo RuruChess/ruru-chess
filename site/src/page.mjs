@@ -650,7 +650,7 @@ function renderLegal(lang, t, c, md, title, slug) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title} — Ruru Chess</title>
 <meta name="description" content="${escAttr(`${title} for Ruru Chess (${c.site ?? 'ruruchess.com'}).`)}">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, follow">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="${c.root}favicon.ico" sizes="any">
 <link rel="icon" href="${c.root}assets/icon.png" type="image/png">
