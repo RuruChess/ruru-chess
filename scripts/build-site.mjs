@@ -12,8 +12,9 @@ const src = path.join(root, 'site', 'src');
 const out = path.join(root, 'site', 'dist');
 const rel = path.join(root, 'release', 'ruru');
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
-const { render, renderPrivacy, renderTerms } = await import(pathToFileURL(path.join(src, 'page.mjs')).href);
+const { render, renderPrivacy, renderTerms, renderLanding } = await import(pathToFileURL(path.join(src, 'page.mjs')).href);
 const content = (await import(pathToFileURL(path.join(src, 'content.mjs')).href)).default;
+const guides = (await import(pathToFileURL(path.join(src, 'pages.mjs')).href)).default;
 
 /** γλώσσες: η πρώτη στη ρίζα */
 const LANGS = [
@@ -86,16 +87,21 @@ fs.copyFileSync(path.join(root, 'public', 'icon.png'), path.join(out, 'assets', 
 fs.copyFileSync(path.join(root, 'Ruru.ico'), path.join(out, 'favicon.ico'));
 fs.writeFileSync(path.join(out, '.nojekyll'), '');
 
+const lastmod = builtAt.toISOString().slice(0, 10);
+
 for (const [i, { lang, dir }] of LANGS.entries()) {
   const t = content[lang];
   const other = LANGS[1 - i];
   const date = new Intl.DateTimeFormat(lang === 'el' ? 'el-GR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(builtAt);
+  const guidesForLang = guides.filter((g) => g[lang]);
   const c = {
     root: dir ? '../' : '',
     otherLang: other.lang,
     otherLangHref: dir ? '../' + other.dir : other.dir,
     site,
     pageUrl: site ? site + dir : null,
+    lastmod,
+    guides: guidesForLang,
     preview,
     links,
     files,
@@ -120,7 +126,49 @@ for (const [i, { lang, dir }] of LANGS.entries()) {
   fs.writeFileSync(path.join(out, dir, 'index.html'), render(lang, t, c, icon));
   fs.writeFileSync(path.join(out, dir, 'privacy.html'), renderPrivacy(lang, t, c, privacy[i]));
   fs.writeFileSync(path.join(out, dir, 'terms.html'), renderTerms(lang, t, c, terms[i]));
+  for (const g of guidesForLang) {
+    const gDir = path.join(out, dir, g.slug);
+    fs.mkdirSync(gDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(gDir, 'index.html'),
+      renderLanding(lang, g, t, { ...c, root: dir ? '../../' : '../' }, icon),
+    );
+  }
 }
+
+fs.writeFileSync(
+  path.join(out, '_headers'),
+  `/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+/assets/style.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/site.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/img/*
+  Cache-Control: public, max-age=2592000
+
+/assets/icon.png
+  Cache-Control: public, max-age=2592000
+
+/favicon.ico
+  Cache-Control: public, max-age=2592000
+
+/robots.txt
+  Cache-Control: public, max-age=3600
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+/llms.txt
+  Cache-Control: public, max-age=3600
+`,
+);
 
 fs.writeFileSync(
   path.join(out, 'site.webmanifest'),
@@ -141,10 +189,9 @@ fs.writeFileSync(
 );
 
 if (site) {
-  const lastmod = builtAt.toISOString().slice(0, 10);
-  const pages = ['', 'privacy.html', 'terms.html'];
+  const staticPages = ['', 'privacy', 'terms'];
   const urls = [];
-  for (const p of pages) {
+  for (const p of staticPages) {
     const enUrl = `${site}${p}`;
     const elUrl = `${site}el/${p}`;
     for (const loc of [enUrl, elUrl]) {
@@ -153,10 +200,54 @@ if (site) {
       );
     }
   }
+  for (const g of guides) {
+    const enUrl = `${site}${g.slug}/`;
+    const elUrl = `${site}el/${g.slug}/`;
+    if (g.en && g.el) {
+      for (const loc of [enUrl, elUrl]) {
+        urls.push(
+          `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>\n    <xhtml:link rel="alternate" hreflang="el" href="${elUrl}"/>\n    <xhtml:link rel="alternate" hreflang="x-default" href="${enUrl}"/>\n  </url>`,
+        );
+      }
+    } else if (g.en) {
+      urls.push(`  <url>\n    <loc>${enUrl}</loc>\n    <lastmod>${lastmod}</lastmod>\n  </url>`);
+    }
+  }
   fs.writeFileSync(path.join(out, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site}sitemap.xml\n`);
   fs.writeFileSync(
     path.join(out, 'sitemap.xml'),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>\n`,
+  );
+  fs.writeFileSync(
+    path.join(out, 'llms.txt'),
+    `# Ruru Chess
+
+> Free, open-source chess desktop application for Windows 10 & 11 (64-bit). Combines large chess database management, Stockfish / Leela Chess Zero / Maia engine analysis, PDF chess book to playable database conversion, opponent preparation, and live shared analysis.
+
+- Website (English): ${site}
+- Website (Greek / Ελληνικά): ${site}el/
+- Latest Release: v${pkg.version} (${lastmod})
+- License: Free & open source (GPL-3.0-or-later, with parts under AGPL-3.0)
+- Cost: Free forever — no subscriptions, no ads, no telemetry
+- Live Shared Analysis Server: https://play.ruruchess.com/
+${gh ? `- GitHub Repository: ${gh}\n- Windows Installer: ${links.full}\n- Portable ZIP: ${links.portable}\n` : ''}
+## Key Capabilities
+
+- **Chess Databases (ChessBase & Scid compatible):** Opens PGN, ChessBase (.cbh, .cbv), and Scid (.si4) files directly, including inside .7z and .zip archives. Handles millions of games locally in SQLite indexes.
+- **PDF Chess Book to Playable Database:** Converts PDF chess books into searchable, interactive games with variations, commentary, and tactical exercises.
+- **Engine Analysis & Blunder Check:** Supports Stockfish, Leela Chess Zero (Lc0), and Maia human-like engines with multi-PV lines, board arrows, evaluation graph, accuracy, and full-game blunder checks.
+- **Opponent Preparation:** Combines FIDE/OTB databases with Lichess and Chess.com games into an opponent dossier and opening repertoire tree.
+- **Live Shared Study, Friends & Teams:** Real-time shared chess analysis rooms with encrypted WebRTC voice, camera, chat, shared engine, PGN sharing, and embedded YouTube/Twitch/Kick video.
+- **Training:** Glicko-2 tactics trainer, classic master lessons, opening repertoire builder, and human-like bots.
+
+## Pages
+
+- [Home (English)](${site}): Full overview, screenshots, downloads, and FAQ.
+- [Αρχική (Ελληνικά)](${site}el/): Πλήρης παρουσίαση στα ελληνικά, λήψη και συχνές ερωτήσεις.
+${guides.map((g) => `- [${g.en.navLabel}](${site}${g.slug}/): ${g.en.description}`).join('\n')}
+- [Privacy Policy](${site}privacy): Zero cookies, zero tracking, offline-first design.
+- [Terms of Use](${site}terms): Open-source licensing and live relay terms.
+`,
   );
 }
 console.log(`Έτοιμο: site/dist (έκδοση ${pkg.version}${preview ? ', προεπισκόπηση' : ''})`);

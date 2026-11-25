@@ -19,50 +19,70 @@ export function render(lang, t, c, icon) {
   const ext = (href) => (/^https?:/.test(href) ? ' rel="noopener"' : '');
   const d = t.download;
 
-  // Πλήρες Schema.org @graph (WebSite + Organization + SoftwareApplication + FAQPage)
+  const siteBase = c.site ?? 'https://ruruchess.com/';
+  const pageUrl = c.pageUrl ?? siteBase;
+  const heroFirst = t.hero.tabs[0];
+  const heroImgAbs = `${siteBase}assets/img/${heroFirst.id}-${lang}.webp`;
+
+  // Πλήρες Schema.org @graph (WebSite + Organization + WebPage + SoftwareApplication + SoftwareSourceCode + FAQPage)
   const graph = [
     {
       '@type': 'WebSite',
-      '@id': `${c.site ?? 'https://ruruchess.com/'}#website`,
-      url: c.site ?? 'https://ruruchess.com/',
+      '@id': `${siteBase}#website`,
+      url: siteBase,
       name: 'Ruru Chess',
       alternateName: ['Ruru', 'RuruChess'],
       inLanguage: ['en', 'el'],
-      publisher: { '@id': `${c.site ?? 'https://ruruchess.com/'}#org` },
+      publisher: { '@id': `${siteBase}#org` },
     },
     {
       '@type': 'Organization',
-      '@id': `${c.site ?? 'https://ruruchess.com/'}#org`,
+      '@id': `${siteBase}#org`,
       name: 'Ruru Chess',
       alternateName: 'Ruru',
-      url: c.site ?? 'https://ruruchess.com/',
+      url: siteBase,
       ...(c.site ? { logo: `${c.site}assets/icon.png` } : {}),
       ...(c.links.repo.startsWith('http') ? { sameAs: [c.links.repo] } : {}),
     },
     {
+      '@type': 'WebPage',
+      '@id': `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: t.title,
+      description: t.description,
+      inLanguage: lang,
+      ...(c.lastmod ? { dateModified: c.lastmod } : {}),
+      isPartOf: { '@id': `${siteBase}#website` },
+      about: { '@id': `${siteBase}#app` },
+      primaryImageOfPage: {
+        '@type': 'ImageObject',
+        url: heroImgAbs,
+        width: 2160,
+        height: 1350,
+      },
+    },
+    {
       '@type': 'SoftwareApplication',
-      '@id': `${c.site ?? 'https://ruruchess.com/'}#app`,
+      '@id': `${siteBase}#app`,
       name: 'Ruru Chess',
       alternateName: ['Ruru', 'Ruru Chess Database'],
       description: t.description,
+      keywords: t.schemaKeywords,
       operatingSystem: 'Windows 10, Windows 11',
+      softwareRequirements: 'Windows 10 or Windows 11 (64-bit)',
       applicationCategory: 'GameApplication',
       applicationSubCategory: 'Chess',
       softwareVersion: c.rev,
+      ...(c.lastmod ? { dateModified: c.lastmod } : {}),
+      ...(/^\d+$/.test(String(c.vars.setupMB)) ? { fileSize: `${c.vars.setupMB}MB` } : {}),
       inLanguage: ['en', 'el'],
       isAccessibleForFree: true,
       license: ['https://www.gnu.org/licenses/gpl-3.0.html', 'https://www.gnu.org/licenses/agpl-3.0.html'],
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
-      publisher: { '@id': `${c.site ?? 'https://ruruchess.com/'}#org` },
-      featureList: [
-        'Stockfish, Leela Chess Zero & Maia engine analysis',
-        'PDF chess book to playable database conversion',
-        'Opens PGN, ChessBase (.cbh, .cbv) and Scid (.si4) databases',
-        'Opponent preparation across FIDE/OTB, Lichess and Chess.com',
-        'Shared live chess analysis with encrypted WebRTC voice, camera and video',
-        'Glicko-2 tactics trainer, classic master lessons and human-like bots',
-      ],
+      publisher: { '@id': `${siteBase}#org` },
+      featureList: t.schemaFeatures,
       ...(c.links.full.startsWith('http') ? { downloadUrl: c.links.full } : {}),
+      ...(c.links.release.startsWith('http') ? { releaseNotes: c.links.release } : {}),
       ...(c.site
         ? {
             url: c.pageUrl,
@@ -76,9 +96,23 @@ export function render(lang, t, c, icon) {
           }
         : {}),
     },
+    ...(c.links.repo.startsWith('http')
+      ? [
+          {
+            '@type': 'SoftwareSourceCode',
+            '@id': `${siteBase}#source`,
+            name: 'Ruru Chess Source Code',
+            codeRepository: c.links.repo,
+            programmingLanguage: ['TypeScript', 'JavaScript'],
+            runtimePlatform: 'Windows 10, Windows 11',
+            license: ['https://www.gnu.org/licenses/gpl-3.0.html', 'https://www.gnu.org/licenses/agpl-3.0.html'],
+            targetProduct: { '@id': `${siteBase}#app` },
+          },
+        ]
+      : []),
     {
       '@type': 'FAQPage',
-      '@id': `${c.pageUrl ?? 'https://ruruchess.com/'}#faq`,
+      '@id': `${pageUrl}#faq`,
       mainEntity: t.faq.items.map(([q, a]) => ({
         '@type': 'Question',
         name: stripHtml(q),
@@ -124,8 +158,6 @@ export function render(lang, t, c, icon) {
     </div>`;
   };
 
-  const heroFirst = t.hero.tabs[0];
-
   return `<!doctype html>
 <html lang="${lang}">
 <head>
@@ -133,6 +165,7 @@ export function render(lang, t, c, icon) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${t.title}</title>
 <meta name="description" content="${escAttr(t.description)}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F9F7F2" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0C121E" media="(prefers-color-scheme: dark)">
@@ -140,6 +173,7 @@ export function render(lang, t, c, icon) {
 <link rel="icon" href="${r}assets/icon.png" type="image/png" sizes="128x128">
 <link rel="apple-touch-icon" href="${r}assets/icon.png">
 <link rel="manifest" href="${r}site.webmanifest">
+<link rel="preload" as="image" href="${img(heroFirst.id)}" type="image/webp" fetchpriority="high">
 ${
   c.site
     ? `<link rel="canonical" href="${c.pageUrl}">
@@ -148,13 +182,15 @@ ${
 <link rel="alternate" hreflang="x-default" href="${c.site}">
 <meta property="og:url" content="${c.pageUrl}">
 <meta property="og:image" content="${c.site}assets/img/og-${lang}.png">
+<meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="${escAttr(t.ogAlt)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escAttr(t.title)}">
 <meta name="twitter:description" content="${escAttr(t.description)}">
-<meta name="twitter:image" content="${c.site}assets/img/og-${lang}.png">`
+<meta name="twitter:image" content="${c.site}assets/img/og-${lang}.png">
+<meta name="twitter:image:alt" content="${escAttr(t.ogAlt)}">`
     : ''
 }
 <meta property="og:type" content="website">
@@ -278,6 +314,14 @@ ${c.preview ? `<div class="preview-bar">${t.preview}</div>` : ''}
           <ul class="check-list">
             ${t.ch2.points.map((x) => `<li>${icon('check')}<span>${x}</span></li>`).join('\n            ')}
           </ul>
+          ${
+            c.guides?.find((g) => g.homeSection === 'books')
+              ? (() => {
+                  const g = c.guides.find((x) => x.homeSection === 'books');
+                  return `<p class="guide-inline-link"><a href="${g.slug}/">${g[lang].navLabel} ${icon('arrow-right')}</a></p>`;
+                })()
+              : ''
+          }
         </div>
         <div class="book-visual">
           <button class="frame zoom book-main" type="button" data-full="${img('book')}" aria-label="${escAttr(t.hero.zoom)}: ${escAttr(t.ch2.alt)}">
@@ -486,6 +530,14 @@ ${c.preview ? `<div class="preview-bar">${t.preview}</div>` : ''}
         <a href="#faq">${t.nav.faq}</a>
         ${c.kofi ? `<a href="#support">${t.nav.support}</a>` : ''}
       </nav>
+      ${
+        c.guides?.length
+          ? `<nav class="footer-col" aria-label="${lang === 'el' ? 'Οδηγοί' : 'Guides'}">
+        <h4>${lang === 'el' ? 'Οδηγοί' : 'Guides'}</h4>
+        ${c.guides.map((g) => `<a href="${g.slug}/">${g[lang].navLabel}</a>`).join('\n        ')}
+      </nav>`
+          : ''
+      }
       <nav class="footer-col" aria-label="${escAttr(t.footer.project)}">
         <h4>${t.footer.project}</h4>
         <a href="${c.links.repo}"${ext(c.links.repo)}>${t.footer.code}</a>
@@ -493,8 +545,8 @@ ${c.preview ? `<div class="preview-bar">${t.preview}</div>` : ''}
         <a href="${c.links.license}"${ext(c.links.license)}>${t.footer.license}</a>
         <a href="${c.links.agpl}"${ext(c.links.agpl)}>${t.footer.agpl}</a>
         <a href="${c.links.credits}"${ext(c.links.credits)}>${t.footer.credits}</a>
-        <a href="privacy.html">${t.footer.privacy}</a>
-        <a href="terms.html">${t.footer.terms}</a>
+        <a href="privacy">${t.footer.privacy}</a>
+        <a href="terms">${t.footer.terms}</a>
       </nav>
     </div>
     <div class="footer-base">
@@ -532,14 +584,14 @@ ${c.preview ? `<div class="preview-bar">${t.preview}</div>` : ''}
 }
 
 export function renderPrivacy(lang, t, c, md) {
-  return renderLegal(lang, t, c, md, t.footer.privacy, 'privacy.html');
+  return renderLegal(lang, t, c, md, t.footer.privacy, 'privacy');
 }
 
 export function renderTerms(lang, t, c, md) {
-  return renderLegal(lang, t, c, md, t.footer.terms, 'terms.html');
+  return renderLegal(lang, t, c, md, t.footer.terms, 'terms');
 }
 
-function renderLegal(lang, t, c, md, title, file) {
+function renderLegal(lang, t, c, md, title, slug) {
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const body = md
     .trim()
@@ -552,9 +604,19 @@ function renderLegal(lang, t, c, md, title, file) {
     })
     .join('\n');
 
-  const pageUrl = c.pageUrl ? `${c.pageUrl}${file}` : null;
-  const enUrl = c.site ? `${c.site}${file}` : null;
-  const elUrl = c.site ? `${c.site}el/${file}` : null;
+  const pageUrl = c.pageUrl ? `${c.pageUrl}${slug}` : null;
+  const enUrl = c.site ? `${c.site}${slug}` : null;
+  const elUrl = c.site ? `${c.site}el/${slug}` : null;
+  const breadcrumb = pageUrl
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Ruru Chess', item: c.pageUrl },
+          { '@type': 'ListItem', position: 2, name: title, item: pageUrl },
+        ],
+      }
+    : null;
 
   return `<!doctype html>
 <html lang="${lang}">
@@ -563,6 +625,7 @@ function renderLegal(lang, t, c, md, title, file) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title} — Ruru Chess</title>
 <meta name="description" content="${escAttr(`${title} for Ruru Chess (${c.site ?? 'ruruchess.com'}).`)}">
+<meta name="robots" content="index, follow">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="${c.root}favicon.ico" sizes="any">
 <link rel="icon" href="${c.root}assets/icon.png" type="image/png">
@@ -576,6 +639,7 @@ ${
 }
 ${THEME_INIT}
 <link rel="stylesheet" href="${c.root}assets/style.css?v=${c.rev}">
+${breadcrumb ? `<script type="application/ld+json">${JSON.stringify(breadcrumb)}</script>` : ''}
 </head>
 <body>
 <header class="topbar">
@@ -585,7 +649,7 @@ ${THEME_INIT}
       <span class="brand-name">Ruru <span>Chess</span></span>
     </a>
     <div class="topbar-act">
-      <a class="nav-lang" href="${c.otherLangHref || './'}${file}" hreflang="${c.otherLang}" lang="${c.otherLang}">${t.otherLang}</a>
+      <a class="nav-lang" href="${c.otherLangHref || './'}${slug}" hreflang="${c.otherLang}" lang="${c.otherLang}">${t.otherLang}</a>
     </div>
   </div>
 </header>
@@ -595,6 +659,386 @@ ${THEME_INIT}
     ${body}
   </article>
 </main>
+</body>
+</html>
+`;
+}
+
+export function renderLanding(lang, page, t, c, icon) {
+  const p = page[lang];
+  const d = t.download;
+  const fill = (s) =>
+    String(s).replace(/\{(\w+)\}/g, (m, k) => (k in c.vars ? c.vars[k] : m));
+  const ext = (href) => (/^https?:/.test(href) ? ' rel="noopener"' : '');
+
+  const r = c.root; // '../' for EN, '../../' for EL
+  const homeHref = '../';
+  const imgSrc = `${r}assets/img/${page.img}-${lang}.webp`;
+  const siteBase = c.site ?? 'https://ruruchess.com/';
+  const enUrl = `${siteBase}${page.slug}/`;
+  const elUrl = `${siteBase}el/${page.slug}/`;
+  const hasOther = Boolean(page[c.otherLang]);
+  const pageUrl = lang === 'el' ? elUrl : enUrl;
+  const homeUrl = lang === 'el' ? `${siteBase}el/` : siteBase;
+  const otherHref = hasOther
+    ? lang === 'el'
+      ? `../../${page.slug}/`
+      : `../el/${page.slug}/`
+    : lang === 'el'
+      ? '../../'
+      : '../el/';
+  const related = (c.guides ?? []).filter((g) => g.slug !== page.slug && g[lang]);
+
+  const graph = [
+    {
+      '@type': 'WebPage',
+      '@id': `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: p.title,
+      description: p.description,
+      keywords: p.keywords,
+      inLanguage: lang,
+      ...(c.lastmod ? { dateModified: c.lastmod } : {}),
+      isPartOf: { '@id': `${siteBase}#website` },
+      about: { '@id': `${siteBase}#app` },
+      primaryImageOfPage: {
+        '@type': 'ImageObject',
+        url: `${siteBase}assets/img/${page.img}-${lang}.webp`,
+        width: 2160,
+        height: 1350,
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Ruru Chess', item: homeUrl },
+        { '@type': 'ListItem', position: 2, name: p.navLabel, item: pageUrl },
+      ],
+    },
+    {
+      '@type': 'SoftwareApplication',
+      '@id': `${siteBase}#app`,
+      name: 'Ruru Chess',
+      operatingSystem: 'Windows 10, Windows 11',
+      applicationCategory: 'GameApplication',
+      applicationSubCategory: 'Chess',
+      softwareVersion: c.rev,
+      isAccessibleForFree: true,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+      ...(c.links.full.startsWith('http') ? { downloadUrl: c.links.full } : {}),
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${pageUrl}#faq`,
+      mainEntity: p.faq.map(([q, a]) => ({
+        '@type': 'Question',
+        name: stripHtml(q),
+        acceptedAnswer: { '@type': 'Answer', text: stripHtml(a) },
+      })),
+    },
+  ];
+  const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
+
+  return `<!doctype html>
+<html lang="${lang}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${p.title}</title>
+<meta name="description" content="${escAttr(p.description)}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F9F7F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0C121E" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="${r}favicon.ico" sizes="any">
+<link rel="icon" href="${r}assets/icon.png" type="image/png" sizes="128x128">
+<link rel="apple-touch-icon" href="${r}assets/icon.png">
+<link rel="manifest" href="${r}site.webmanifest">
+<link rel="preload" as="image" href="${imgSrc}" type="image/webp" fetchpriority="high">
+${
+  c.site
+    ? `<link rel="canonical" href="${pageUrl}">
+${
+  hasOther
+    ? `<link rel="alternate" hreflang="en" href="${enUrl}">
+<link rel="alternate" hreflang="el" href="${elUrl}">
+<link rel="alternate" hreflang="x-default" href="${enUrl}">`
+    : `<link rel="alternate" hreflang="${lang}" href="${pageUrl}">
+<link rel="alternate" hreflang="x-default" href="${pageUrl}">`
+}
+<meta property="og:url" content="${pageUrl}">
+<meta property="og:image" content="${siteBase}assets/img/og-${lang}.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${escAttr(p.imgAlt)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escAttr(p.title)}">
+<meta name="twitter:description" content="${escAttr(p.description)}">
+<meta name="twitter:image" content="${siteBase}assets/img/og-${lang}.png">
+<meta name="twitter:image:alt" content="${escAttr(p.imgAlt)}">`
+    : ''
+}
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Ruru Chess">
+<meta property="og:locale" content="${t.locale}">
+<meta property="og:locale:alternate" content="${t.altLocale}">
+<meta property="og:title" content="${escAttr(p.title)}">
+<meta property="og:description" content="${escAttr(p.description)}">
+${THEME_INIT}
+<link rel="stylesheet" href="${r}assets/style.css?v=${c.rev}">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+</head>
+<body>
+<a class="skip" href="#main">${t.skip}</a>
+
+<header class="topbar" id="top">
+  <div class="wrap topbar-in">
+    <a class="brand" href="${homeHref}">
+      <img src="${r}assets/icon.png" width="30" height="30" alt="Ruru Chess owl emblem">
+      <span class="brand-name">Ruru <span>Chess</span></span>
+    </a>
+    <nav class="nav" id="menu" aria-label="${escAttr(t.menu)}">
+      <a href="${homeHref}#analysis">${t.nav.overview}</a>
+      <a href="${homeHref}#books">${t.nav.books}</a>
+      <a href="${homeHref}#study">${t.nav.study}</a>
+      <a href="${homeHref}#training">${t.nav.train}</a>
+      <a href="#faq">${t.nav.faq}</a>
+      <a class="nav-lang" href="${otherHref}" hreflang="${c.otherLang}" lang="${c.otherLang}">${t.otherLang}</a>
+    </nav>
+    <div class="topbar-act">
+      <button class="icon-toggle" type="button" id="theme-toggle" aria-label="${escAttr(t.themeToggle)}" title="${escAttr(t.themeToggle)}">
+        <span class="ic-sun">${icon('sun')}</span>
+        <span class="ic-moon">${icon('moon')}</span>
+      </button>
+      <a class="btn btn-ink btn-sm nav-dl" href="${c.links.full}" data-dl-guide>${icon('download')}<span>${t.nav.download}</span></a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" aria-label="${escAttr(t.menu)}">${icon('menu')}</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero guide-hero">
+    <div class="wrap">
+      <nav class="crumb" aria-label="Breadcrumb">
+        <a href="${homeHref}">Ruru Chess</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">${p.navLabel}</span>
+      </nav>
+
+      <div class="book-spread guide-spread">
+        <div class="book-copy">
+          <p class="kicker"><span class="kicker-dot" aria-hidden="true"></span>${p.eyebrow}</p>
+          <h1>${p.h1}</h1>
+          <p class="lead">${p.lead}</p>
+          <div class="guide-actions">
+            <a class="btn btn-cobalt btn-lg" href="${c.links.full}" data-dl-guide>
+              ${icon('download')}
+              <span class="btn-stack">
+                <strong>${p.cta}</strong>
+                <small>${fill(p.ctaSub)}</small>
+              </span>
+            </a>
+            <p class="hero-links">
+              <a href="${c.links.portable}">${t.hero.portable}</a>
+              <span aria-hidden="true">·</span>
+              <a href="${homeHref}#download">${t.hero.checksums}</a>
+              <span aria-hidden="true">·</span>
+              <a href="${c.links.repo}"${ext(c.links.repo)}>${t.hero.source}</a>
+            </p>
+          </div>
+        </div>
+        <div class="book-visual">
+          <button class="frame zoom book-main" type="button" data-full="${imgSrc}" aria-label="${escAttr(t.hero.zoom)}: ${escAttr(p.imgAlt)}">
+            <img src="${imgSrc}" width="2160" height="1350" alt="${escAttr(p.imgAlt)}" fetchpriority="high" decoding="async">
+            <span class="zoom-hint" aria-hidden="true">${icon('maximize-2')}</span>
+          </button>
+          ${
+            page.insetImg
+              ? `<figure class="book-inset" aria-hidden="true">
+            <span class="pdf-badge">${icon('file-text')}${p.pdfTag}</span>
+            <img src="${r}assets/img/${page.insetImg}" width="960" height="600" alt="${escAttr(p.insetAlt)}" loading="lazy" decoding="async">
+            <span class="pdf-arrow">${icon('arrow-right')}</span>
+          </figure>`
+              : ''
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-warm" id="how-it-works">
+    <div class="wrap">
+      <header class="ch-head ch-head-tight">
+        <p class="ch-eyebrow">${p.stepsEyebrow}</p>
+        <h2>${p.stepsTitle}</h2>
+      </header>
+      <ol class="steps-grid">
+        ${p.steps
+          .map(
+            ([title, text], i) => `<li class="step-card">
+          <span class="step-num">0${i + 1}</span>
+          <h3>${title}</h3>
+          <p>${text}</p>
+        </li>`,
+          )
+          .join('\n        ')}
+      </ol>
+    </div>
+  </section>
+
+  <section class="band" id="details">
+    <div class="wrap">
+      <header class="ch-head">
+        <p class="ch-eyebrow">${p.featuresEyebrow}</p>
+        <h2>${p.featuresTitle}</h2>
+        <p class="ch-lead">${p.featuresLead}</p>
+      </header>
+      <div class="bento">
+        ${p.cards
+          .map(
+            (card) => `<article class="bento-card">
+          <span class="bento-tag">${card.tag}</span>
+          <h3>${card.title}</h3>
+          <p>${card.text}</p>
+        </article>`,
+          )
+          .join('\n        ')}
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-warm" id="comparison">
+    <div class="wrap wrap-narrow">
+      <header class="ch-head ch-head-tight">
+        <p class="ch-eyebrow">${p.compareEyebrow}</p>
+        <h2>${p.compareTitle}</h2>
+      </header>
+      <div class="compare-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>${p.compareCols.map((col, idx) => `<th${idx === 2 ? ' class="col-hl"' : ''}>${col}</th>`).join('')}</tr>
+          </thead>
+          <tbody>
+            ${p.compareRows
+              .map(
+                (row) => `<tr>
+              <td><strong>${row[0]}</strong></td>
+              <td class="muted">${row[1]}</td>
+              <td class="col-hl">${icon('check')}<span>${row[2]}</span></td>
+            </tr>`,
+              )
+              .join('\n            ')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="faq">
+    <div class="wrap wrap-narrow">
+      <header class="ch-head ch-head-tight">
+        <p class="ch-eyebrow">${p.faqEyebrow}</p>
+        <h2>${p.faqTitle}</h2>
+      </header>
+      <div class="faq-list">
+        ${p.faq
+          .map(
+            ([q, a]) => `<details class="faq-item">
+          <summary><span>${q}</span>${icon('chevron-down')}</summary>
+          <div class="faq-ans"><p>${a}</p></div>
+        </details>`,
+          )
+          .join('\n        ')}
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-warm">
+    <div class="wrap">
+      <div class="guide-cta">
+        <div>
+          <h2>${p.ctaTitle}</h2>
+          <p class="ch-lead">${p.ctaLead}</p>
+        </div>
+        <div class="guide-cta-act">
+          <a class="btn btn-cobalt btn-lg" href="${c.links.full}" data-dl-guide>${icon('download')}<span>${p.cta}</span></a>
+          <a class="small" href="${homeHref}">${lang === 'el' ? '← Δες όλες τις δυνατότητες του Ruru Chess' : '← Explore all Ruru Chess features'}</a>
+        </div>
+      </div>
+      ${
+        related.length
+          ? `<div class="related-guides">
+        <p class="ch-eyebrow">${lang === 'el' ? 'Περισσότεροι οδηγοί' : 'More guides'}</p>
+        <div class="related-links">
+          ${related.map((g) => `<a class="related-pill" href="../${g.slug}/">${g[lang].navLabel} ${icon('arrow-right')}</a>`).join('')}
+        </div>
+      </div>`
+          : ''
+      }
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="${homeHref}">
+          <img src="${r}assets/icon.png" width="28" height="28" alt="Ruru Chess">
+          <span class="brand-name">Ruru <span>Chess</span></span>
+        </a>
+        <p>${t.footer.tagline}</p>
+      </div>
+      <nav class="footer-col" aria-label="${escAttr(t.footer.program)}">
+        <h4>${t.footer.program}</h4>
+        <a href="${homeHref}#download">${t.nav.download}</a>
+        <a href="${c.links.release}"${ext(c.links.release)}>${d.whatsNew}</a>
+        <a href="${homeHref}#faq">${t.nav.faq}</a>
+      </nav>
+      <nav class="footer-col" aria-label="${lang === 'el' ? 'Οδηγοί' : 'Guides'}">
+        <h4>${lang === 'el' ? 'Οδηγοί' : 'Guides'}</h4>
+        ${(c.guides ?? []).map((g) => `<a href="../${g.slug}/">${g[lang].navLabel}</a>`).join('\n        ')}
+      </nav>
+      <nav class="footer-col" aria-label="${escAttr(t.footer.project)}">
+        <h4>${t.footer.project}</h4>
+        <a href="${c.links.repo}"${ext(c.links.repo)}>${t.footer.code}</a>
+        <a href="${c.links.issues}"${ext(c.links.issues)}>${t.footer.issues}</a>
+        <a href="${c.links.license}"${ext(c.links.license)}>${t.footer.license}</a>
+        <a href="../privacy">${t.footer.privacy}</a>
+        <a href="../terms">${t.footer.terms}</a>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <p>© ${c.year} Ruru Chess. ${t.footer.legal}</p>
+      <a class="footer-lang" href="${otherHref}" hreflang="${c.otherLang}" lang="${c.otherLang}">${icon('languages')}<span>${t.otherLang}</span></a>
+    </div>
+  </div>
+</footer>
+
+<dialog class="dl-modal" id="dl-modal" aria-labelledby="dl-modal-title">
+  <div class="dl-modal-in">
+    <div class="dl-modal-head">
+      <span class="dl-modal-ic">${icon('download')}</span>
+      <h3 id="dl-modal-title">${d.modalTitle}</h3>
+      <button type="button" class="dl-modal-x" aria-label="${escAttr(d.modalClose)}" data-dl-close>${icon('x')}</button>
+    </div>
+    <p class="dl-modal-sub">${d.modalSub}</p>
+    <ol class="dl-modal-steps">${d.modalSteps.map((x) => `<li>${x}</li>`).join('')}</ol>
+    <p class="dl-modal-note">${icon('shield-check')}<span>${d.modalNote}</span></p>
+    <div class="dl-modal-foot">
+      <a class="small" href="${homeHref}#download" data-dl-close>${d.modalCheck}</a>
+      <button type="button" class="btn btn-ink btn-sm" data-dl-close>${d.modalClose}</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="${escAttr(t.hero.zoom)}">
+  <button type="button" class="lightbox-close" aria-label="Close">${icon('x')}</button>
+  <img alt="">
+</dialog>
+<script src="${r}assets/site.js?v=${c.rev}" defer></script>
 </body>
 </html>
 `;

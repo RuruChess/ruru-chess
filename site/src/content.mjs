@@ -5,10 +5,20 @@ export default {
   en: {
     locale: 'en_US',
     altLocale: 'el_GR',
-    title: 'Ruru Chess — Free Chess Analysis, Database & Study App for Windows',
+    title: 'Ruru Chess — Free Chess Database, Stockfish & Study App',
     description:
       'Ruru Chess (Ruru) is a free, open-source chess desktop app for Windows. Manage game databases, analyze with Stockfish, turn PDF chess books into playable databases, prepare for opponents, and study live with friends.',
     ogAlt: 'Ruru Chess desktop interface showing Stockfish multi-line game analysis on a chess board',
+    schemaKeywords:
+      'free chess database, open source chess database Windows, open cbh file, open cbv file, PDF chess book to PGN, Stockfish GUI Windows, Leela Chess Zero, Maia chess, chess opponent preparation, live chess analysis',
+    schemaFeatures: [
+      'Stockfish, Leela Chess Zero & Maia engine analysis',
+      'PDF chess book to playable PGN and database conversion',
+      'Opens PGN, ChessBase (.cbh, .cbv) and Scid (.si4) databases, including inside .7z and .zip archives',
+      'Opponent preparation across FIDE/OTB, Lichess and Chess.com',
+      'Shared live chess analysis with encrypted WebRTC voice, camera and video',
+      'Glicko-2 tactics trainer, classic master lessons and human-like bots',
+    ],
     skip: 'Skip to content',
     menu: 'Menu',
     themeToggle: 'Switch light or dark theme',
@@ -378,10 +388,20 @@ export default {
   el: {
     locale: 'el_GR',
     altLocale: 'en_US',
-    title: 'Ruru Chess — Δωρεάν πρόγραμμα σκακιού: Ανάλυση, Βάσεις & Μελέτη για Windows',
+    title: 'Ruru Chess — Δωρεάν Πρόγραμμα Σκακιού, Βάσεις & Ανάλυση',
     description:
       'Το Ruru Chess (Ruru) είναι δωρεάν, ανοιχτού κώδικα πρόγραμμα σκακιού για Windows. Διαχείριση βάσεων, ανάλυση με Stockfish, μετατροπή βιβλίων PDF σε βάσεις, προετοιμασία αντιπάλου και ζωντανή κοινή μελέτη με φίλους.',
     ogAlt: 'Το Ruru Chess σε ανάλυση παρτίδας με Stockfish, σκακιέρα με βέλη και σημειογραφία',
+    schemaKeywords:
+      'δωρεάν πρόγραμμα σκακιού, βάση σκακιού Windows, άνοιγμα cbh cbv, μετατροπή βιβλίου σκακιού PDF σε PGN, ανάλυση Stockfish, προετοιμασία αντιπάλου σκάκι, ζωντανή ανάλυση σκακιού',
+    schemaFeatures: [
+      'Ανάλυση παρτίδων με Stockfish, Leela Chess Zero & Maia',
+      'Μετατροπή σκακιστικών βιβλίων PDF σε διαδραστική βάση και PGN',
+      'Άνοιγμα αρχείων PGN, ChessBase (.cbh, .cbv) και Scid (.si4), ακόμα και μέσα από .7z ή .zip',
+      'Προετοιμασία αντιπάλου από βάσεις FIDE/OTB, Lichess και Chess.com',
+      'Ζωντανή κοινή ανάλυση με κρυπτογραφημένη φωνή WebRTC, κάμερα και βίντεο',
+      'Προπόνηση τακτικής με Glicko-2, κλασικά μαθήματα και bots με ανθρώπινο στιλ',
+    ],
     skip: 'Μετάβαση στο περιεχόμενο',
     menu: 'Μενού',
     themeToggle: 'Αλλαγή φωτεινού ή σκοτεινού θέματος',
