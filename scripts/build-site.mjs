@@ -85,7 +85,19 @@ fs.mkdirSync(path.join(out, 'assets', 'img'), { recursive: true });
 for (const f of ['style.css', 'site.js']) fs.copyFileSync(path.join(src, f), path.join(out, 'assets', f));
 for (const f of fs.readdirSync(path.join(src, 'img'))) fs.copyFileSync(path.join(src, 'img', f), path.join(out, 'assets', 'img', f));
 fs.copyFileSync(path.join(root, 'public', 'icon.png'), path.join(out, 'assets', 'icon.png'));
-fs.copyFileSync(path.join(root, 'Ruru.ico'), path.join(out, 'favicon.ico'));
+const icoBuf = fs.readFileSync(path.join(root, 'Ruru.ico'));
+fs.writeFileSync(path.join(out, 'favicon.ico'), icoBuf);
+// Εξαγωγή καθαρών 48x48 & 256x256 PNG από το Ruru.ico (Google Search favicon & Schema logo)
+const icoCount = icoBuf.readUInt16LE(4);
+for (let k = 0; k < icoCount; k++) {
+  const off = 6 + k * 16;
+  const w = icoBuf[off] || 256;
+  const h = icoBuf[off + 1] || 256;
+  const size = icoBuf.readUInt32LE(off + 8);
+  const dataOff = icoBuf.readUInt32LE(off + 12);
+  if (w === 48 && h === 48) fs.writeFileSync(path.join(out, 'assets', 'favicon-48.png'), icoBuf.subarray(dataOff, dataOff + size));
+  if (w === 256 && h === 256) fs.writeFileSync(path.join(out, 'assets', 'logo-256.png'), icoBuf.subarray(dataOff, dataOff + size));
+}
 fs.writeFileSync(path.join(out, '.nojekyll'), '');
 
 const lastmod = builtAt.toISOString().slice(0, 10);
@@ -164,6 +176,12 @@ fs.writeFileSync(
 /assets/icon.png
   Cache-Control: public, max-age=2592000
 
+/assets/favicon-48.png
+  Cache-Control: public, max-age=2592000
+
+/assets/logo-256.png
+  Cache-Control: public, max-age=2592000
+
 /favicon.ico
   Cache-Control: public, max-age=2592000
 
@@ -189,7 +207,11 @@ fs.writeFileSync(
       display: 'browser',
       background_color: '#F9F7F2',
       theme_color: '#175CD3',
-      icons: [{ src: '/assets/icon.png', sizes: '128x128', type: 'image/png' }],
+      icons: [
+        { src: '/assets/favicon-48.png', sizes: '48x48', type: 'image/png' },
+        { src: '/assets/icon.png', sizes: '128x128', type: 'image/png' },
+        { src: '/assets/logo-256.png', sizes: '256x256', type: 'image/png' },
+      ],
     },
     null,
     2,

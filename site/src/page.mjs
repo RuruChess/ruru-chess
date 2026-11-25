@@ -64,7 +64,7 @@ export function render(lang, t, c, icon) {
       name: 'Ruru Chess',
       alternateName: 'Ruru',
       url: siteBase,
-      ...(c.site ? { logo: `${c.site}assets/icon.png` } : {}),
+      ...(c.site ? { logo: `${c.site}assets/logo-256.png` } : {}),
       ...(c.links.repo.startsWith('http') ? { sameAs: [c.links.repo] } : {}),
     },
     {
@@ -192,9 +192,10 @@ export function render(lang, t, c, icon) {
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F9F7F2" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0C121E" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="${r}favicon.ico" sizes="any">
-<link rel="icon" href="${r}assets/icon.png" type="image/png" sizes="128x128">
-<link rel="apple-touch-icon" href="${r}assets/icon.png">
+<link rel="icon" href="${r}favicon.ico" sizes="48x48">
+<link rel="icon" href="${r}assets/favicon-48.png" type="image/png" sizes="48x48">
+<link rel="icon" href="${r}assets/logo-256.png" type="image/png" sizes="256x256">
+<link rel="apple-touch-icon" href="${r}assets/logo-256.png">
 <link rel="manifest" href="${r}site.webmanifest">
 <link rel="preload" as="image" href="${img(heroFirst.id)}" type="image/webp" fetchpriority="high">
 ${
@@ -652,8 +653,8 @@ function renderLegal(lang, t, c, md, title, slug) {
 <meta name="description" content="${escAttr(`${title} for Ruru Chess (${c.site ?? 'ruruchess.com'}).`)}">
 <meta name="robots" content="noindex, follow">
 <meta name="color-scheme" content="light dark">
-<link rel="icon" href="${c.root}favicon.ico" sizes="any">
-<link rel="icon" href="${c.root}assets/icon.png" type="image/png">
+<link rel="icon" href="${c.root}favicon.ico" sizes="48x48">
+<link rel="icon" href="${c.root}assets/favicon-48.png" type="image/png" sizes="48x48">
 ${
   pageUrl
     ? `<link rel="canonical" href="${pageUrl}">
@@ -776,9 +777,10 @@ export function renderLanding(lang, page, t, c, icon) {
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F9F7F2" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0C121E" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="${r}favicon.ico" sizes="any">
-<link rel="icon" href="${r}assets/icon.png" type="image/png" sizes="128x128">
-<link rel="apple-touch-icon" href="${r}assets/icon.png">
+<link rel="icon" href="${r}favicon.ico" sizes="48x48">
+<link rel="icon" href="${r}assets/favicon-48.png" type="image/png" sizes="48x48">
+<link rel="icon" href="${r}assets/logo-256.png" type="image/png" sizes="256x256">
+<link rel="apple-touch-icon" href="${r}assets/logo-256.png">
 <link rel="manifest" href="${r}site.webmanifest">
 <link rel="preload" as="image" href="${imgSrc}" type="image/webp" fetchpriority="high">
 ${
