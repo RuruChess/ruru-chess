@@ -1,5 +1,5 @@
 /**
- * Διαγράμματα γραμμένα με γραμματοσειρά σκακιού (Alpha, Merida, Leipzig κ.ά., π.χ. βιβλία Quality Chess): κάθε
+ * Διαγράμματα γραμμένα με γραμματοσειρά σκακιού (Alpha, Merida, Leipzig κ.ά.): κάθε
  * γραμμή της σκακιέρας είναι κείμενο («+l+ +», «PzP»), άρα η θέση διαβάζεται ακριβώς, χωρίς αναγνώριση εικόνας.
  * Μαζί τους ο αριθμός της άσκησης δίπλα στη σκακιέρα, η επικεφαλίδα πάνω της (παίκτες, τόπος, χρονιά) και το
  * σημάδι για το ποιος παίζει (μικρό σύμβολο στη δεξιά πλευρά: ψηλά ο Μαύρος, χαμηλά ο Λευκός).
@@ -54,7 +54,7 @@ export function findDiagrams(items: Item[]): { diagrams: Item[]; rest: Item[] } 
     cells.sort((a, b) => b.y - a.y || a.x - b.x);
     const segs: Seg[] = [];
     for (const c of cells) {
-      // δύο σκακιέρες δίπλα δίπλα (Quality Chess, ασκήσεις): το δεξί πλαίσιο της μιας απέχει ~2 κελιά από το αριστερό
+      // δύο σκακιέρες δίπλα δίπλα (σελίδες ασκήσεων): το δεξί πλαίσιο της μιας απέχει ~2 κελιά από το αριστερό
       // της άλλης· πάνω από ένα κελί κενό μετά από δεξί πλαίσιο ή πριν από αριστερό δεν ενώνει τις γραμμές τους
       const apart = (s: Seg) => c.x - s.x1 > cell * 1.5 && (RIGHT_EDGE.has(s.cells[s.cells.length - 1].c) || LEFT_EDGE.test(c.c));
       const row = segs.filter((s) => Math.abs(s.y - c.y) < cell * 0.3 && c.x - s.x1 < cell * 2.5 && c.x - s.x1 > -cell * 0.5 && !apart(s));
@@ -120,7 +120,7 @@ export function annotateDiagrams(diagrams: Item[], items: Item[], used = new Set
       used.add(marker);
       d.diagram!.turn = marker.y > (top + bottom) / 2 ? 'b' : 'w';
     }
-    // «W» / «B» αριστερά από τη σκακιέρα (βιβλία Gambit: ποιος παίζει)· αλλιώς έμενε στο κείμενο και κολλούσε στην
+    // «W» / «B» αριστερά από τη σκακιέρα (ένδειξη σειράς)· αλλιώς έμενε στο κείμενο και κολλούσε στην
     // κίνηση που ακολουθεί («B 18 … ♗xb2»)
     const letter = marker ? undefined : near.find((it) => /^[WB]$/.test(it.str.trim()) && it.x + it.w <= left + cell * 0.3 && it.x >= left - cell * 2.5 && it.y > bottom && it.y < top);
     if (letter) {
@@ -130,7 +130,7 @@ export function annotateDiagrams(diagrams: Item[], items: Item[], used = new Set
     // ο αριθμός αριστερά από τη σκακιέρα, αλλιώς από πάνω της (ο πιο κοντινός)
     // (διάγραμμα-εικόνα: μόνο με τελεία ή παρένθεση, «26.», «(26)»· ένας σκέτος αριθμός εκεί είναι συνήθως κίνηση ή σελίδα)
     // («7)» που κλείνει την παρένθεση της προηγούμενης λέξης είναι παραπομπή του κειμένου, «…3 exd5 (Diagram 7)», όχι
-    // αριθμός: Starting Out έβγαινε 56 «ασκήσεις» στις 70 παρτίδες)
+    // αριθμός άσκησης)
     const reference = (it: Item) => {
       const i = items.indexOf(it);
       return /^\d+\)$/.test(it.str.trim()) && i > 0 && /\([^)]*$/.test(items[i - 1].str.trim());
@@ -142,9 +142,9 @@ export function annotateDiagrams(diagrams: Item[], items: Item[], used = new Set
     const reach = d.diagram?.id !== undefined ? 1.2 : 3;
     const above = near.filter((it) => num(it) && it.y > top - cell * 0.3 && it.y <= top + cell * reach && it.x >= left - cell * 3 && it.x <= right + cell);
     // (σελίδα από εικόνα: και σκέτος αριθμός, όταν είναι μεγάλος, ≥ 1,4 φορές τα γράμματα της σελίδας, δίπλα στην πάνω
-    // άκρη, αριστερά ή δεξιά: Quality Chess τυπώνει «25» στο εξωτερικό περιθώριο. Χωρίς αυτόν οι λύσεις δεν έβρισκαν
-    // την άσκησή τους στα σκαναρισμένα βιβλία ασκήσεων. Και βαριά γραφή σε κάθε μέγεθος, ή έντονη ≥ 1,15: το μέγεθος που μετρά ο
-    // αναγνώστης για δύο ψηφία είναι αναξιόπιστο, GM Attack «17» έντονο 13,4 και «21» βαρύ 9,6 με κείμενο 10,6)
+    // άκρη, αριστερά ή δεξιά στο εξωτερικό περιθώριο. Χωρίς αυτόν οι λύσεις δεν έβρισκαν την άσκησή τους στα
+    // σκαναρισμένα βιβλία ασκήσεων. Και βαριά γραφή σε κάθε μέγεθος, ή έντονη ≥ 1,15, καθώς το μέγεθος που μετρά ο
+    // αναγνώστης για δύο ψηφία είναι αναξιόπιστο)
     const big =
       d.diagram?.id !== undefined
         ? near.find((it) => !used.has(it) && it.font.startsWith('ocr') && /^\d{1,4}$/.test(it.str.trim()) && (it.size >= 1.4 * textSize || /^ocr-h/.test(it.font) || (/^ocr-b/.test(it.font) && it.size >= 1.15 * textSize)) && it.y >= top - cell * 1.6 && it.y <= top + cell * 0.5 && ((it.x + it.w <= left + cell * 0.3 && it.x >= left - cell * 3) || (it.x >= right - cell * 0.3 && it.x <= right + cell * 3)))
@@ -177,9 +177,9 @@ export function turnOf(text: string): 'w' | 'b' | null {
   // «Position after White's 26th move»: παίζει ο άλλος
   const after = /\b(?:position\s+)?after\s+(white|black)['’]?s\b/i.exec(text);
   if (after) return after[1].toLowerCase() === 'white' ? 'b' : 'w';
-  // «Diagram 7 (B)» (Everyman, Starting Out): το γράμμα στην παρένθεση
-  const everyman = /\bDiagram\s+\d{1,4}\s*\(([WB])\)/.exec(text);
-  if (everyman) return everyman[1] === 'W' ? 'w' : 'b';
+  // «Diagram 7 (B)»: το γράμμα στην παρένθεση
+  const diagTurn = /\bDiagram\s+\d{1,4}\s*\(([WB])\)/.exec(text);
+  if (diagTurn) return diagTurn[1] === 'W' ? 'w' : 'b';
   if (/\b(white|weiß|weiss)\b[^.]{0,20}\b(to (move|play)|zieht|am zug)|(παίζει|παίζουν) (ο |τα )?λευκ/i.test(text)) return 'w';
   if (/\b(black|schwarz)\b[^.]{0,20}\b(to (move|play)|zieht|am zug)|(παίζει|παίζουν) (ο |τα )?μαύρ/i.test(text)) return 'b';
   return null;

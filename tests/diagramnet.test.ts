@@ -43,7 +43,7 @@ describe('πακέτο θέσεων διαγραμμάτων', () => {
   });
 
   it('δύο βασίλισσες ενός χρώματος και καμία του άλλου σε θέση μέσης παρτίδας: αλλάζει αυτή που είναι πιο βαθιά στο άλλο στρατόπεδο', () => {
-    // (The Safest Sicilian: η μαύρη βασίλισσα του e7 διαβάστηκε λευκή)
+    // (η μαύρη βασίλισσα του e7 διαβάστηκε λευκή)
     const pl = 'r4rk1/1b2Qppp/ppnppb2/2n5/2P1P3/N1N1B3/PPQ1BPPP/2RR2K1';
     const r: BookBoards = { boards: [[]], cluster: [Array(64).fill(-1)], clusters: [], fixed: new Map([[0, pl]]) };
     expect(placements(r)).toEqual(['r4rk1/1b2qppp/ppnppb2/2n5/2P1P3/N1N1B3/PPQ1BPPP/2RR2K1']);

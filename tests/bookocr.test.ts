@@ -1,5 +1,5 @@
 /**
- * Τεστ: βιβλία με κείμενο από OCR (σκαναρισμένο βιβλίο με στρώμα κειμένου, π.χ. «_compress» PDF). Συνθετικά δεδομένα
+ * Τεστ: βιβλία με κείμενο από OCR (σκαναρισμένο βιβλίο με ενσωματωμένο στρώμα κειμένου). Συνθετικά δεδομένα
  * (καμία σελίδα από βιβλίο): σύμβολα κομματιών με πολλές μορφές («lLl» = ♘, «i.» = ♗, «l"!:» = ♖), αριθμοί κινήσεων
  * με κενά και γράμματα («1 0.», «1 l .»), «• • •», αξιολογήσεις («00» = ∞), και σύμβολο που χωρά σε πολλά κομμάτια («�»).
  */
@@ -58,7 +58,7 @@ describe('βιβλία με παρτίδες μέσα σε ενότητες («T
     book.push(para(`Trap ${n} - Lullaby ${n}`, false, true), para('Intro text about the trap.'), para('Kochiev — Ivanov USSR 1976'));
     book.push(para('1 Qf3 Qf6 2 g3 b6 3 Ag2 Ab7 4 0-0 e6 5 d3 d5 6 Qbd2 Ae7 7 e4 dxe4 8 dxe4 (2a)'), para('Qc6 9 Ve2 2b: after 9 Ve2 and Black is fine.'));
   }
-  book.push(para('Trap 9 - Pawns', false, true), para('Stone — Giddins'), para(''), para('Club Match 1988'), para('1 c4 b6 2 Qc3 Ab7 3 e4 e6 4 Qf3 Ab4'));
+  book.push(para('Trap 9 - Pawns', false, true), para('Stone — Baker'), para(''), para('Club Match 1988'), para('1 c4 b6 2 Qc3 Ab7 3 e4 e6 4 Qf3 Ab4'));
 
   it('κάθε παρτίδα του βιβλίου γίνεται παρτίδα, με παίκτες, τόπο, χρονιά και την ενότητα', () => {
     const res = parseBook(book, { title: 'Traps', author: '' });

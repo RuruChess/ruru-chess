@@ -81,7 +81,7 @@ describe('Βιβλία ασκήσεων', () => {
     expect(res.pgn).toContain('30. Ra8# 1-0');
   });
 
-  it('κωδικοί ασκήσεων κάτω από το διάγραμμα («W», «E3.01 **/», FCE): οι λύσεις στο τέλος με τον ίδιο κωδικό', () => {
+  it('κωδικοί ασκήσεων κάτω από το διάγραμμα («W», «E3.01 **/»): οι λύσεις στο τέλος με τον ίδιο κωδικό', () => {
     const ex = (placement: string, code: string, id: number) => [diagram({ placement, id }), para('W', { page: 1 }), para(`${code} **/`, { page: 1 }), para('How does White win?', { page: 1 })];
     const res = parseBook(
       [
@@ -131,7 +131,7 @@ describe('Βιβλία ασκήσεων', () => {
   });
 });
 
-describe('Quality Chess: διαγράμματα δίπλα δίπλα, λύσεις με επικεφαλίδα, διάγραμμα βαριάντας', () => {
+describe('βιβλία ασκήσεων: διαγράμματα δίπλα δίπλα, λύσεις με επικεφαλίδα, διάγραμμα βαριάντας', () => {
   const sol = (...parts: string[]): BookParagraph => ({ ...para(''), runs: parts.map((text, i) => ({ text, main: i % 2 === 1 })), text: parts.join('') });
 
   it('δύο σκακιέρες στην ίδια σειρά, με ~2 κελιά ανάμεσα στα πλαίσια, διαβάζονται χωριστά', () => {

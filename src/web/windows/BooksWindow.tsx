@@ -601,9 +601,9 @@ function Verdict({ v }: { v: BookVerdict }) {
 }
 
 const COVERS = ['#2b4c7e', '#3d5a80', '#7a2e3a', '#2f6b4f', '#9a6b1f', '#1f6f78'];
-const SKIP = new Set(['the', 'a', 'an', 'of', 'on', 'and', 'with', 'for', 'to', 'in', 'pdf', 'pdfcoffee', 'com']);
+const SKIP = new Set(['the', 'a', 'an', 'of', 'on', 'and', 'with', 'for', 'to', 'in', 'pdf']);
 
-/** Δύο αρχικά για το «εξώφυλλο» (χωρίς άρθρα και το «pdfcoffee.com» των ονομάτων αρχείων). */
+/** Δύο αρχικά για το «εξώφυλλο» (χωρίς άρθρα). */
 function initials(name: string): string {
   const words = name.match(/\p{L}+/gu) ?? [];
   const keep = words.filter((w) => !SKIP.has(w.toLowerCase()));

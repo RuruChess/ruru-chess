@@ -12,22 +12,22 @@ describe('ποιότητα ανάγνωσης βιβλίου', () => {
 
   it('έγκαιρη ένδειξη: σκαναρισμένο, χαλασμένο κείμενο, κανονικό', () => {
     expect(textWarning({ read: 10, ocr: 10, squares: 0, clean: 0 })).toBe('scanned');
-    expect(textWarning({ read: 100, ocr: 1, squares: 184, clean: 78 })).toBe('garbled'); // 1001 Exercises
-    expect(textWarning({ read: 100, ocr: 1, squares: 10043, clean: 9347 })).toBeNull(); // Italian
+    expect(textWarning({ read: 100, ocr: 1, squares: 184, clean: 78 })).toBe('garbled');
+    expect(textWarning({ read: 100, ocr: 1, squares: 10043, clean: 9347 })).toBeNull();
     expect(textWarning({ read: 3, ocr: 3, squares: 20, clean: 2 })).toBeNull(); // πολύ νωρίς
     expect(textWarning(undefined)).toBeNull();
   });
 
   it('ετυμηγορία: ψηφιακά βιβλία καλή, σκαναρισμένα πειραματική', () => {
-    expect(bookVerdict(stats({ moves: 27127, unplaced: 130, ocrPages: 1 }), 303).level).toBe('good'); // Italian
-    expect(bookVerdict(stats({ moves: 5721, unplaced: 42, ocrPages: 2 }), 470).level).toBe('good'); // Krykun
-    expect(bookVerdict(stats({ moves: 51614, unplaced: 1330, ocrPages: 1 }), 875).level).toBe('good'); // French
-    const ex = bookVerdict(stats({ moves: 15, unplaced: 187, diagrams: 494, verified: 3, ocrPages: 2 }), 126); // 1001 Exercises
+    expect(bookVerdict(stats({ moves: 27127, unplaced: 130, ocrPages: 1 }), 303).level).toBe('good');
+    expect(bookVerdict(stats({ moves: 5721, unplaced: 42, ocrPages: 2 }), 470).level).toBe('good');
+    expect(bookVerdict(stats({ moves: 51614, unplaced: 1330, ocrPages: 1 }), 875).level).toBe('good');
+    const ex = bookVerdict(stats({ moves: 15, unplaced: 187, diagrams: 494, verified: 3, ocrPages: 2 }), 126);
     expect(ex.level).toBe('experimental');
     expect(ex.issues).toEqual(['moves', 'diagrams']);
-    expect(bookVerdict(stats({ moves: 22, unplaced: 590, diagrams: 207, verified: 9, ocrPages: 141 }), 141).level).toBe('experimental'); // Alekhine
-    expect(bookVerdict(stats({ moves: 2376, unplaced: 880, diagrams: 314, verified: 29, ocrPages: 114 }), 116).level).toBe('experimental'); // Traps (OCR)
-    const ko = bookVerdict(stats({ moves: 17030, unplaced: 13000, ocrPages: 7 }), 722, [], { read: 722, ocr: 7, squares: 1000, clean: 400 }); // Kotronias
+    expect(bookVerdict(stats({ moves: 22, unplaced: 590, diagrams: 207, verified: 9, ocrPages: 141 }), 141).level).toBe('experimental');
+    expect(bookVerdict(stats({ moves: 2376, unplaced: 880, diagrams: 314, verified: 29, ocrPages: 114 }), 116).level).toBe('experimental');
+    const ko = bookVerdict(stats({ moves: 17030, unplaced: 13000, ocrPages: 7 }), 722, [], { read: 722, ocr: 7, squares: 1000, clean: 400 });
     expect(ko.level).toBe('partial');
     expect(ko.issues).toEqual(['moves', 'text']);
   });

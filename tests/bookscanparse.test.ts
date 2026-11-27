@@ -16,7 +16,7 @@ const moves = (game: string) =>
     .replace(/\s+/g, ' ')
     .trim();
 
-describe('αιχμαλωσίες πιονιών χωρίς «x» (Chess Stars)', () => {
+describe('αιχμαλωσίες πιονιών χωρίς «x»', () => {
   // 20 τέτοιες αιχμαλωσίες στο βιβλίο, καμία με «x»
   const filler = para(Array.from({ length: 10 }, (_, k) => `${20 + k}.cd5 ed5`).join(' '));
 
@@ -131,7 +131,7 @@ describe('κείμενο από τον αναγνώστη εικόνας: κολ
   };
   const parse = (...paras: BookParagraph[]) => games(parseBook([heading('Chapter 1'), ...paras], { title: 'T', author: '' }).pgn)[0];
 
-  it('αριθμός με τελείες στο τέλος ενός κομματιού και η κίνηση στο επόμενο («[[14...]][[Rc8 15 h4!]]», Starting Out)', () => {
+  it('αριθμός με τελείες στο τέλος ενός κομματιού και η κίνηση στο επόμενο («[[14...]][[Rc8 15 h4!]]»)', () => {
     const g = parse(
       para('1.e4 e5 2.Nf3 Nc6 3.Bb5', true),
       para('Instead 3.Bc4 Bc5 is the Italian.'),
@@ -152,7 +152,7 @@ describe('κείμενο από τον αναγνώστη εικόνας: κολ
     expect(games(res.pgn).map(moves).join(' | ')).toMatch(/1\. e4 e5 2\. Nf3 d5 3\. exd5/);
   });
 
-  it('τετράγωνο κολλημένο στον επόμενο αριθμό χωρίς τελεία («♘c63 ♗b5 a64 ♗a4», FCE)', () => {
+  it('τετράγωνο κολλημένο στον επόμενο αριθμό χωρίς τελεία («♘c63 ♗b5 a64 ♗a4»)', () => {
     // (βιβλίο με αριθμούς χωρίς τελεία: ≥ 20 τέτοιοι)
     const fill = para(Array.from({ length: 22 }, (_, k) => `${30 + k} h3`).join(', '));
     expect(mainLine(parse(para(`1 e4 e5 2 ${N}f3 ${N}c63 ${B}b5 a64 ${B}a4 ${N}f6`, true), fill))).toMatch(/2\. Nf3 Nc6 3\. Bb5 a6 4\. Ba4 Nf6/);
@@ -201,7 +201,7 @@ describe('κείμενο από τον αναγνώστη εικόνας: κολ
     expect(mainLine(bare)).toMatch(/2\. Nf3 Nc6 3\. Bb5 a6 4\. Ba4 Nf6 5\. O-O Be7 6\. Bb3 b5 7\. d3 d6/);
   });
 
-  it('μορφή Everyman: ο αριθμός στο τέλος ενός κομματιού και η κίνησή του στο επόμενο («…a6 4» + « ♗a4»)', () => {
+  it('αριθμοί χωρίς τελεία: ο αριθμός στο τέλος ενός κομματιού και η κίνησή του στο επόμενο («…a6 4» + « ♗a4»)', () => {
     const p = paraOf(run(`1 e4 e5 2 ${N}f3 ${N}c6 3 ${B}b5 a6 4`, true), run(` ${B}a4 ${N}f6 5 0-0 ${B}e7`, true));
     p.runs[1] = { ...p.runs[1], top: true };
     const g = parse(p, para(Array.from({ length: 22 }, (_, k) => `${30 + k} h3`).join(', ')));
@@ -282,7 +282,7 @@ describe('αριθμός άσκησης δίπλα σε διάγραμμα-ει�
 });
 
 describe('διάγραμμα-εικόνα με θέση από το πακέτο διαγραμμάτων', () => {
-  // παράδειγμα μέσα σε κεφάλαιο: «παίκτες, διάγραμμα, 32.h6!» (GM Positional)· η θέση: λευκός βασιλιάς e1, πιόνι e2, μαύρος βασιλιάς e8
+  // παράδειγμα μέσα σε κεφάλαιο: «παίκτες, διάγραμμα, 32.h6!»· η θέση: λευκός βασιλιάς e1, πιόνι e2, μαύρος βασιλιάς e8
   const img: BookParagraph = { page: 1, indent: 0, heading: false, caption: false, runs: [], text: '', diagram: { placement: '4k3/8/8/8/8/8/4P3/4K3', turn: 'w', label: null, caption: '', id: 0 } };
   const paras = [heading('Chapter 1'), para('1.e4 e5 2.Nf3 Nc6', true), img, para('40.e4 Kd7 41.Kd2', true)];
 
@@ -355,7 +355,7 @@ describe('διάγραμμα-εικόνα με θέση από το πακέτο
   });
 });
 
-describe('Everyman με παρτίδες «Game N» μέσα στα κεφάλαια (Starting Out, από εικόνα)', () => {
+describe('παρτίδες «Game N» μέσα στα κεφάλαια (αριθμοί χωρίς τελεία, από εικόνα)', () => {
   const mixed = (...runs: Array<[string, boolean]>): BookParagraph => {
     const p = para('');
     p.runs = runs.map(([text, main]) => ({ text, main }));
@@ -421,7 +421,7 @@ describe('Everyman με παρτίδες «Game N» μέσα στα κεφάλα
   });
 });
 
-describe('διαγράμματα-εικόνες με επεξήγηση, χωρίς κινήσεις (Rozman, «How to Win at Chess»)', () => {
+describe('διαγράμματα-εικόνες με επεξήγηση, χωρίς κινήσεις', () => {
   const diag = (id: number, placement: string): BookParagraph => ({ page: 1, indent: 0, heading: false, caption: false, runs: [], text: '', diagram: { placement, turn: null, label: null, caption: '', id } });
   const ruy = 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R';
   const sicilian = 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR';
@@ -449,7 +449,7 @@ describe('διαγράμματα-εικόνες με επεξήγηση, χωρ�
   });
 });
 
-describe('θέσεις διαγραμμάτων που δεν γίνονται, και ροκέ με μεγάλη παύλα (The Safest Sicilian, GM Attack)', () => {
+describe('θέσεις διαγραμμάτων που δεν γίνονται, και ροκέ με μεγάλη παύλα', () => {
   const diagram = (placement: string): BookParagraph => ({ page: 1, indent: 0, heading: false, caption: false, runs: [], text: '', diagram: { placement, turn: null, label: null, caption: '', id: 0 } });
 
   it('βασίλισσες με ανάποδα χρώματα, σε σαχ αυτός που δεν παίζει: αλλάζουν χρώμα', () => {
@@ -468,7 +468,7 @@ describe('θέσεις διαγραμμάτων που δεν γίνονται, 
   });
 });
 
-describe('λάθη του OCR που έσπαγαν ολόκληρες παρτίδες (Nunn, Starting Out)', () => {
+describe('λάθη του OCR που έσπαγαν ολόκληρες παρτίδες', () => {
   // (ένα σύμβολο κομματιού ως εικόνα κάπου στο βιβλίο: κείμενο από εικόνα)
   const image = para('');
   // (βιβλίο με αριθμούς χωρίς τελεία: ≥ 20 τέτοιοι)

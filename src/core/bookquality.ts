@@ -33,8 +33,8 @@ export function moveTokens(text: string): { squares: number; clean: number } {
 
 /**
  * Έγκαιρη ένδειξη από την ανάγνωση: «scanned» όταν ≥30% των σελίδων πάνε σε OCR, «garbled» όταν κάτω από 60% των
- * λέξεων με τετράγωνο είναι καθαρές κινήσεις (μετρήσεις: Italian 94%, French 95%, My First 88%, 1001 Exercises 42%,
- * Chernev 32%). Χρειάζεται λίγες σελίδες ή λέξεις πριν αποφασίσει, ώστε η αρχή του βιβλίου να μην το παραπλανά.
+ * λέξεων με τετράγωνο είναι καθαρές κινήσεις. Χρειάζεται λίγες σελίδες ή λέξεις πριν αποφασίσει, ώστε η αρχή του
+ * βιβλίου να μην το παραπλανά.
  */
 export function textWarning(s: TextScan | undefined): 'scanned' | 'garbled' | null {
   if (!s) return null;
@@ -74,8 +74,6 @@ export function worstPages(warnings: BookWarning[], n = 5): Array<{ page: number
  * Ετυμηγορία μετά την ανάλυση. Καλή: ≥90% των κινήσεων στο δέντρο, <20% σελίδες με OCR, τα διαγράμματα-εικόνες
  * (όταν είναι ≥20) επιβεβαιωμένα τουλάχιστον κατά το μισό και κείμενο χωρίς χαλασμένες κινήσεις. Πειραματική: κάτω
  * από 50 κινήσεις, ή κάτω από τις μισές στο δέντρο, ή βιβλίο κυρίως με OCR χωρίς ≥90% στο δέντρο. Αλλιώς μερική.
- * Μετρήσεις (κινήσεις/εκτός): Italian 27.127/130, Krykun 5.721/42, French 51.614/1.330 → καλή· Kotronias ~17.000/13.000
- * με χαλασμένα σύμβολα → μερική· 1001 Exercises 15/187 (494 διαγράμματα, 3 επιβεβαιωμένα), Alekhine (OCR) → πειραματική.
  */
 export function bookVerdict(stats: BookStats, pages: number, warnings: BookWarning[] = [], scan?: TextScan): BookVerdict {
   const found = stats.moves + stats.unplaced;

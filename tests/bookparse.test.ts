@@ -83,7 +83,7 @@ describe('Βιβλίο σε βάση', () => {
       '5. Nxc6 {I feel this is the most common move.} 5... bxc6 ({White is trying to reach an endgame if Black plays} 5... Qf6 6. Qf3 Qxf3 7. gxf3)',
     );
   });
-  it('μορφή Everyman: αριθμοί χωρίς τελεία, «Chapter Two», ενότητες, ετικέτες «(b)» και συνέχεια μετά από «:»', () => {
+  it('αριθμοί χωρίς τελεία, «Chapter Two», ενότητες, ετικέτες «(b)» και συνέχεια μετά από «:»', () => {
     const main = (text: string) => para(text, true);
     const big = (text: string) => ({ ...para(text, true), heading: true });
     const r = parseBook(
