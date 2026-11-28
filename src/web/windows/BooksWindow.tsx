@@ -11,6 +11,7 @@ import { L, fmtBytes, fmtNum } from '../i18n.ts';
 import { reportError, useApp } from '../store.ts';
 import { setUiLater } from '../tactics/store.ts';
 import type { BookIssue, BookLevel, BookVerdict } from '../../core/bookquality.ts';
+import { ScanPack } from '../books/ScanPack.tsx';
 import '../books/books.css';
 
 interface BookStats {
@@ -277,6 +278,7 @@ export function BooksWindow({ active }: { active: boolean }) {
                   {L('Διάλεξε PDF…', 'Choose PDF…')}
                 </button>
                 <p className="kb-drop-hint">{L('Καλύτερα ψηφιακά PDF · τα σκαναρισμένα είναι πειραματικά', 'Digital PDFs work best · scanned ones are experimental')}</p>
+                <ScanPack variant="hint" />
               </div>
             )}
 
@@ -413,7 +415,7 @@ function ImportCard({ j, onForget, onNew }: { j: BookImport; onForget: () => voi
     label = j.pages ? L(`Ανάγνωση σελίδας ${j.page} από ${j.pages}`, `Reading page ${j.page} of ${j.pages}`) : L('Άνοιγμα του PDF…', 'Opening the PDF…');
   } else if (j.status === 'ocr') {
     value = j.pages ? j.page / j.pages : 0;
-    label = L(`Αναγνώριση κειμένου (OCR των Windows): σελίδα ${j.page} από ${j.pages} χωρίς κανονικό κείμενο`, `Text recognition (Windows OCR): page ${j.page} of ${j.pages} without proper text`);
+    label = L(`Αναγνώριση κειμένου (OCR): σελίδα ${j.page} από ${j.pages} χωρίς κανονικό κείμενο`, `Text recognition (OCR): page ${j.page} of ${j.pages} without proper text`);
   } else if (j.status === 'parsing') {
     label = L('Ανάλυση του κειμένου: κινήσεις, βαριάντες, σχόλια, διαγράμματα…', 'Analysing the text: moves, variations, comments, diagrams…');
   } else if (importing) {
@@ -448,6 +450,8 @@ function ImportCard({ j, onForget, onNew }: { j: BookImport; onForget: () => voi
     : [];
   const showStats = st && (j.status === 'importing' || j.status === 'done');
   const early = j.early && !j.verdict && j.status !== 'cancelled';
+  // βιβλίο που διαβάστηκε (ή διαβάζεται) με OCR: πρόταση για τον βελτιωμένο αναγνώστη, όσο λείπει
+  const offer = Boolean(j.early || st?.ocrPages) && j.status !== 'cancelled';
   const errors = [j.status === 'error' ? j.error : undefined, libJob?.status === 'error' ? libJob.error : undefined].filter(Boolean);
 
   return (
@@ -489,7 +493,7 @@ function ImportCard({ j, onForget, onNew }: { j: BookImport; onForget: () => voi
         </div>
       )}
 
-      {(early || errors.length > 0 || showStats) && (
+      {(early || offer || errors.length > 0 || showStats) && (
         <div className="books-body">
           {early && (
             <p className="kb-callout warn" role="status">
@@ -498,6 +502,7 @@ function ImportCard({ j, onForget, onNew }: { j: BookImport; onForget: () => voi
                 : L('Κακό κείμενο στο PDF (χαλασμένες κινήσεις): πειραματική ανάγνωση, το αποτέλεσμα θα έχει κενά.', 'Poor text in the PDF (garbled moves): experimental reading, the result will have gaps.')}
             </p>
           )}
+          {offer && <ScanPack variant="offer" />}
           {errors.map((e, i) => (
             <p key={i} className="kb-callout danger" role="alert">
               {e}

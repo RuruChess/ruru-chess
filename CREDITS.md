@@ -31,6 +31,9 @@
 | Δίκτυο της Leela T1-256x10-distilled (λήψη από το storage.lczero.org), δεν περιλαμβάνεται στο πακέτο | οι συντελεστές του έργου Leela Chess Zero | όπως το έργο Lc0 |
 | Βάρη Maia 1100–1900 (λήψη από την εφαρμογή), δεν περιλαμβάνονται στο πακέτο | CSSLab, [CSSLab/maia-chess](https://github.com/CSSLab/maia-chess) | GPL-3.0 |
 | Λήψη και έλεγχοι του Lc0 και της Maia, «ανθρώπινες» κινήσεις της Maia (`src/server/lc0.ts`, `parseVerboseStats`, `sampleHuman`) | Λάζαρος Μπατσής | GPL-3.0 |
+| Μοντέλα PP-OCRv6_small_det και PP-OCRv6_small_rec, στο «πακέτο σκαναρισμένων βιβλίων» (προαιρετική λήψη από την εφαρμογή, `src/server/books/scanpack.ts`), δεν περιλαμβάνονται στο πακέτο | PaddlePaddle Authors, [PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) | Apache-2.0 |
+| ONNX Runtime για Node.js (onnxruntime-node, onnxruntime-common), στο ίδιο προαιρετικό πακέτο | Microsoft, [onnxruntime.ai](https://onnxruntime.ai/) | MIT (με τις ειδοποιήσεις τρίτων μέσα στο πακέτο) |
+| Chess Diagram Net (θέσεις από διαγράμματα-εικόνες), αμετάβλητο, στο ίδιο προαιρετικό πακέτο | [regard2462/chess-diagram-net](https://github.com/regard2462/chess-diagram-net) | AGPL-3.0-or-later |
 | ts-fsrs (διαστήματα επανάληψης FSRS) | open-spaced-repetition | MIT |
 | pdf.js (`pdfjs-dist`, ανάγνωση του κειμένου των PDF για το «Βιβλίο σε βάση»· μπαίνει στο πακέτο χωρίς canvas) | Mozilla και οι συντελεστές του [mozilla/pdf.js](https://github.com/mozilla/pdf.js) | Apache-2.0 |
 | Κύρια συλλογή puzzles (λήψη από την Τακτική, δεν περιλαμβάνεται στο πακέτο) | ανοιχτά δεδομένα | CC0 1.0 |

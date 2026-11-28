@@ -2035,6 +2035,38 @@ button:focus-visible,
   color: var(--muted);
 }
 
+/* ▾ / ▸: κλείσιμο και άνοιγμα μιας βαριάντας */
+.notation .var-fold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin: 0 4px 0 -6px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface, transparent);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.notation .var-fold:hover {
+  border-color: var(--accent, var(--text));
+}
+
+.notation .var-more:hover {
+  color: var(--text);
+}
+
+.notation .var-more {
+  color: var(--muted);
+  cursor: pointer;
+}
+
 .notation .result {
   font-weight: 700;
   margin-left: 6px;
@@ -2292,8 +2324,22 @@ button:focus-visible,
   color: var(--danger);
 }
 
+/* η καλύτερη κίνηση δίπλα στο σκορ: σταθερό πλάτος, ώστε η κεφαλίδα να μην αλλάζει σειρές σε κάθε νέα κίνηση */
+.eval-best {
+  width: 6.6em;
+  flex: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
 .engine-stats {
+  min-width: 11em;
   font-size: 12px;
+  font-variant-numeric: tabular-nums;
   color: var(--muted);
 }
 
@@ -2311,6 +2357,12 @@ button:focus-visible,
 
 .engine-lines {
   margin-top: 6px;
+}
+
+/* γραμμές / σκορ της προηγούμενης θέσης, όσο έρχονται οι νέες */
+.eval-big.stale,
+.eval-best.stale {
+  opacity: 0.55;
 }
 /* σταματημένη μηχανή: το τελευταίο αποτέλεσμα, αχνό */
 .engine-lines.stopped {
@@ -2360,6 +2412,26 @@ button:focus-visible,
   gap: 8px;
   flex-wrap: wrap;
   margin-bottom: 6px;
+}
+
+/* καρτέλα «Βιβλίο» του δέντρου: όνομα του βιβλίου Polyglot, ή εξήγηση + επιλογή όταν δεν υπάρχει */
+.book-name {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+
+.book-empty {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+
+.book-empty p {
+  margin: 0;
 }
 
 .seg {
@@ -4537,4 +4609,19 @@ button.support:hover:not(:disabled) {
   font-size: 12px;
   font-weight: 600;
   color: var(--text);
+}
+
+/* Feedback (κουμπί πάνω δεξιά) */
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.feedback-form textarea,
+.feedback-form input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.feedback-form p {
+  margin: 0;
 }

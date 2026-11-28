@@ -1,6 +1,6 @@
 # Privacy policy — Ruru Chess
 
-Version 3.0.0 · 23 November 2026
+Version 3.2.0 · 28 November 2026
 
 ## Who is responsible
 
@@ -71,6 +71,10 @@ What we cannot recall: copies that others already downloaded or saved. Cloudflar
 
 If you have no access to the app, write to the address above with your Name#TAG. We may ask for something that shows the account is yours. Never send us your recovery code.
 
+## Feedback
+
+The Feedback button (top right) sends your message to our server only when you press Send: the type (problem, idea, other), your text, the app version and language, and your email only if you write it so we can reply. We keep it until we have read and handled it and at most 12 months. Your IP address is kept for one hour, only to stop abuse (at most 5 messages per hour). Legal basis: handling the message you chose to send (article 6(1)(f)) and, if you gave an email, your consent to a reply (article 6(1)(a)). To have a message deleted earlier, write to the address above.
+
 ## Other services the app contacts
 
 These requests go directly from your computer. Each service sees your IP address and applies its own privacy policy.
@@ -96,7 +100,7 @@ You can ask for access, correction, deletion, restriction or portability of your
 
 # Πολιτική απορρήτου — Ruru Chess
 
-Έκδοση 3.0.0 · 23 Νοεμβρίου 2026
+Έκδοση 3.2.0 · 28 Νοεμβρίου 2026
 
 ## Ποιος είναι υπεύθυνος
 
@@ -166,6 +170,10 @@ Evangelos Polymeras, Ελλάδα. Επικοινωνία και αναφορέ�
 Τι δεν μπορούμε να πάρουμε πίσω: αντίγραφα που κατέβασαν ή αποθήκευσαν ήδη άλλοι. Τα αυτόματα αντίγραφα ασφαλείας της Cloudflare λήγουν μέσα σε 30 μέρες και δεν χρησιμοποιούνται για επαναφορά διαγραμμένων λογαριασμών. Τα δωμάτια με link είναι άσχετα με τον λογαριασμό και λήγουν μόνα τους.
 
 Αν δεν έχεις πρόσβαση στην εφαρμογή, γράψε στη διεύθυνση πιο πάνω με το Όνομα#TAG σου. Μπορεί να σου ζητήσουμε κάτι που δείχνει ότι ο λογαριασμός είναι δικός σου. Μη μας στείλεις ποτέ τον κωδικό ανάκτησης.
+
+## Feedback
+
+Το κουμπί Feedback (πάνω δεξιά) στέλνει το μήνυμά σου στον server μας μόνο όταν πατήσεις Αποστολή: το είδος (πρόβλημα, ιδέα, άλλο), το κείμενό σου, την έκδοση και τη γλώσσα της εφαρμογής, και το email σου μόνο αν το γράψεις για να σου απαντήσουμε. Το κρατάμε ώσπου να το διαβάσουμε και να το χειριστούμε και το πολύ 12 μήνες. Η διεύθυνση IP σου κρατιέται μία ώρα, μόνο κατά της κατάχρησης (ως 5 μηνύματα την ώρα). Νομική βάση: ο χειρισμός του μηνύματος που διάλεξες να στείλεις (άρθρο 6 παρ. 1 στ) και, αν έδωσες email, η συγκατάθεσή σου για απάντηση (άρθρο 6 παρ. 1 α). Για να σβηστεί νωρίτερα ένα μήνυμα, γράψε στη διεύθυνση πιο πάνω.
 
 ## Άλλες υπηρεσίες με τις οποίες συνδέεται η εφαρμογή
 

@@ -95,6 +95,17 @@ describe('store', () => {
     expect(Array.from(db.idsWithFlags(GF_COMMENTS))).not.toContain(1);
   });
 
+  it('οριστική διαγραφή επιλεγμένων (Delete)', () => {
+    const a = db.insertGame(g2);
+    const b = db.insertGame(g2);
+    const before = db.count();
+    // ανύπαρκτη παρτίδα: δεν μετρά
+    expect(db.deleteGames([a, 999999])).toBe(1);
+    expect(db.count()).toBe(before - 1);
+    expect(db.getGame(a)).toBeNull();
+    expect(db.getGame(b)).not.toBeNull();
+  });
+
   it('βοηθητικά', () => {
     expect(searchKey('Παπαδόπουλος')).toBe('παπαδοπουλοσ');
     expect(parsePgnDate('2004.??.??')).toBe(20040000);

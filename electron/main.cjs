@@ -110,6 +110,19 @@ async function probeServer(port) {
   return null;
 }
 
+/**
+ * Μήνυμα του server (IPC ή /api/window/host): νέο παράθυρο, ή εξωτερικός σύνδεσμος (ήδη ελεγμένος από τον server).
+ * Τον σύνδεσμο τον ανοίγουμε εμείς και όχι ο server: το Electron είναι μπροστά, άρα ο browser έρχεται μπροστά.
+ */
+function handleServerMessage(msg) {
+  if (!msg || typeof msg.url !== 'string') return;
+  if (msg.type === 'open-link') {
+    if (isExternalSafe(msg.url)) void shell.openExternal(msg.url);
+    return;
+  }
+  createWindow(msg.url, msg);
+}
+
 function connectWindowHost(baseUrl) {
   if (hostReq) {
     hostReq.destroy();
@@ -133,8 +146,7 @@ function connectWindowHost(baseUrl) {
           buf = buf.slice(idx + 1);
           if (!line) continue;
           try {
-            const msg = JSON.parse(line);
-            if (msg && msg.url) createWindow(msg.url, msg);
+            handleServerMessage(JSON.parse(line));
           } catch {
             // αγνοούμε μη έγκυρη γραμμή
           }
@@ -160,7 +172,7 @@ async function startOrConnectServer() {
     return existing.url;
   }
 
-  const nodeExe = process.env.RURU_NODE || (fs.existsSync(BUNDLED_NODE) ? BUNDLED_NODE : 'node');
+  const nodeExe = fs.existsSync(BUNDLED_NODE) ? BUNDLED_NODE : 'node';
   // --idle: αν τρέχει εισαγωγή όταν κλείσουν τα παράθυρα, ο server τελειώνει τη δουλειά και κλείνει μόνος του
   const child = spawn(nodeExe, [SERVER_ENTRY, '--idle'], {
     cwd: ROOT,
@@ -184,9 +196,7 @@ async function startOrConnectServer() {
   child.stderr.setEncoding('utf8');
   child.stderr.on('data', (chunk) => process.stderr.write(chunk));
 
-  child.on('message', (msg) => {
-    if (msg && msg.type === 'open-window' && msg.url) createWindow(msg.url, msg);
-  });
+  child.on('message', (msg) => handleServerMessage(msg));
 
   child.on('error', (err) => {
     earlyError = err;

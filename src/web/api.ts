@@ -33,11 +33,11 @@ export const api = {
 };
 
 // ---------------------------------------------------------------------------
-// Γεγονότα από τον server (SSE)
+// Γεγονότα από τον server (WebSocket· όχι SSE: βλ. `upgrade` στο server/http.ts)
 
 type Listener = (data: any) => void;
 const listeners = new Map<string, Set<Listener>>();
-let source: EventSource | null = null;
+let source: WebSocket | null = null;
 /** Ταυτότητα αυτού του παραθύρου (ο server καταλαβαίνει πότε κλείνει, π.χ. οι Ρυθμίσεις). */
 export const WINDOW_ID = Math.random().toString(36).slice(2, 10);
 
@@ -45,9 +45,13 @@ export const WINDOW_ID = Math.random().toString(36).slice(2, 10);
 let serverVersion: string | null = null;
 
 function ensureSource(): void {
-  if (source) return;
-  source = new EventSource(`/api/events?win=${WINDOW_ID}`);
-  source.addEventListener('open', () => {
+  if (!source) connect();
+}
+
+function connect(): void {
+  const ws = new WebSocket(`${location.origin.replace(/^http/, 'ws')}/api/events?win=${WINDOW_ID}`);
+  source = ws;
+  ws.addEventListener('open', () => {
     for (const l of openListeners) l();
     void fetch('/api/version')
       .then((r) => r.json() as Promise<{ version?: string }>)
@@ -57,17 +61,12 @@ function ensureSource(): void {
       })
       .catch(() => {});
   });
-  for (const type of listeners.keys()) attach(type);
-}
-
-const attached = new Set<string>();
-function attach(type: string): void {
-  if (!source || attached.has(type)) return;
-  attached.add(type);
-  source.addEventListener(type, (ev) => {
-    const data = JSON.parse((ev as MessageEvent).data);
+  ws.addEventListener('message', (ev) => {
+    const { type, data } = JSON.parse((ev as MessageEvent).data as string) as { type: string; data: unknown };
     for (const l of listeners.get(type) ?? []) l(data);
   });
+  // ξανασύνδεση μετά από 2″ (π.χ. επανεκκίνηση του server), όπως έκανε μόνο του το SSE
+  ws.addEventListener('close', () => setTimeout(connect, 2000));
 }
 
 const openListeners = new Set<() => void>();
@@ -83,7 +82,6 @@ export function onServerEvent(type: string, fn: Listener): () => void {
   if (!set) listeners.set(type, (set = new Set()));
   set.add(fn);
   ensureSource();
-  attach(type);
   return () => set!.delete(fn);
 }
 
@@ -257,7 +255,7 @@ export interface AppInfo {
   name: string;
   version: string;
   node: string;
-  links: { site: string | null; support: string | null; repo: string | null; releases: string | null };
+  links: { site: string | null; support: string | null; repo: string | null; releases: string | null; youtube?: string | null };
 }
 
 export interface UpdateInfo {

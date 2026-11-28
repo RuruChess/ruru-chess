@@ -7,10 +7,10 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { spawn } from 'node:child_process';
 import type { Router } from './http.ts';
 import { HttpError } from './library.ts';
 import { APP_ROOT } from './paths.ts';
+import { openExternal } from './window.ts';
 
 interface PackageJson {
   version: string;
@@ -40,6 +40,8 @@ export const LINKS = {
   support: https(urlOf(Array.isArray(pkg.funding) ? pkg.funding[0] : pkg.funding)),
   repo: REPO ? `https://github.com/${REPO}` : null,
   releases: REPO ? `https://github.com/${REPO}/releases/latest` : null,
+  /** το κανάλι με τα βίντεο-οδηγούς (σημείωμα στις Εκδόσεις) */
+  youtube: 'https://www.youtube.com/@RuruChess',
 };
 
 export interface UpdateInfo {
@@ -88,7 +90,7 @@ function openLink(url: string): void {
     // η σελίδα λήψης της βάσης αναφοράς (Lumbra's Gigabase)
     url === 'https://lumbrasgigabase.com/en/download-area-en/#pgn';
   if (!ok || !https(url)) throw new HttpError(400, 'Μη αποδεκτός σύνδεσμος');
-  spawn('explorer.exe', [url], { detached: true, stdio: 'ignore' }).unref();
+  openExternal(url);
 }
 
 export function registerAbout(r: Router): void {

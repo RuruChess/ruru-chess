@@ -1,15 +1,15 @@
 /**
  * «Αναφορά»: οι κινήσεις της θέσης στη βάση αναφοράς
  * (παρτίδες, αποτελέσματα, Elo, επίδοση, έτος) και από κάτω οι παρτίδες που φτάνουν
- * εκεί — πρώτα οι πρόσφατες δυνατών παικτών. Εναλλακτικά: βιβλίο Polyglot. Με λίγα
- * κομμάτια και online tablebase.
+ * εκεί — πρώτα οι πρόσφατες δυνατών παικτών. Εναλλακτικά: βιβλίο Polyglot (επιλογή, αλλαγή και αφαίρεση εδώ, στην
+ * καρτέλα «Βιβλίο»· όχι στις Ρυθμίσεις). Με λίγα κομμάτια και online tablebase.
  */
 import { useEffect, useMemo, useState } from 'react';
-import { ListTree, ListOrdered, BookOpen } from 'lucide-react';
+import { ListTree, ListOrdered, BookOpen, FolderOpen, X } from 'lucide-react';
 import { Position } from '../../core/chess.ts';
-import { api, type DbInfo, type TreeMoveInfo } from '../api.ts';
+import { api, pickFiles, type DbInfo, type TreeMoveInfo } from '../api.ts';
 import { L, fmtNum } from '../i18n.ts';
-import { useApp } from '../store.ts';
+import { reportError, useApp } from '../store.ts';
 import { displaySan, type NotationStyle } from './Notation.tsx';
 
 interface Props {
@@ -77,6 +77,7 @@ export function ScoreBar({ w, d, l }: { w: number; d: number; l: number }) {
 export function TreePanel({ fen, style, dbId, onDbChange, onPlay, onShowGames, onOpenGame }: Props) {
   const library = useApp((s) => s.library);
   const settings = useApp((s) => s.settings);
+  const saveSettings = useApp((s) => s.saveSettings);
   const [source, setSource] = useState<'db' | 'book'>('db');
   const [book, setBook] = useState<BookResponse | null>(null);
   const [tree, setTree] = useState<TreeResponse | null>(null);
@@ -134,7 +135,14 @@ export function TreePanel({ fen, style, dbId, onDbChange, onPlay, onShowGames, o
       alive = false;
       clearTimeout(t);
     };
-  }, [fen, source, effectiveDb, pieces, settings?.onlineLookups]);
+  }, [fen, source, effectiveDb, pieces, settings?.onlineLookups, settings?.bookPath]);
+
+  /** Το βιβλίο Polyglot: διάλογος αρχείου (κενό = αφαίρεση· το αρχείο μένει στον δίσκο). */
+  const chooseBook = async () => {
+    const p = (await pickFiles('book').catch(() => []))[0];
+    if (p) await saveSettings({ bookPath: p }).catch(reportError);
+  };
+  const removeBook = () => void saveSettings({ bookPath: '' }).catch(reportError);
 
   const pos = useMemo(() => {
     try {
@@ -188,6 +196,19 @@ export function TreePanel({ fen, style, dbId, onDbChange, onPlay, onShowGames, o
           <button className="link-btn" onClick={() => onShowGames(effectiveDb, fen)} title={L('Όλες οι παρτίδες της θέσης στο παράθυρο της βάσης', 'All games of this position in the database window')}>
             <ListOrdered size={14} /> {fmtNum(tree.total)} {L('παρτίδες', 'games')}
           </button>
+        )}
+        {source === 'book' && book?.configured && (
+          <>
+            <span className="book-name" title={settings?.bookPath}>
+              {book.name}
+            </span>
+            <button className="link-btn" onClick={() => void chooseBook()} title={L('Άλλο βιβλίο Polyglot (.bin)', 'Another Polyglot book (.bin)')}>
+              <FolderOpen size={14} /> {L('Αλλαγή…', 'Change…')}
+            </button>
+            <button className="link-btn" onClick={removeBook} title={L('Αφαίρεση βιβλίου (το αρχείο μένει στον δίσκο)', 'Remove book (the file stays on disk)')}>
+              <X size={14} /> {L('Αφαίρεση', 'Remove')}
+            </button>
+          </>
         )}
         {loading && <span className="spinner" />}
       </div>
@@ -275,14 +296,24 @@ export function TreePanel({ fen, style, dbId, onDbChange, onPlay, onShowGames, o
           </table>
         </div>
       )}
-      {source === 'book' && book && !book.configured && <div className="muted small">{L('Δεν έχει οριστεί βιβλίο — Ρυθμίσεις → Βιβλίο ανοιγμάτων.', 'No book set — Settings → Opening book.')}</div>}
+      {source === 'book' && book && !book.configured && (
+        <div className="book-empty">
+          <p className="muted small">
+            {L(
+              'Ένα βιβλίο ανοιγμάτων Polyglot (.bin) δείχνει επιλεγμένες κινήσεις για κάθε θέση, π.χ. το ρεπερτόριό σου από άλλο πρόγραμμα. Μπορείς να φτιάξεις ένα και από μια βάση σου («Δημιουργία βιβλίου Polyglot…» στις Βάσεις).',
+              'A Polyglot opening book (.bin) shows chosen moves for each position, e.g. your repertoire from another program. You can also create one from one of your databases (“Create Polyglot book…” in Databases).',
+            )}
+          </p>
+          <button className="kb-btn ghost sm" onClick={() => void chooseBook()}>
+            <FolderOpen size={14} /> {L('Διάλεξε βιβλίο…', 'Choose book…')}
+          </button>
+        </div>
+      )}
       {source === 'book' && book?.configured && (
         <table className="tree-table">
           <thead>
             <tr>
-              <th>
-                {L('Κίνηση', 'Move')} <span className="muted">({book.name})</span>
-              </th>
+              <th>{L('Κίνηση', 'Move')}</th>
               <th className="num">{L('Βάρος', 'Weight')}</th>
               <th className="num">%</th>
             </tr>

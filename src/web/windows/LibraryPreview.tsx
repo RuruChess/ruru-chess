@@ -3,7 +3,7 @@
  * βάσης που διάλεξες με κλικ (αλλιώς αυτής που μελετούσες) και δίπλα σκακιέρα με την επιλεγμένη παρτίδα, κίνηση-κίνηση.
  * Στη γραμμή της, η «Συνέχεια μελέτης»: η τελευταία παρτίδα βάσης που μελέτησες, στην κίνηση όπου έμεινες.
  */
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState, type MutableRefObject } from 'react';
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, ChevronsLeft, ChevronsRight, CirclePlay, FolderOpen, X } from 'lucide-react';
 import { START_FEN } from '../../core/chess.ts';
 import type { GameNode } from '../../core/game.ts';
@@ -51,6 +51,8 @@ export function LibraryPreview({ db, study, studyDb, collapsed, onCollapse, onCl
   // η μελέτη ανήκει στη βάση που φαίνεται: η παρτίδα της επιλεγμένη, η σκακιέρα στην κίνηση όπου έμεινες
   const studied = study && db && study.dbId === db.id ? study : null;
   const [selected, setSelected] = useState<number | null>(studied?.gameId ?? null);
+  // ← / → στη λίστα: κίνηση-κίνηση στη σκακιέρα δίπλα
+  const previewStep = useRef<((dir: -1 | 1) => void) | null>(null);
   const importing = db?.busy?.kind === 'import';
 
   useEffect(() => {
@@ -131,10 +133,11 @@ export function LibraryPreview({ db, study, studyDb, collapsed, onCollapse, onCl
                 selected={new Set(selected === null ? [] : [selected])}
                 onSelect={(_ids, row: GameRow | null) => row && setSelected(row.id)}
                 onOpen={(row) => openGame(db.id, row.id)}
+                onStep={(d) => previewStep.current?.(d)}
               />
             )}
           </div>
-          <PreviewGame dbId={db?.id ?? null} gameId={selected} startPly={studied && selected === studied.gameId ? studied.ply : 0} onOpen={(ply, title) => db && selected !== null && openGame(db.id, selected, ply, title)} />
+          <PreviewGame dbId={db?.id ?? null} gameId={selected} startPly={studied && selected === studied.gameId ? studied.ply : 0} onOpen={(ply, title) => db && selected !== null && openGame(db.id, selected, ply, title)} stepRef={previewStep} />
         </div>
       )}
     </section>
@@ -142,7 +145,7 @@ export function LibraryPreview({ db, study, studyDb, collapsed, onCollapse, onCl
 }
 
 /** Η επιλεγμένη παρτίδα: σκακιέρα, κίνηση-κίνηση με τα βελάκια, οι κινήσεις της κύριας γραμμής με κλικ, άνοιγμα. */
-function PreviewGame({ dbId, gameId, startPly, onOpen }: { dbId: string | null; gameId: number | null; startPly: number; onOpen: (ply: number, title: string) => void }) {
+function PreviewGame({ dbId, gameId, startPly, onOpen, stepRef }: { dbId: string | null; gameId: number | null; startPly: number; onOpen: (ply: number, title: string) => void; stepRef: MutableRefObject<((dir: -1 | 1) => void) | null> }) {
   const settings = useApp((s) => s.settings);
   const style = (((settings?.ui as Record<string, unknown> | undefined)?.notation as NotationStyle | undefined) ?? 'figurine') as NotationStyle;
   const [g, setG] = useState<{ head: Record<string, string>; start: string; startTurn: number; startFullmove: number; main: GameNode[] } | null>(null);
@@ -179,6 +182,7 @@ function PreviewGame({ dbId, gameId, startPly, onOpen }: { dbId: string | null; 
   const name = (v: string | undefined) => (v && v !== '?' ? v.split(',')[0] : '?');
   const title = g ? `${name(g.head.White)} – ${name(g.head.Black)}` : '…';
   const go = (p: number) => setPly(Math.max(0, Math.min(last, p)));
+  stepRef.current = (d) => go(ply + d);
   const label = (n: GameNode) => displaySan(n.san, style);
 
   return (

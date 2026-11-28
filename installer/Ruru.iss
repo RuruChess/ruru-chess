@@ -74,6 +74,8 @@ Type: filesandordirs; Name: "{app}\dist"
 Type: filesandordirs; Name: "{app}\public"
 Type: filesandordirs; Name: "{app}\node_modules"
 Type: filesandordirs; Name: "{app}\electron"
+Type: filesandordirs; Name: "{app}\resources"
+Type: filesandordirs; Name: "{app}\locales"
 Type: files; Name: "{app}\preset.json"
 Type: filesandordirs; Name: "{app}\reference"
 ; η ίδια εφαρμογή με το παλιό όνομα: φεύγουν το exe και οι συντομεύσεις της (όχι οι βάσεις)
@@ -113,12 +115,13 @@ begin
     WritePreset;
 end;
 
-// Η εφαρμογή μπορεί να τρέχει (RuruChess.exe / electron.exe / node.exe του φακέλου της): κλείνουν πριν την απεγκατάσταση
+// Η εφαρμογή μπορεί να τρέχει (Ruru.exe / παλιό RuruChess.exe / electron.exe / node.exe του φακέλου της): κλείνουν πριν την απεγκατάσταση
 function InitializeUninstall: Boolean;
 var
   ResultCode: Integer;
 begin
-  Exec('powershell.exe', '-NoProfile -NonInteractive -Command "Get-Process RuruChess,electron,node -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq ''' +
+  Exec('powershell.exe', '-NoProfile -NonInteractive -Command "Get-Process Ruru,RuruChess,electron,node -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq ''' +
+    ExpandConstant('{app}\Ruru.exe') + ''' -or $_.Path -eq ''' +
     ExpandConstant('{app}\electron\runtime\RuruChess.exe') + ''' -or $_.Path -eq ''' +
     ExpandConstant('{app}\electron\runtime\electron.exe') + ''' -or $_.Path -eq ''' +
     ExpandConstant('{app}\node\node.exe') + ''' } | Stop-Process -Force"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
@@ -134,7 +137,7 @@ begin
   if CurUninstallStep = usPostUninstall then
     Exec('powershell.exe', '-NoProfile -NonInteractive -Command "foreach ($n in ''Ruru'',''KnightBase'') { $d = Join-Path $env:LOCALAPPDATA $n; ' +
       '$b = Join-Path $d ''browser''; if ((Test-Path -LiteralPath $b) -and -not (Get-CimInstance Win32_Process | Where-Object { $_.Name -eq ''msedge.exe'' -and $_.CommandLine -like (''*'' + $b + ''*'') })) { Remove-Item -LiteralPath $b -Recurse -Force -ErrorAction SilentlyContinue }; ' +
-      '$e = Join-Path $d ''electron''; if ((Test-Path -LiteralPath $e) -and -not (Get-CimInstance Win32_Process | Where-Object { ($_.Name -eq ''RuruChess.exe'' -or $_.Name -eq ''electron.exe'') -and $_.CommandLine -like ''*electron*main.cjs*'' })) { Remove-Item -LiteralPath $e -Recurse -Force -ErrorAction SilentlyContinue }; ' +
+      '$e = Join-Path $d ''electron''; if ((Test-Path -LiteralPath $e) -and -not (Get-CimInstance Win32_Process | Where-Object { $_.Name -eq ''Ruru.exe'' -or (($_.Name -eq ''RuruChess.exe'' -or $_.Name -eq ''electron.exe'') -and $_.CommandLine -like ''*electron*main.cjs*'') })) { Remove-Item -LiteralPath $e -Recurse -Force -ErrorAction SilentlyContinue }; ' +
       'if ((Test-Path -LiteralPath $d) -and -not (Get-ChildItem -LiteralPath $d -Force -ErrorAction SilentlyContinue)) { Remove-Item -LiteralPath $d -Force -ErrorAction SilentlyContinue } }"',
       '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
 end;

@@ -6,14 +6,16 @@
 //   node admin.mjs delete-team <id ομάδας>     σβήνει ομάδα με όλο το chat της
 //   node admin.mjs delete-user <id | Όνομα#TAG> πλήρης διαγραφή λογαριασμού (δεν αναιρείται)
 //   node admin.mjs close <αναφορά>             η αναφορά εξετάστηκε και σβήνεται
+//   node admin.mjs feedback                    τα μηνύματα από το κουμπί Feedback της εφαρμογής
+//   node admin.mjs close-feedback <id>         το μήνυμα διαβάστηκε και σβήνεται
 //
 // Θέλει στο περιβάλλον ADMIN_KEY (ίδιο με το secret του Worker) και RELAY_URL (χωρίς προεπιλογή, για να
 // μη γίνει ποτέ κατά λάθος διαγραφή στον πραγματικό server αντί για τον τοπικό).
 const { ADMIN_KEY, RELAY_URL } = process.env;
 const [action, id = ''] = process.argv.slice(2);
-const ACTIONS = ['reports', 'test-accounts', 'remove-message', 'delete-team', 'delete-user', 'close'];
+const ACTIONS = ['reports', 'test-accounts', 'remove-message', 'delete-team', 'delete-user', 'close', 'feedback', 'close-feedback'];
 
-if (!ADMIN_KEY || !RELAY_URL || !ACTIONS.includes(action) || (!['reports', 'test-accounts'].includes(action) && !id)) {
+if (!ADMIN_KEY || !RELAY_URL || !ACTIONS.includes(action) || (!['reports', 'test-accounts', 'feedback'].includes(action) && !id)) {
   console.error(`Χρήση (με ADMIN_KEY και RELAY_URL στο περιβάλλον): node admin.mjs <${ACTIONS.join(' | ')}> [id]`);
   process.exitCode = 2;
 } else {
@@ -32,5 +34,11 @@ if (!ADMIN_KEY || !RELAY_URL || !ACTIONS.includes(action) || (!['reports', 'test
   } else if (action === 'test-accounts') {
     for (const x of data.accounts) console.log(`${x.id}  ${x.name}#${x.tag}  ${new Date(x.at).toLocaleString('el-GR')}`);
     console.log(`${data.accounts.length} λογαριασμοί`);
+  } else if (action === 'feedback') {
+    for (const x of data.feedback) {
+      console.log(`\n[${x.id}] ${new Date(x.at).toLocaleString('el-GR')} · ${x.kind} · v${x.version || '?'} · ${x.lang}${x.email ? ` · ${x.email}` : ''}`);
+      console.log(x.text);
+    }
+    console.log(`\n${data.feedback.length} μηνύματα`);
   } else console.log('Έγινε.');
 }

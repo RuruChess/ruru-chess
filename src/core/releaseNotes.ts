@@ -17,6 +17,8 @@ export interface ReleaseItem {
   kind: NoteKind;
   title: Localized;
   desc: Localized;
+  /** ήρθε από σχόλια χρηστών (Reddit, Feedback κ.λπ.): σήμα «Από τα σχόλιά σας» */
+  fromUsers?: boolean;
 }
 
 export interface ReleaseSection {
@@ -30,11 +32,224 @@ export interface ReleaseNote {
   date: Localized;
   headline: Localized;
   subtitle: Localized;
+  /** σημείωμα του δημιουργού στην αρχή της έκδοσης (παράγραφοι) */
+  devNote?: Localized[];
   highlights: ReleaseHighlight[];
   sections: ReleaseSection[];
 }
 
 export const RELEASE_NOTES: readonly ReleaseNote[] = [
+  {
+    version: '3.2.0',
+    date: { el: 'Νοέμβριος 2026', en: 'November 2026' },
+    headline: { el: 'Ruru Chess 3.2 — Σκαναρισμένα βιβλία, νέοι ήχοι & Feedback', en: 'Ruru Chess 3.2 — Scanned Books, New Sounds & Feedback' },
+    subtitle: {
+      el: 'Βελτιωμένη ανάγνωση σκαναρισμένων βιβλίων, νέο σετ ήχων με ήχο ματ και δικοί σου ήχοι, κουμπί Feedback, η καλύτερη κίνηση δίπλα στο σκορ και πολλές διορθώσεις από τα σχόλιά σας.',
+      en: 'Improved reading of scanned books, a new sound set with a mate sound and your own sounds, a Feedback button, the best move next to the engine score, and many fixes from your comments.',
+    },
+    devNote: [
+      {
+        el: 'Σας ευχαριστώ πολύ για την ανταπόκριση. Τα σχόλιά σας βοήθησαν πραγματικά: πολλές αλλαγές αυτής της έκδοσης ήρθαν από εσάς και έχουν το σήμα «Από τα σχόλιά σας». Γι’ αυτό γράφω τώρα αυτό το σημείωμα. Συνεχίστε να μου γράφετε, πλέον και από το κουμπί Feedback.',
+        en: 'Thank you so much for the response. Your feedback really helped: many changes in this version came from you and carry the “From your feedback” badge. That is why I am writing this note now. Keep writing to me, now also through the Feedback button.',
+      },
+      {
+        el: 'Ήθελα να βγάλω μια μεγαλύτερη ενημέρωση, αλλά κάποια bugs και οι λανθασμένες προειδοποιήσεις από antivirus έπρεπε να διορθωθούν τώρα. Πολλοί από εσάς χρησιμοποιείτε το Ruru για να βλέπετε το Παγκόσμιο Πρωτάθλημα, και ήθελα όλα να δουλεύουν τέλεια.',
+        en: 'I wanted to ship a bigger update, but some bugs and the false antivirus warnings had to be fixed now. Many of you use Ruru to follow the World Championship, and I wanted everything to work perfectly.',
+      },
+      {
+        el: 'Για τη βελτιωμένη ανάγνωση σκαναρισμένων βιβλίων δίσταζα, γιατί είναι βαριά για πιο αδύναμους υπολογιστές, και ήθελα να τη βγάλω μαζί με μια ελαφρύτερη εκδοχή. Προς το παρόν είναι προαιρετική λήψη, με τις απαιτήσεις γραμμένες δίπλα στο κουμπί. Αν ο υπολογιστής σου δυσκολεύεται, το OCR των Windows δουλεύει όπως πριν.',
+        en: 'I hesitated about the improved reading of scanned books, because it is heavy for weaker computers, and I wanted to release it together with a lighter version. For now it is an optional download, with its requirements written next to the button. If your PC struggles, Windows OCR works just as before.',
+      },
+      {
+        el: 'Τον νέο ήχο τον έφτιαξα μόνος μου, ηχογραφώντας μια σκακιέρα, γιατί είναι δύσκολο να βρεις καλό ήχο με άδεια που να επιτρέπει να τον χρησιμοποιήσουμε. Αν δεν σου αρέσει, άλλαξέ τον από το κουμπί του ήχου: ο παλιός υπάρχει ως «Προηγούμενος ήχος».',
+        en: 'I made the new sound myself by recording a chessboard, because it is hard to find a good sound with a license that lets us use it. If you don’t like it, change it from the sound button: the old one is still there as “Previous sound”.',
+      },
+      {
+        el: 'Αν θέλεις να στηρίξεις το Ruru, το καλύτερο που μπορείς να κάνεις για τώρα είναι να του βάλεις ένα αστεράκι στο GitHub. Και αν θέλεις να δεις πώς γίνονται τα πράγματα, ανεβάζω μικρά βίντεο-οδηγούς στο κανάλι μας στο YouTube.',
+        en: 'If you want to support Ruru, the best thing you can do for now is to give it a star on GitHub. And if you want to see how things work, I post short tutorial videos on our YouTube channel.',
+      },
+    ],
+    highlights: [
+      {
+        icon: 'db',
+        title: { el: 'Βελτιωμένη ανάγνωση σκαναρισμένων', en: 'Improved reading of scanned books' },
+        desc: {
+          el: 'Στο «Βιβλίο σε βάση» μπορείς να κατεβάσεις δωρεάν έναν καλύτερο αναγνώστη για σκαναρισμένα PDF. Τρέχει τοπικά στον υπολογιστή σου.',
+          en: 'In “Book to database” you can download a better reader for scanned PDFs for free. It runs locally on your PC.',
+        },
+      },
+      {
+        icon: 'app',
+        title: { el: 'Νέοι ήχοι & δικοί σου ήχοι', en: 'New sounds & your own sounds' },
+        desc: {
+          el: 'Νέο σετ ήχων «Ruru» με ξεχωριστό ήχο για το ματ, και «Δικοί μου ήχοι» για να βάλεις τα δικά σου αρχεία ήχου.',
+          en: 'A new “Ruru” sound set with its own mate sound, plus “My sounds” to use your own audio files.',
+        },
+      },
+      {
+        icon: 'app',
+        title: { el: 'Κουμπί Feedback', en: 'Feedback button' },
+        desc: {
+          el: 'Στείλε μας πρόβλημα, ιδέα ή ό,τι άλλο θέλεις κατευθείαν από την εφαρμογή, με το κουμπί πάνω δεξιά.',
+          en: 'Send us a problem, an idea or anything else straight from the app, with the button at the top right.',
+        },
+      },
+    ],
+    sections: [
+      {
+        category: 'training',
+        title: { el: 'Βελτίωση & Τακτικά', en: 'Improve & Tactics' },
+        items: [
+          {
+            kind: 'fix',
+            fromUsers: true,
+            title: { el: 'Η σκακιέρα γυρίζει σε κάθε γρίφο', en: 'The board turns for every puzzle' },
+            desc: {
+              el: 'Στους γύρους με σερί, χρόνο και 3 λάθη η σκακιέρα γυρίζει πια προς την πλευρά που παίζει σε κάθε γρίφο, και υπάρχει κουμπί για να τη γυρίσεις μόνος σου.',
+              en: 'In streak, timed and 3-mistake runs the board now turns to the side to move in every puzzle, and a Flip button lets you turn it yourself.',
+            },
+          },
+          {
+            kind: 'improved',
+            fromUsers: true,
+            title: { el: 'Ο γύρος σου δεν χάνεται', en: 'Your run is kept' },
+            desc: {
+              el: 'Αν πας σε άλλο τρόπο εξάσκησης και γυρίσεις, ο γύρος συνεχίζει από εκεί που τον άφησες.',
+              en: 'If you switch to another training mode and come back, your run continues where you left it.',
+            },
+          },
+        ],
+      },
+      {
+        category: 'db',
+        title: { el: 'Βάσεις, Ανάλυση & Βιβλία', en: 'Databases, Analysis & Books' },
+        items: [
+          {
+            kind: 'new',
+            fromUsers: true,
+            title: { el: 'Η καλύτερη κίνηση δίπλα στο σκορ', en: 'Best move next to the score' },
+            desc: {
+              el: 'Η μηχανή δείχνει την καλύτερη κίνηση δίπλα στην αξιολόγηση, και οι γραμμές της δεν «χοροπηδούν» πια σε κάθε νέα κίνηση.',
+              en: 'The engine shows its best move next to the evaluation, and its lines no longer jump around with every new move.',
+            },
+          },
+          {
+            kind: 'new',
+            fromUsers: true,
+            title: { el: 'Σύμπτυξη βαριαντών', en: 'Collapse variations' },
+            desc: {
+              el: 'Στη σημειογραφία μπορείς να κλείσεις μια βαριάντα για να βλέπεις καθαρά την κύρια γραμμή.',
+              en: 'In the notation you can collapse a variation to keep the main line clear.',
+            },
+          },
+          {
+            kind: 'improved',
+            fromUsers: true,
+            title: { el: '←/→ στη λίστα παρτίδων', en: '←/→ in the game list' },
+            desc: {
+              el: 'Με τα βελάκια ←/→ περνάς τις κινήσεις της παρτίδας στην προεπισκόπηση χωρίς να την ανοίξεις.',
+              en: 'The ←/→ arrow keys step through the moves of the game in the preview without opening it.',
+            },
+          },
+          {
+            kind: 'improved',
+            title: { el: 'Βιβλίο ανοιγμάτων μέσα στο δέντρο', en: 'Opening book inside the tree' },
+            desc: {
+              el: 'Το βιβλίο Polyglot (.bin) το διαλέγεις, το αλλάζεις ή το αφαιρείς πια κατευθείαν από την καρτέλα «Βιβλίο» του δέντρου ανοιγμάτων, με μια σύντομη εξήγηση. Έφυγε από τις Ρυθμίσεις.',
+              en: 'You now choose, change or remove the Polyglot book (.bin) right from the “Book” tab of the opening tree, with a short explanation. It is no longer in Settings.',
+            },
+          },
+          {
+            kind: 'improved',
+            title: { el: 'Οριστική διαγραφή παρτίδων', en: 'Permanent game deletion' },
+            desc: {
+              el: 'Η διαγραφή παρτίδων (Del, κάδος ή «Διαγραφή…») τις σβήνει πια οριστικά, αφού πρώτα σε ρωτήσει. Η «Εύρεση διπλών» εξακολουθεί να τις σημαδεύει, με δυνατότητα επαναφοράς.',
+              en: 'Deleting games (Del, the bin or “Delete…”) now removes them permanently, after asking you first. “Find duplicates” still only marks them, so you can restore them.',
+            },
+          },
+          {
+            kind: 'new',
+            title: { el: 'Βελτιωμένη ανάγνωση σκαναρισμένων βιβλίων', en: 'Improved reading of scanned books' },
+            desc: {
+              el: 'Προαιρετική λήψη μέσα από το «Βιβλίο σε βάση». Διαβάζει τα σκαναρισμένα PDF καλύτερα από το OCR των Windows. Θέλει περίπου 1 GB μνήμης και είναι πιο αργή (λίγα δευτερόλεπτα ανά σελίδα). Τα σκαναρισμένα βιβλία παραμένουν λιγότερο αξιόπιστα από τα ψηφιακά PDF.',
+              en: 'An optional download inside “Book to database”. It reads scanned PDFs better than Windows OCR. It needs about 1 GB of memory and is slower (a few seconds per page). Scanned books remain less reliable than digital PDFs.',
+            },
+          },
+        ],
+      },
+      {
+        category: 'prep',
+        title: { el: 'Προετοιμασία', en: 'Preparation' },
+        items: [
+          {
+            kind: 'improved',
+            title: { el: 'Καθαρότερη λίστα προετοιμασιών', en: 'A tidier preparation list' },
+            desc: {
+              el: 'Κάθε προετοιμασία έχει X για να τη βγάλεις από τη λίστα, και μια νέα προετοιμασία για τον ίδιο αντίπαλο με τα ίδια φίλτρα ενημερώνει την παλιά αντί να φτιάχνει δεύτερη.',
+              en: 'Every preparation has an X to remove it from the list, and preparing again for the same opponent with the same filters updates the old one instead of creating a second.',
+            },
+          },
+        ],
+      },
+      {
+        category: 'app',
+        title: { el: 'Σκακιέρα, Ήχοι & Εφαρμογή', en: 'Board, Sounds & App' },
+        items: [
+          {
+            kind: 'new',
+            fromUsers: true,
+            title: { el: '«Δικοί μου ήχοι»', en: '“My sounds”' },
+            desc: {
+              el: 'Ανέβασε δικά σου αρχεία ήχου για κίνηση, φάγωμα, σαχ και ματ.',
+              en: 'Upload your own audio files for move, capture, check and mate.',
+            },
+          },
+          {
+            kind: 'new',
+            title: { el: 'Σετ ήχων «Ruru»', en: '“Ruru” sound set' },
+            desc: {
+              el: 'Νέο προεπιλεγμένο σετ ήχων, με ξεχωριστό ήχο για το ματ.',
+              en: 'A new default sound set, with its own mate sound.',
+            },
+          },
+          {
+            kind: 'new',
+            fromUsers: true,
+            title: { el: 'Επιλογές σκακιέρας', en: 'Board options' },
+            desc: {
+              el: 'Στις Ρυθμίσεις μπορείς να κλείσεις το χρώμα στην τελευταία κίνηση και τις κουκκίδες στις νόμιμες κινήσεις.',
+              en: 'In Settings you can turn off the last-move highlight and the legal-move dots.',
+            },
+          },
+          {
+            kind: 'new',
+            title: { el: 'Κουμπί Feedback', en: 'Feedback button' },
+            desc: {
+              el: 'Στείλε πρόβλημα, ιδέα ή σχόλιο από το κουμπί πάνω δεξιά. Το email είναι προαιρετικό. Λεπτομέρειες στην Πολιτική Απορρήτου.',
+              en: 'Send a problem, an idea or a comment from the button at the top right. Email is optional. Details are in the Privacy Policy.',
+            },
+          },
+          {
+            kind: 'fix',
+            fromUsers: true,
+            title: { el: 'Ruru.exe χωρίς ξεχωριστό πρόγραμμα εκκίνησης', en: 'Ruru.exe without a separate launcher' },
+            desc: {
+              el: 'Το Ruru.exe είναι πια η ίδια η εφαρμογή, χωρίς το μικρό πρόγραμμα εκκίνησης που κάποια antivirus έβλεπαν λανθασμένα ως ύποπτο. Στη Διαχείριση Εργασιών φαίνεται ως «Ruru Chess».',
+              en: 'Ruru.exe is now the app itself, without the small launcher that some antivirus programs wrongly flagged as suspicious. Task Manager shows it as “Ruru Chess”.',
+            },
+          },
+          {
+            kind: 'fix',
+            title: { el: 'Πολλά παράθυρα ανοιχτά', en: 'Many windows open' },
+            desc: {
+              el: 'Με 6 ή περισσότερα παράθυρα ανοιχτά (βάσεις, παρτίδες, Ρυθμίσεις), ένα νέο παράθυρο μπορούσε να μείνει για πάντα στο «Ruru…». Τώρα ανοίγει κανονικά, όσα παράθυρα κι αν έχεις.',
+              en: 'With 6 or more windows open (databases, games, Settings), a new window could get stuck on “Ruru…” forever. Now it opens normally, however many windows you have.',
+            },
+          },
+        ],
+      },
+    ],
+  },
   {
     version: '3.1.0',
     date: { el: 'Νοέμβριος 2026', en: 'November 2026' },

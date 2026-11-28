@@ -2,7 +2,7 @@
 // εξαρτήσεις και χωρίς cookies. Έκδοση και σύνδεσμοι από το package.json (`homepage`, `repository`,
 // `funding`, `bugs.email`), μεγέθη και SHA-256 από το release/ (node scripts/make-release.mjs).
 // Χωρίς σύνδεσμο GitHub βγαίνει προεπισκόπηση με σχετική ένδειξη στην κορυφή· χωρίς Ko-fi λείπει η «Στήριξε».
-// Χρήση: node scripts/build-site.mjs [--check: σφάλμα αν λείπει κάτι για τη δημοσίευση]
+// Χρήση: node scripts/build-site.mjs [--check: σφάλμα αν λείπει κάτι για τη δημοσίευση] [--from-github: μεγέθη & SHA-256 από GitHub Release]
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -56,17 +56,42 @@ const links = {
   kofi: kofi ?? '#support',
 };
 
-const mb = (f) => (fs.existsSync(path.join(rel, f)) ? String(Math.round(fs.statSync(path.join(rel, f)).size / 1e6)) : '?');
+const fromGitHub = process.argv.includes('--from-github');
+let ghRelease = null;
+let ghSumsText = null;
+if (fromGitHub) {
+  if (!repoMatch) throw new Error('Λείπει το "repository" στο package.json για --from-github');
+  const apiUrl = `https://api.github.com/repos/${repoMatch[1]}/${repoMatch[2]}/releases/tags/v${pkg.version}`;
+  const res = await fetch(apiUrl, { headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'ruru-build-site' } });
+  if (!res.ok) throw new Error(`Αποτυχία ανάγνωσης GitHub Release v${pkg.version} (${res.status})`);
+  ghRelease = await res.json();
+  const sumsAsset = (ghRelease.assets ?? []).find((a) => a.name === 'SHA256SUMS.txt');
+  if (sumsAsset?.browser_download_url) {
+    const sRes = await fetch(sumsAsset.browser_download_url, { headers: { 'User-Agent': 'ruru-build-site' } });
+    if (!sRes.ok) throw new Error(`Αποτυχία λήψης SHA256SUMS.txt (${sRes.status})`);
+    ghSumsText = await sRes.text();
+  }
+}
+
+const ghSizeMap = new Map((ghRelease?.assets ?? []).map((a) => [a.name, a.size]));
+const mb = (f) => {
+  if (fromGitHub) return ghSizeMap.has(f) ? String(Math.round(ghSizeMap.get(f) / 1e6)) : '?';
+  return fs.existsSync(path.join(rel, f)) ? String(Math.round(fs.statSync(path.join(rel, f)).size / 1e6)) : '?';
+};
 const sumsFile = path.join(rel, 'SHA256SUMS.txt');
-const files = fs.existsSync(sumsFile)
-  ? fs
-      .readFileSync(sumsFile, 'utf8')
+const sumsRaw = fromGitHub ? ghSumsText : fs.existsSync(sumsFile) ? fs.readFileSync(sumsFile, 'utf8') : null;
+const files = sumsRaw
+  ? sumsRaw
       .split('\n')
       .map((l) => /^([0-9a-f]{64})\s+(\S+)$/.exec(l.trim()))
       .filter(Boolean)
       .map((m) => ({ hash: m[1], name: m[2], mb: mb(m[2]), href: base ? base + m[2] : '#download' }))
   : [];
-const builtAt = fs.existsSync(path.join(rel, FULL)) ? fs.statSync(path.join(rel, FULL)).mtime : new Date();
+const builtAt = fromGitHub && ghRelease?.published_at
+  ? new Date(ghRelease.published_at)
+  : fs.existsSync(path.join(rel, FULL))
+    ? fs.statSync(path.join(rel, FULL)).mtime
+    : new Date();
 
 // εικονίδια Lucide (ISC), όπως στην εφαρμογή: όσα ζητά η σελίδα
 const used = new Set([...fs.readFileSync(path.join(src, 'page.mjs'), 'utf8').matchAll(/icon\('([\w-]+)'\)/g)].map((m) => m[1]));
@@ -267,7 +292,7 @@ ${gh ? `- GitHub Repository: ${gh}\n- Windows Installer: ${links.full}\n- Portab
 - **PDF Chess Book to Playable Database:** Converts PDF chess books into searchable, interactive games with variations, commentary, and tactical exercises.
 - **Engine Analysis & Blunder Check:** Supports Stockfish, Leela Chess Zero (Lc0), and Maia human-like engines with multi-PV lines, board arrows, evaluation graph, accuracy, and full-game blunder checks.
 - **Opponent Preparation:** Combines FIDE/OTB databases with Lichess and Chess.com games into an opponent dossier and opening repertoire tree.
-- **Live Shared Study, Friends & Teams:** Real-time shared chess analysis rooms with encrypted WebRTC voice, camera, chat, shared engine, PGN sharing, and embedded YouTube/Twitch/Kick video.
+- **Live Shared Study, Friends & Teams:** Real-time shared chess analysis rooms with encrypted WebRTC voice, camera, chat, shared engine, PGN sharing, and synced YouTube, Twitch & Kick video.
 - **Training:** Glicko-2 tactics trainer, classic master lessons, opening repertoire builder, and human-like bots.
 
 ## Pages

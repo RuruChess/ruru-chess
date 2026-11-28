@@ -1,45 +1,78 @@
 /**
- * Ήχοι της σκακιέρας: πραγματικές ηχογραφήσεις (βλ. `public/sounds/README.md`). Ξύλο (προεπιλογή): ξύλινο κομμάτι
- * σε ξύλινη σκακιέρα, του el_boss (CC0)· Πιάνο και Ρετρό του Enigmahack (AGPL-3.0-or-later). Κίνηση, αιχμαλωσία
- * (άλλος ήχος), σαχ (όπου το σετ έχει) και ειδοποίηση· διακόπτης, σετ και ένταση στις Ρυθμίσεις και στο ηχείο της
+ * Ήχοι της σκακιέρας: πραγματικές ηχογραφήσεις (βλ. `public/sounds/README.md`). Ruru (προεπιλογή): ξύλινη σκακιέρα,
+ * ηχογραφήσεις του δημιουργού του Ruru· Ξύλο: ξύλινο κομμάτι σε ξύλινη σκακιέρα, του el_boss (CC0)· Πιάνο και Ρετρό
+ * του Enigmahack (AGPL-3.0-or-later). Κίνηση, αιχμαλωσία (άλλος ήχος), σαχ και ματ (όπου το σετ έχει) και
+ * ειδοποίηση· διακόπτης, σετ και ένταση στις Ρυθμίσεις και στο ηχείο της
  * πάνω γραμμής (`ui.sound`). Τα αρχεία φορτώνονται με την πρώτη ενέργεια του χρήστη, ώστε ο πρώτος ήχος να παίζει
  * χωρίς καθυστέρηση.
  */
 
-export type SoundTheme = 'wood' | 'piano' | 'nes';
-export type MoveSound = 'move' | 'capture' | 'castle' | 'promote' | 'check' | 'notify' | 'success' | 'error';
+export type SoundTheme = 'ruru' | 'wood' | 'piano' | 'nes' | 'custom';
+export type MoveSound = 'move' | 'capture' | 'castle' | 'promote' | 'check' | 'mate' | 'notify' | 'success' | 'error';
+/** οι ήχοι που διαλέγει ο χρήστης στο «Δικοί μου ήχοι» (στον server: /api/sounds/custom/<είδος>) */
+export type CustomSlot = 'move' | 'capture' | 'check' | 'mate';
+export const CUSTOM_SLOTS: CustomSlot[] = ['move', 'capture', 'check', 'mate'];
 
 export interface SoundConfig {
   on: boolean;
   theme: SoundTheme;
   /** 0–100 */
   volume: number;
+  /** «Δικοί μου ήχοι»: ποιοι υπάρχουν (η τιμή αλλάζει σε κάθε νέο αρχείο, ώστε να μη μένει ο παλιός) */
+  custom?: Partial<Record<CustomSlot, number>>;
 }
 
-export const SOUND_THEMES: SoundTheme[] = ['wood', 'piano', 'nes'];
-export const DEFAULT_SOUND: SoundConfig = { on: true, theme: 'wood', volume: 70 };
+export const SOUND_THEMES: SoundTheme[] = ['ruru', 'wood', 'piano', 'nes', 'custom'];
+export const DEFAULT_SOUND: SoundConfig = { on: true, theme: 'ruru', volume: 70 };
 
 /** Οι ρυθμίσεις ήχου από το `ui` των ρυθμίσεων (και το παλιό `ui.sounds`). */
 export function soundConfig(ui: Record<string, unknown> | undefined): SoundConfig {
   const s = (ui?.sound ?? {}) as Partial<SoundConfig>;
+  const custom: Partial<Record<CustomSlot, number>> = {};
+  for (const k of CUSTOM_SLOTS) {
+    const v = (s.custom as Record<string, unknown> | undefined)?.[k];
+    if (typeof v === 'number') custom[k] = v;
+  }
   return {
     on: typeof s.on === 'boolean' ? s.on : ui?.sounds !== false,
     theme: SOUND_THEMES.includes(s.theme as SoundTheme) ? (s.theme as SoundTheme) : DEFAULT_SOUND.theme,
     volume: typeof s.volume === 'number' && Number.isFinite(s.volume) ? Math.max(0, Math.min(100, Math.round(s.volume))) : DEFAULT_SOUND.volume,
+    custom: Object.keys(custom).length ? custom : undefined,
   };
 }
 
-/** Τα αρχεία κάθε σετ· ό,τι λείπει (ροκέ, προαγωγή, σαχ στο Ξύλο) παίζει τον ήχο κίνησης, το «λάθος» σιωπή. */
+/**
+ * Τα αρχεία κάθε σετ· ό,τι λείπει (ροκέ, προαγωγή, σαχ στο Ruru/Ξύλο) παίζει τον ήχο κίνησης, το ματ χωρίς δικό του
+ * ήχο τον ήχο του σαχ, το «λάθος» σιωπή.
+ */
 const MUSIC: Partial<Record<MoveSound, string>> = { move: 'Move', capture: 'Capture', check: 'Check', notify: 'GenericNotify', success: 'GenericNotify' };
-const SETS: Record<SoundTheme, Partial<Record<MoveSound, string>>> = {
+const SETS: Record<Exclude<SoundTheme, 'custom'>, Partial<Record<MoveSound, string>>> = {
+  ruru: { move: 'Move', capture: 'Capture', mate: 'Mate', notify: 'GenericNotify', success: 'GenericNotify' },
   wood: { move: 'Move', capture: 'Capture', notify: 'GenericNotify', success: 'GenericNotify' },
   piano: MUSIC,
   nes: MUSIC,
 };
 
-function fileFor(theme: SoundTheme, kind: MoveSound): string | null {
+const urlOf = (theme: SoundTheme, file: string) => `/sounds/${theme}/${file}.mp3`;
+
+const woodUrl = (kind: MoveSound) => {
+  const f = SETS.wood[kind] ?? SETS.wood.move;
+  return f ? urlOf('wood', f) : null;
+};
+
+/** Το αρχείο ενός ήχου· στους «Δικούς μου ήχους» ό,τι δεν διάλεξε ο χρήστης παίζει από το Ξύλο. */
+function urlFor(c: SoundConfig, kind: MoveSound): string | null {
   if (kind === 'error') return null;
-  return SETS[theme][kind] ?? SETS[theme].move ?? null;
+  if (c.theme === 'custom') {
+    // ό,τι λείπει: ο πιο κοντινός ήχος του χρήστη (ματ → σαχ → κίνηση, σαχ → κίνηση), αλλιώς το Ξύλο
+    const chain: CustomSlot[] = kind === 'mate' ? ['mate', 'check', 'move'] : kind === 'check' ? ['check', 'move'] : kind === 'capture' ? ['capture'] : kind === 'move' || kind === 'castle' || kind === 'promote' ? ['move'] : [];
+    const pick = chain.find((k) => c.custom?.[k]);
+    if (pick) return `/api/sounds/custom/${pick}?v=${c.custom![pick]}`;
+    return woodUrl(kind);
+  }
+  const set = SETS[c.theme];
+  const f = set[kind] ?? (kind === 'mate' ? set.check : undefined) ?? set.move;
+  return f ? urlOf(c.theme, f) : null;
 }
 
 let cfg: SoundConfig = DEFAULT_SOUND;
@@ -60,8 +93,6 @@ function audio(): AudioContext | null {
   return ctx;
 }
 
-const urlOf = (theme: SoundTheme, file: string) => `/sounds/${theme}/${file}.mp3`;
-
 function load(a: AudioContext, url: string): Promise<AudioBuffer | null> {
   let p = buffers.get(url);
   if (!p) {
@@ -74,9 +105,11 @@ function load(a: AudioContext, url: string): Promise<AudioBuffer | null> {
   return p;
 }
 
-function preload(theme: SoundTheme): void {
+function preload(c: SoundConfig): void {
   const a = audio();
-  if (a) for (const f of new Set(Object.values(SETS[theme]))) if (f) void load(a, urlOf(theme, f));
+  if (!a) return;
+  const kinds: MoveSound[] = ['move', 'capture', 'check', 'mate', 'notify'];
+  for (const u of new Set(kinds.map((k) => urlFor(c, k)))) if (u) void load(a, u);
 }
 
 // φόρτωση με την πρώτη ενέργεια του χρήστη (πριν από την πρώτη κίνηση)
@@ -84,7 +117,7 @@ if (typeof window !== 'undefined') {
   const first = () => {
     window.removeEventListener('pointerdown', first, true);
     window.removeEventListener('keydown', first, true);
-    if (cfg.on) preload(cfg.theme);
+    if (cfg.on) preload(cfg);
   };
   window.addEventListener('pointerdown', first, true);
   window.addEventListener('keydown', first, true);
@@ -92,9 +125,9 @@ if (typeof window !== 'undefined') {
 
 /** Οι τρέχουσες ρυθμίσεις (τις δίνει το App από τις ρυθμίσεις του server). */
 export function setSoundConfig(c: SoundConfig): void {
-  const changed = c.theme !== cfg.theme;
+  const changed = c.theme !== cfg.theme || JSON.stringify(c.custom) !== JSON.stringify(cfg.custom);
   cfg = c;
-  if (changed && ctx && c.on) preload(c.theme);
+  if (changed && ctx && c.on) preload(c);
 }
 
 export interface SoundOptions {
@@ -105,19 +138,23 @@ export interface SoundOptions {
 /** Παίζει έναν ήχο (σιωπηλά αν ο ήχος είναι κλειστός ή αν ο browser δεν επιτρέπει ακόμη ήχο). */
 export function playSound(kind: MoveSound, opts: SoundOptions = {}): void {
   const c = opts.preview ?? cfg;
-  const file = fileFor(c.theme, kind);
-  if ((!c.on && !opts.preview) || !file || c.volume <= 0) return;
+  const url = urlFor(c, kind);
+  if ((!c.on && !opts.preview) || !url || c.volume <= 0) return;
   const a = audio();
   if (!a) return;
-  void load(a, urlOf(c.theme, file)).then((buf) => {
-    if (!buf) return;
-    const src = a.createBufferSource();
-    src.buffer = buf;
-    const g = a.createGain();
-    g.gain.value = (c.volume / 100) ** 1.5;
-    src.connect(g).connect(a.destination);
-    src.start();
-  });
+  // δικός μου ήχος που λείπει από τον δίσκο (ή δεν διαβάζεται): παίζει το Ξύλο αντί για σιωπή
+  const wood = c.theme === 'custom' ? woodUrl(kind) : null;
+  void load(a, url)
+    .then((buf) => buf ?? (wood && wood !== url ? load(a, wood) : null))
+    .then((buf) => {
+      if (!buf) return;
+      const src = a.createBufferSource();
+      src.buffer = buf;
+      const g = a.createGain();
+      g.gain.value = (c.volume / 100) ** 1.5;
+      src.connect(g).connect(a.destination);
+      src.start();
+    });
 }
 
 /**
@@ -146,18 +183,22 @@ export function playChime(): void {
   });
 }
 
-/** Τι ήχο θέλει μια κίνηση (από το SAN): σαχ, αιχμαλωσία, ροκέ, προαγωγή ή απλή κίνηση. */
+/** Τι ήχο θέλει μια κίνηση (από το SAN): ματ, σαχ, αιχμαλωσία, ροκέ, προαγωγή ή απλή κίνηση. */
 export function moveSoundOf(san: string): MoveSound {
-  if (/[+#]/.test(san)) return 'check';
+  if (san.includes('#')) return 'mate';
+  if (san.includes('+')) return 'check';
   if (san.includes('x')) return 'capture';
   if (san.startsWith('O-O')) return 'castle';
   if (san.includes('=')) return 'promote';
   return 'move';
 }
 
-/** Ο ήχος μιας κίνησης (σαχ σε σετ χωρίς ήχο σαχ: αιχμαλωσία ή κίνηση). */
+/** Ο ήχος μιας κίνησης (ματ σε σετ χωρίς ήχο ματ: όπως το σαχ· σαχ σε σετ χωρίς ήχο σαχ: αιχμαλωσία ή κίνηση). */
 export function playMoveSound(san: string, opts: SoundOptions = {}): void {
-  const kind = moveSoundOf(san);
-  const theme = (opts.preview ?? cfg).theme;
-  playSound(kind === 'check' && !SETS[theme].check && san.includes('x') ? 'capture' : kind, opts);
+  const c = opts.preview ?? cfg;
+  const has = (k: CustomSlot) => (c.theme === 'custom' ? Boolean(c.custom?.[k]) : Boolean(SETS[c.theme][k]));
+  let kind = moveSoundOf(san);
+  if (kind === 'mate' && !has('mate')) kind = 'check';
+  if (kind === 'check' && !has('check') && san.includes('x')) kind = 'capture';
+  playSound(kind, opts);
 }

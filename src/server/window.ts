@@ -16,7 +16,10 @@ export interface AppWindowRequest {
   maximized: boolean;
 }
 
-type WindowDelegate = (req: AppWindowRequest) => boolean;
+/** Ό,τι στέλνεται στο Electron: νέο παράθυρο, ή εξωτερικός σύνδεσμος για τον browser του χρήστη. */
+export type HostMessage = AppWindowRequest | { type: 'open-link'; url: string };
+
+type WindowDelegate = (msg: HostMessage) => boolean;
 let windowDelegate: WindowDelegate | null = null;
 
 /** Ορίζει εξωτερικό διαχειριστή παραθύρων (π.χ. Electron host)· επιστρέφει συνάρτηση αποσύνδεσης. */
@@ -43,4 +46,19 @@ export function openAppWindow(url: string, size: { w: number; h: number } = { w:
     connectBrowser();
   }
   else spawn('cmd', ['/c', 'start', '', url], { detached: true, stdio: 'ignore', windowsHide: true }).unref();
+}
+
+/**
+ * Εξωτερικός σύνδεσμος (ήδη ελεγμένος) στον browser του χρήστη. Στο Electron τον ανοίγει το ίδιο το Electron
+ * (`shell.openExternal`): το παράθυρό του είναι μπροστά, άρα και ο browser έρχεται μπροστά. Από τον server, που τρέχει
+ * στο παρασκήνιο, τα Windows δεν αφήνουν το νέο παράθυρο να έρθει μπροστά και η σελίδα άνοιγε πίσω από την εφαρμογή.
+ */
+export function openExternal(url: string): void {
+  const msg: HostMessage = { type: 'open-link', url };
+  if (process.env.RURU_ELECTRON === '1' && process.connected && typeof process.send === 'function') {
+    process.send(msg);
+    return;
+  }
+  if (windowDelegate?.(msg)) return;
+  spawn('explorer.exe', [url], { detached: true, stdio: 'ignore' }).unref();
 }

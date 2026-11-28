@@ -56,8 +56,8 @@ export default [
         },
         {
           tag: 'Watch Together',
-          title: 'Embedded YouTube, Twitch & Kick video',
-          text: 'Open a live tournament stream or chess lecture right inside Ruru Chess — choose “For everyone” to watch with Ruru participants or “Only for me”.',
+          title: 'Synced YouTube, Twitch & Kick video',
+          text: 'Open a live tournament stream or chess lecture right inside Ruru Chess — choose “For everyone” to watch together (with synced YouTube play, pause & seek) or “Only for me”.',
         },
         {
           tag: 'Friends & Study Teams',
@@ -152,8 +152,8 @@ export default [
         },
         {
           tag: 'Παρακολούθηση Μαζί',
-          title: 'Ενσωματωμένο YouTube, Twitch & Kick',
-          text: 'Άνοιξε ζωντανή μετάδοση τουρνουά ή σκακιστικό βίντεο μέσα στο Ruru Chess — διάλεξε «Για όλους» για τους χρήστες Ruru ή «Μόνο για μένα».',
+          title: 'Συγχρονισμένο YouTube, Twitch & Kick',
+          text: 'Άνοιξε ζωντανή μετάδοση τουρνουά ή σκακιστικό βίντεο μέσα στο Ruru Chess — διάλεξε «Για όλους» (με συγχρονισμένο play, pause & seek στο YouTube) ή «Μόνο για μένα».',
         },
         {
           tag: 'Φίλοι & Ομάδες Μελέτης',

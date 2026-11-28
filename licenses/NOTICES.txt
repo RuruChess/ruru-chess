@@ -145,7 +145,7 @@ License text: licenses/LGPL-2.1.txt
 == Electron 45.4.1 & Chromium (MIT / BSD / GNU LGPL v2.1 for ffmpeg.dll) ==
 Electron: https://github.com/electron/electron/tree/v45.4.1
 Chromium: https://www.chromium.org/
-License texts included in the packaged runtime: electron/runtime/LICENSE and electron/runtime/LICENSES.chromium.html
+License texts included in the packaged runtime: LICENSE.electron.txt and LICENSES.chromium.html
 
 == Endgame lesson texts (CC BY-SA 4.0) ==
 Adapted from English Wikipedia articles; each lesson names its article and revision.

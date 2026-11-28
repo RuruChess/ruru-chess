@@ -11,6 +11,7 @@ import { api, onServerEvent } from './api.ts';
 import { dropController } from './gameModel.ts';
 import { Toasts } from './components/ui.tsx';
 import { Guide, restartGuide } from './components/Guide.tsx';
+import { FeedbackButton } from './components/FeedbackButton.tsx';
 import { HelpButton } from './components/HelpMenu.tsx';
 import { ReleaseNotesWindow, useReleaseNotesAutoOpen, useUnseenReleaseNotes } from './components/ReleaseNotes.tsx';
 import { SoundButton } from './components/SoundControl.tsx';
@@ -293,6 +294,7 @@ export function App() {
             <FilePlus2 size={17} />
           </button>
           <SoundButton />
+          <FeedbackButton />
           <HelpButton
             canRestartGuide={!OPEN_KEY}
             onRestartGuide={() => {

@@ -245,13 +245,16 @@
 .tx .prep-list .bots-sub {
   margin: 0 0 4px;
 }
+.tx .prep-item-row {
+  position: relative;
+}
 .tx .prep-item {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 36px 8px 12px;
   border: 1px solid var(--line);
   border-radius: var(--r-md);
   background: var(--surface);
@@ -268,7 +271,31 @@
   background: var(--accent-soft);
 }
 .tx .prep-item-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-weight: var(--fw-semibold);
+}
+.tx .prep-item-x {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tx .prep-item-x:hover,
+.tx .prep-item-x:focus-visible {
+  background: var(--danger-soft);
+  color: var(--danger-text);
 }
 
 /* αναφορά */

@@ -10,13 +10,15 @@ import { setUiLater } from '../tactics/store.ts';
 import { SOUND_THEMES, playMoveSound, soundConfig, type SoundConfig, type SoundTheme } from '../sounds.ts';
 
 export const soundThemeName = (t: SoundTheme): string =>
-  ({ wood: L('Ξύλο', 'Wood'), piano: L('Πιάνο', 'Piano'), nes: L('Ρετρό', 'Retro') })[t];
+  ({ ruru: 'Ruru', wood: L('Προηγούμενος ήχος', 'Previous sound'), piano: L('Πιάνο', 'Piano'), nes: L('Ρετρό', 'Retro'), custom: L('Δικοί μου ήχοι', 'My own sounds') })[t];
 
 export const soundThemeNote = (t: SoundTheme): string =>
   ({
+    ruru: L('Ηχογραφημένη ξύλινη σκακιέρα, με δικό της ήχο για αιχμαλωσία και ματ', 'A recorded wooden board, with its own sounds for captures and checkmate'),
     wood: L('Ξύλινα κομμάτια σε ξύλινη σκακιέρα, άλλος ήχος στην αιχμαλωσία', 'Wooden pieces on a wooden board, a different sound for captures'),
     piano: L('Απαλές νότες πιάνου', 'Soft piano notes'),
     nes: L('Ήχοι παλιού βιντεοπαιχνιδιού (8-bit)', 'Old video game sounds (8-bit)'),
+    custom: L('Δικά σου αρχεία ήχου για κίνηση, αιχμαλωσία, σαχ και ματ', 'Your own sound files for move, capture, check and checkmate'),
   })[t];
 
 /** Δείγμα: μια κίνηση και μια αιχμαλωσία, με τις ρυθμίσεις που δίνονται (και με κλειστό ήχο). */

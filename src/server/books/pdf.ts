@@ -792,8 +792,10 @@ export async function readPdfLines(file: string, opts: ReadOptions = {}): Promis
         win?.ready.catch(() => {});
         // πολλές σελίδες ταυτόχρονα σε περισσότερες διεργασίες αναγνώστη: η εικόνα της σελίδας και η ανάλυση των γλύφων
         // τρέχουν σε έναν πυρήνα, άρα περισσότερα νήματα στο μοντέλο δεν βοηθούν (2–3 διεργασίες επιταχύνουν σημαντικά)
+        // ...όσες χωρούν και στην ελεύθερη μνήμη: ~1 GB η καθεμιά (μέτρηση 28/11: η διεργασία ~0,75 GB), με 1 GB περιθώριο
         const cpus = os.cpus().length;
-        const lanes = Math.max(1, Math.min(3, Number(process.env.KNIGHTBASE_PPOCR_LANES) || (cpus >= 12 ? 3 : cpus >= 8 ? 2 : 1)));
+        const byMem = Math.floor(os.freemem() / 2 ** 30) - 1;
+        const lanes = Math.max(1, Math.min(3, Number(process.env.KNIGHTBASE_PPOCR_LANES) || Math.min(cpus >= 12 ? 3 : cpus >= 8 ? 2 : 1, byMem)));
         const pps = [pp];
         for (let k = 1; k < lanes; k++) {
           const extra = new PpOcr(pack);

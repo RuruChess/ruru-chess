@@ -17,11 +17,13 @@ import { registerTraining } from './training.ts';
 import { registerDownloads } from './downloads.ts';
 import { registerLc0 } from './lc0.ts';
 import { registerBooks } from './books/import.ts';
+import { registerScanPack } from './books/scanpack.ts';
 import { VERSION, newer, registerAbout } from './about.ts';
 import { registerWatch } from './watch.ts';
 import { registerMyGames } from './mygames.ts';
 import { registerPrep } from './prep.ts';
 import { registerTactics } from './tactics/index.ts';
+import { registerSounds } from './sounds.ts';
 import { connectBrowser, maximizeOnOpen } from './browser.ts';
 import { discoverEngines } from './engine.ts';
 import { openAppWindow } from './window.ts';
@@ -50,10 +52,12 @@ registerTraining(router, lib);
 registerDownloads(router, lib);
 registerLc0(router, lib, analysis);
 registerBooks(router, lib);
+registerScanPack(router);
 registerAbout(router);
 registerWatch(router, lib);
 registerMyGames(router, lib);
 registerPrep(router, lib);
+registerSounds(router);
 // νέο κύριο παράθυρο (όταν η εφαρμογή ανοίγει ξανά ενώ τρέχει ήδη)
 let appUrl = `http://127.0.0.1:${PORT}`;
 router.post('/api/window/main', () => {

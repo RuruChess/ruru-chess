@@ -105,6 +105,35 @@
   color: var(--accent-text, var(--accent));
 }
 
+/* σημείωμα του δημιουργού (ReleaseNote.devNote) */
+.kb-card.rn-dev {
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  border-left: 3px solid var(--accent);
+}
+
+.rn-dev-h {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.rn-dev p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.rn-dev-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
 .rn-highlights {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -242,6 +271,20 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
+}
+
+/* σήμα «Από τα σχόλιά σας» δίπλα στον τίτλο (ReleaseItem.fromUsers) */
+.rn-from {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: 1px;
+  color: var(--text-2);
+  white-space: nowrap;
 }
 
 .rn-item-body p {

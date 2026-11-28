@@ -327,3 +327,49 @@
     flex-wrap: wrap;
   }
 }
+
+/* Λήψη του πακέτου σκαναρισμένων βιβλίων (ScanPack.tsx) */
+.scanpack {
+  display: grid;
+  gap: 6px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.scanpack p {
+  margin: 0;
+}
+.scanpack.offer {
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--panel-2);
+}
+.scanpack-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.kb-drop .scanpack {
+  justify-items: center;
+  text-align: center;
+}
+.kb-drop .scanpack-row {
+  justify-content: center;
+}
+/* (με .scanpack μπροστά: αλλιώς το `.kb-drop p` της περιοχής του PDF κρατά το δικό του χρώμα) */
+.scanpack.ok,
+.scanpack .scanpack-done {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ok-text);
+}
+.scanpack .scanpack-error {
+  color: var(--danger-text);
+}
+.scanpack .scanpack-note {
+  color: var(--muted);
+}
+.scanpack .scanpack-warn {
+  color: var(--warn-text);
+}

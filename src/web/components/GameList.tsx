@@ -50,11 +50,13 @@ interface Props {
   onContext?: (row: GameRow, x: number, y: number) => void;
   /** πλήκτρο Delete στη λίστα */
   onDeleteKey?: () => void;
+  /** ← / → στη λίστα: κίνηση πίσω / μπροστά στην προεπισκόπηση της επιλεγμένης παρτίδας */
+  onStep?: (dir: -1 | 1) => void;
   /** αλλαγή δεδομένων χωρίς αλλαγή κλειδιού */
   refreshToken?: number | string;
 }
 
-export function GameList({ dbId, viewKey, count, sort, onSort, selected, onSelect, onOpen, onContext, onDeleteKey, refreshToken }: Props) {
+export function GameList({ dbId, viewKey, count, sort, onSort, selected, onSelect, onOpen, onContext, onDeleteKey, onStep, refreshToken }: Props) {
   const parentRef = useRef<HTMLDivElement>(null);
   const [pages, setPages] = useState<Map<number, GameRow[]>>(new Map());
   const loading = useRef(new Set<number>());
@@ -133,6 +135,10 @@ export function GameList({ dbId, viewKey, count, sort, onSort, selected, onSelec
       return;
     } else if (e.key === 'Delete') {
       onDeleteKey?.();
+      return;
+    } else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && onStep) {
+      e.preventDefault();
+      onStep(e.key === 'ArrowLeft' ? -1 : 1);
       return;
     } else return;
     e.preventDefault();

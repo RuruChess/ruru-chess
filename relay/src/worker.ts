@@ -9,6 +9,7 @@
  *  Φίλοι (social.ts): POST /api/social/register {name}, POST /api/social/recover {key}, WebSocket /social?u=<id>.
  *  Λογαριασμός (κλειδί στο Authorization): POST /api/social/delete?u=, POST /api/social/export?u=
  *  Υπεύθυνος (μόνο αν έχει οριστεί το secret ADMIN_KEY): POST /api/admin {action} (βλ. admin.mjs).
+ *  Feedback από την εφαρμογή: POST /api/feedback {kind, text, email?, version, lang} (src/core/feedback.ts).
  *  Αρχεία: POST /api/social/file?u=&to=|team=&name=&games= (μόνο PGN σε απλό κείμενο, έως 1 MB, κλειδί στο Authorization),
  *          GET /api/social/file/<id>?u= (μόνο για τα μέλη της συνομιλίας).
  *
@@ -65,6 +66,7 @@ import {
 import { PGN_MIME, readCapped } from '../../src/core/pgnFile.ts';
 import { FILE_DAYS, FILE_MAX, FILE_RE, TEAM_RE, cleanFileName, hashKey, parseNameTag, parseRecovery, USER_RE } from '../../src/core/social.ts';
 import { Conversation, Directory, Team, UserHub, type SocialEnv } from './social.ts';
+import { FEEDBACK_MAX, cleanFeedback } from '../../src/core/feedback.ts';
 
 export { Conversation, Directory, Team, UserHub };
 
@@ -128,7 +130,7 @@ export default {
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
 
     const limiter =
-      url.pathname === '/api/new' || url.pathname === '/api/analysis/new' || /^\/api\/analysis\/[^/]+\/ice$/.test(url.pathname)
+      url.pathname === '/api/new' || url.pathname === '/api/analysis/new' || url.pathname === '/api/feedback' || /^\/api\/analysis\/[^/]+\/ice$/.test(url.pathname)
         ? env.ROOMS_LIMIT
         : url.pathname === '/social' || url.pathname === '/api/admin' || url.pathname.startsWith('/api/social/')
           ? env.SOCIAL_LIMIT
@@ -209,6 +211,23 @@ export default {
     }
 
     if (url.pathname === '/api/admin') return admin(req, env);
+
+    // feedback από την εφαρμογή (κουμπί πάνω δεξιά): το διαβάζει ο υπεύθυνος (admin.mjs feedback)
+    if (url.pathname === '/api/feedback') {
+      if (req.method !== 'POST') return json({ error: 'method' }, 405);
+      const text = await req.text();
+      if (text.length > FEEDBACK_MAX * 6 + 1000) return json({ error: 'too large' }, 413);
+      let body: unknown = null;
+      try {
+        body = JSON.parse(text);
+      } catch {
+        return json({ error: 'bad request' }, 400);
+      }
+      const f = cleanFeedback(body);
+      if (!f) return json({ error: 'bad request' }, 400);
+      const r = await env.DIRECTORY.get(env.DIRECTORY.idFromName('directory')).addFeedback(f, req.headers.get('CF-Connecting-IP') ?? 'local');
+      return 'error' in r ? json(r, r.error === 'rate' ? 429 : 503) : json({ ok: true });
+    }
 
     if (url.pathname === '/api/social/file' && req.method === 'POST') return uploadFile(req, url, env);
     const file = /^\/api\/social\/file\/([a-z2-9]+)$/.exec(url.pathname);
@@ -379,6 +398,10 @@ async function admin(req: Request, env: Env): Promise<Response> {
       return json({ accounts: await dir.testAccounts() });
     case 'close':
       return json({ ok: await dir.closeReport(id) });
+    case 'feedback':
+      return json({ feedback: await dir.feedback() });
+    case 'close-feedback':
+      return json({ ok: await dir.closeFeedback(id) });
     case 'remove-message': {
       const r = await dir.reportById(id);
       if (!r?.conv) return json({ error: 'notfound' }, 404);

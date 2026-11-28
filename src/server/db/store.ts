@@ -744,6 +744,21 @@ export class GameDatabase {
     return Number(r.changes);
   }
 
+  /** Οριστική αφαίρεση συγκεκριμένων παρτίδων (Delete στη λίστα)· επιστρέφει πόσες σβήστηκαν. */
+  deleteGames(ids: number[]): number {
+    this.invalidateCounts();
+    const moves = this.prep('DELETE FROM moves WHERE id = ?');
+    const games = this.prep('DELETE FROM games WHERE id = ?');
+    let n = 0;
+    this.db.exec('BEGIN');
+    for (const id of ids) {
+      moves.run(id);
+      n += Number(games.run(id).changes);
+    }
+    this.db.exec('COMMIT');
+    return n;
+  }
+
   /**
    * Διπλές παρτίδες (ίδιοι παίκτες, αποτέλεσμα, ημικινήσεις, έτος και κινήσεις)· μένει η
    * παλαιότερη, οι ήδη διαγραμμένες δεν μετρούν. Πρώτα υποψήφιες με κλειδί 52 bit από τα

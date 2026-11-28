@@ -4,7 +4,7 @@
 // Translated to TypeScript and modified for Ruru Chess: 2026-10-22 to 2026-11-22.
 // License texts: LICENSE, licenses/AGPL-3.0.txt, licenses/NOTICES.txt
 /** Παράθυρο μηχανής (UCI): άπειρη ανάλυση, πολλές γραμμές, απειλή, μπάρα αξιολόγησης. */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Pause, Play, Plus, Minus, Swords, X } from 'lucide-react';
 import { Position, START_FEN } from '../../core/chess.ts';
 import { api, onServerEvent, type AnalysisEvent, type EngineConfig, type PvLine } from '../api.ts';
@@ -95,8 +95,16 @@ export function EnginePanel({ session, fen, style, onPlayLine, onBest, onClose, 
   );
 
   useEffect(() => {
-    // και σταματημένη: οι γραμμές μιας άλλης θέσης φεύγουν
-    setData((d) => (d && d.fen === analysisFen ? d : null));
+    // σταματημένη: οι γραμμές μιας άλλης θέσης φεύγουν· σε λειτουργία μένουν αχνές ώσπου να έρθουν οι νέες
+    // (αλλιώς το πλαίσιο αδειάζει για μια στιγμή και ό,τι είναι από κάτω «χοροπηδά»). Σε ματ / πατ δεν έρχονται νέες
+    // γραμμές (στην άπειρη ανάλυση η μηχανή περιμένει «stop»), άρα και τότε φεύγουν
+    let over = false;
+    try {
+      over = Position.fromFen(analysisFen).legalMoves().length === 0;
+    } catch {
+      // άκυρη θέση: όπως πριν
+    }
+    if (!running || over) setData((d) => (d && d.fen === analysisFen ? d : null));
     if (!running || !engineId) return;
     const t = setTimeout(() => {
       api.post('/api/analysis/start', { session, engineId, fen: analysisFen || START_FEN, multipv }).catch((e) => {
@@ -113,17 +121,37 @@ export function EnginePanel({ session, fen, style, onPlayLine, onBest, onClose, 
 
   useEffect(() => () => void api.post('/api/analysis/close', { session }).catch(() => {}), [session]);
 
-  useEffect(() => {
-    onBest?.(running && data && !threat ? data.lines : [], running);
-  }, [data, running, threat]);
+  // οι γραμμές που φαίνονται είναι της τρέχουσας θέσης; (αλλιώς της προηγούμενης, αχνές, χωρίς κλικ και βέλη)
+  const fresh = Boolean(data) && data!.fen === analysisFen;
 
+  useEffect(() => {
+    onBest?.(running && fresh && !threat ? data!.lines : [], running);
+  }, [data, running, threat, fresh]);
+
+  // όσο τρέχει η μηχανή το πλαίσιο των γραμμών δεν μικραίνει (για νέα θέση έρχεται πρώτα μία γραμμή και μετά οι
+  // υπόλοιπες): κρατά το μεγαλύτερο ύψος του, ώστε ό,τι είναι από κάτω να μη «χοροπηδά»· από την αρχή σε άλλες ρυθμίσεις
+  const linesRef = useRef<HTMLDivElement>(null);
+  const tallest = useRef({ key: '', h: 0 });
+  useLayoutEffect(() => {
+    const el = linesRef.current;
+    if (!el) return;
+    const key = `${running}|${multipv}|${engineId}|${threat}`;
+    if (tallest.current.key !== key) tallest.current = { key, h: 0 };
+    el.style.minHeight = '';
+    if (!running) return;
+    tallest.current.h = Math.max(tallest.current.h, el.offsetHeight);
+    el.style.minHeight = `${tallest.current.h}px`;
+  });
+
+  // αρίθμηση κινήσεων από τη θέση των γραμμών που φαίνονται
+  const shownFen = data?.fen ?? analysisFen;
   const pos = useMemo(() => {
     try {
-      return Position.fromFen(analysisFen);
+      return Position.fromFen(shownFen);
     } catch {
       return Position.start();
     }
-  }, [analysisFen]);
+  }, [shownFen]);
 
   const lineText = (l: PvLine) => {
     const out: Array<{ text: string; idx: number }> = [];
@@ -163,7 +191,10 @@ export function EnginePanel({ session, fen, style, onPlayLine, onBest, onClose, 
             </option>
           ))}
         </select>
-        <span className={`eval-big ${top ? ((top.mate ?? top.cp ?? 0) >= 0 ? 'pos' : 'neg') : ''}`}>{top ? formatEval(top.cp, top.mate) : ''}</span>
+        <span className={`eval-big ${top ? ((top.mate ?? top.cp ?? 0) >= 0 ? 'pos' : 'neg') : ''}${fresh ? '' : ' stale'}`}>{top ? formatEval(top.cp, top.mate) : ''}</span>
+        <span className={`eval-best${fresh ? '' : ' stale'}`} title={top?.san[0] ? `${threat ? L('Η απειλή', 'The threat') : L('Η καλύτερη κίνηση', 'The best move')}: ${lineText(top)[0].text}` : undefined}>
+          {top?.san[0] ? lineText(top)[0].text : ''}
+        </span>
         <span className="engine-stats">
           {data
             ? running
@@ -192,14 +223,14 @@ export function EnginePanel({ session, fen, style, onPlayLine, onBest, onClose, 
         )}
       </div>
       {threat && <div className="threat-note">{L('Ανάλυση απειλής (σαν να ξαναπαίζει ο αντίπαλος)', 'Threat analysis (opponent to move again)')}</div>}
-      <div className={`engine-lines${running ? '' : ' stopped'}`}>
+      <div ref={linesRef} className={`engine-lines${running && fresh ? '' : ' stopped'}`}>
         {(data?.lines ?? []).map((l) => (
           <div key={l.multipv} className="engine-line">
             <span className={`line-eval ${(l.mate ?? l.cp ?? 0) >= 0 ? 'pos' : 'neg'}`}>{formatEval(l.cp, l.mate)}</span>
             <span className="line-depth">{l.depth}</span>
             <span className="line-moves">
               {lineText(l).map((m) => (
-                <span key={m.idx} className="pv-move" onClick={() => !threat && onPlayLine(l.uci.slice(0, m.idx + 1))} title={threat ? '' : L('Πρόσθεσε ως βαριάντα ως εδώ', 'Add as variation up to here')}>
+                <span key={m.idx} className="pv-move" onClick={() => !threat && fresh && onPlayLine(l.uci.slice(0, m.idx + 1))} title={threat ? '' : L('Πρόσθεσε ως βαριάντα ως εδώ', 'Add as variation up to here')}>
                   {m.text}{' '}
                 </span>
               ))}

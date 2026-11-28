@@ -1,8 +1,9 @@
 /** Καρτέλες του παραθύρου βάσης: Παίκτες, Τουρνουά, Ανοίγματα, Στατιστικά, Προεπισκόπηση. */
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type MutableRefObject } from 'react';
 import { Search } from 'lucide-react';
 import { Position, START_FEN } from '../../../core/chess.ts';
 import { parseGames } from '../../../core/pgn.ts';
+import type { GameNode } from '../../../core/game.ts';
 import type { TiebreakKey, Tiebreaks } from '../../../core/tiebreak.ts';
 import { api, type GameRow } from '../../api.ts';
 import { L, fmtDate, fmtNum, resultText } from '../../i18n.ts';
@@ -498,9 +499,17 @@ export function StatsPane({ dbId }: { dbId: string }) {
 // ---------------------------------------------------------------------------
 // Προεπισκόπηση παρτίδας
 
-export function GamePreview({ dbId, row }: { dbId: string; row: GameRow | null }) {
+/** Προεπισκόπηση της επιλεγμένης παρτίδας: δείχνει την τελική θέση· με ← / → στη λίστα (stepRef) κίνηση-κίνηση. */
+export function GamePreview({ dbId, row, stepRef }: { dbId: string; row: GameRow | null; stepRef?: MutableRefObject<((dir: -1 | 1) => void) | null> }) {
   const settings = useApp((s) => s.settings);
-  const [data, setData] = useState<{ fen: string; moves: string } | null>(null);
+  const style = (((settings?.ui as Record<string, unknown> | undefined)?.notation as NotationStyle | undefined) ?? 'figurine') as NotationStyle;
+  const [data, setData] = useState<{ start: string; startTurn: number; startFullmove: number; main: GameNode[]; moves: string } | null>(null);
+  const [ply, setPly] = useState(0);
+  const last = data?.main.length ?? 0;
+  if (stepRef) {
+    // → στο τέλος ξεκινά από την πρώτη κίνηση
+    stepRef.current = (dir) => data && setPly((p) => (dir > 0 && p >= last ? Math.min(1, last) : Math.max(0, Math.min(last, p + dir))));
+  }
   useEffect(() => {
     if (!row) {
       setData(null);
@@ -515,12 +524,12 @@ export function GamePreview({ dbId, row }: { dbId: string; row: GameRow | null }
           const g = parseGames(r.pgn)[0]?.game;
           if (!g) return;
           const main = g.mainline();
-          const end = main.length ? main[main.length - 1].fen : g.startFen;
           const text = main
             .slice(0, 40)
             .map((n) => (n.whiteMoved(g.startTurn) ? `${n.moveNumber(g.startFullmove, g.startTurn)}.${n.san}` : n.san))
             .join(' ');
-          setData({ fen: end, moves: text + (main.length > 40 ? ' …' : '') });
+          setData({ start: g.startFen, startTurn: g.startTurn, startFullmove: g.startFullmove, main, moves: text + (main.length > 40 ? ' …' : '') });
+          setPly(main.length);
         })
         .catch(() => {});
     }, 120);
@@ -530,11 +539,18 @@ export function GamePreview({ dbId, row }: { dbId: string; row: GameRow | null }
     };
   }, [dbId, row]);
   if (!row) return <div className="preview muted pad">{L('Διάλεξε παρτίδα για προεπισκόπηση', 'Select a game to preview')}</div>;
+  const node = data && ply > 0 ? data.main[ply - 1] : null;
   return (
     <div className="preview">
       <div className="preview-board">
-        <Board fen={data?.fen ?? START_FEN} orientation="white" movable="none" theme={settings?.boardTheme} pieceSet={settings?.pieceSet} coordinates={false} />
+        <Board fen={node ? node.fen : (data?.start ?? START_FEN)} orientation="white" movable="none" lastMove={node?.move} theme={settings?.boardTheme} pieceSet={settings?.pieceSet} coordinates={false} />
       </div>
+      {data && (
+        <div className="muted small tnum" title={L('← / → στη λίστα: κίνηση πίσω / μπροστά', '← / → in the list: move back / forward')}>
+          {node ? `${node.moveNumber(data.startFullmove, data.startTurn)}${node.whiteMoved(data.startTurn) ? '.' : '…'}${displaySan(node.san, style)}` : L('αρχή', 'start')}
+          {` · ← →`}
+        </div>
+      )}
       <div className="preview-head">
         <b>{row.white}</b> {row.welo ? `(${row.welo})` : ''} – <b>{row.black}</b> {row.belo ? `(${row.belo})` : ''} <span className="res">{resultText(row.result)}</span>
       </div>

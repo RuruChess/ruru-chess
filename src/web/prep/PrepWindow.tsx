@@ -8,7 +8,7 @@
  * Από κάθε θέση: «Παρτίδες της θέσης» (η βάση με φίλτρο χρώματος και θέσης) ή «Ανάλυση» (σκακιέρα με μηχανή).
  */
 import { useEffect, useMemo, useState } from 'react';
-import { Check, ChevronLeft, CircleAlert, Database, FlaskConical, RefreshCw, SlidersHorizontal, Square, Target, Trash2 } from 'lucide-react';
+import { Check, ChevronLeft, CircleAlert, Database, FlaskConical, RefreshCw, SlidersHorizontal, Square, Target, Trash2, X } from 'lucide-react';
 import { Position, START_FEN } from '../../core/chess.ts';
 import {
   PREP_SOURCES,
@@ -170,6 +170,19 @@ export function PrepWindow({ active }: { active: boolean }) {
   const prep = preps.find((p) => p.id === sel) ?? null;
   const showForm = form !== null || (loaded && !prep);
 
+  // χωρίς παρτίδες: φεύγει και η άδεια βάση της· αλλιώς η βάση μένει στις Βάσεις
+  const forget = (p: PrepInfo) =>
+    void api
+      .post<{ emptyDb: string | null }>(`/api/prep/${p.id}/forget`)
+      .then(async ({ emptyDb }) => {
+        if (emptyDb) await api.post(`/api/library/${emptyDb}/remove`, { deleteFiles: true });
+        const { toast, refreshLibrary } = useApp.getState();
+        toast(emptyDb ? L(`Αφαιρέθηκε: ${p.name}.`, `Removed: ${p.name}.`) : L(`Αφαιρέθηκε: ${p.name}. Η βάση μένει στις Βάσεις.`, `Removed: ${p.name}. The database stays in Databases.`), 'info');
+        void refreshLibrary();
+        return load();
+      })
+      .catch(reportError);
+
   return (
     <div className="tx bots prep">
       <div className={`bots-lobby prep-lobby${preps.length ? '' : ' is-empty'}`}>
@@ -203,7 +216,7 @@ export function PrepWindow({ active }: { active: boolean }) {
                 key={prep.id}
                 prep={prep}
                 progress={progress[prep.id] ?? null}
-                onForget={() => void api.post(`/api/prep/${prep.id}/forget`).then(load)}
+                onForget={() => forget(prep)}
                 onEdit={() => openForm({ prev: prep })}
                 active={active}
               />
@@ -223,22 +236,34 @@ export function PrepWindow({ active }: { active: boolean }) {
               {preps.map((p) => {
                 const total = p.counts.lichess + p.counts.chesscom + p.counts.local;
                 return (
-                  <button
-                    key={p.id}
-                    type="button"
-                    className={`prep-item${p.id === sel && !showForm ? ' is-sel' : ''}`}
-                    onClick={() => {
-                      setForm(null);
-                      setSel(p.id);
-                    }}
-                  >
-                    <span className="prep-item-name">{p.name}</span>
-                    <span className="faint small">
-                      {progress[p.id]
-                        ? L('Κατεβαίνουν παρτίδες…', 'Fetching games…')
-                        : `${fmtNum(total)} ${L('παρτίδες', 'games')} · ${[p.lichess && 'Lichess', p.chesscom && 'Chess.com', (p.otb || p.locals?.length) && 'OTB'].filter(Boolean).join(' + ')}`}
-                    </span>
-                  </button>
+                  <div key={p.id} className="prep-item-row">
+                    <button
+                      type="button"
+                      className={`prep-item${p.id === sel && !showForm ? ' is-sel' : ''}`}
+                      onClick={() => {
+                        setForm(null);
+                        setSel(p.id);
+                      }}
+                    >
+                      <span className="prep-item-name" title={p.name}>
+                        {p.name}
+                      </span>
+                      <span className="faint small">
+                        {progress[p.id]
+                          ? L('Κατεβαίνουν παρτίδες…', 'Fetching games…')
+                          : `${fmtNum(total)} ${L('παρτίδες', 'games')} · ${[p.lichess && 'Lichess', p.chesscom && 'Chess.com', (p.otb || p.locals?.length) && 'OTB'].filter(Boolean).join(' + ')}`}
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      className="prep-item-x"
+                      onClick={() => forget(p)}
+                      title={L('Αφαίρεση από τη λίστα (οι παρτίδες μένουν στις Βάσεις)', 'Remove from the list (the games stay in Databases)')}
+                      aria-label={L(`Αφαίρεση: ${p.name}`, `Remove: ${p.name}`)}
+                    >
+                      <X size={16} aria-hidden />
+                    </button>
+                  </div>
                 );
               })}
             </section>
@@ -343,14 +368,14 @@ function PrepReport({ prep, progress, onForget, onEdit, active }: { prep: PrepIn
         {confirmForget ? (
           <>
             <button type="button" className="btn btn-sm btn-danger" onClick={onForget}>
-              {L('Αφαίρεση (η βάση μένει)', 'Remove (database stays)')}
+              {L('Αφαίρεση (οι παρτίδες μένουν)', 'Remove (games stay)')}
             </button>
             <button type="button" className="btn btn-ghost btn-sm" onClick={() => setConfirmForget(false)}>
               {L('Άκυρο', 'Cancel')}
             </button>
           </>
         ) : (
-          <button type="button" className="btn btn-ghost btn-sm" onClick={() => setConfirmForget(true)} title={L('Αφαίρεση από τη λίστα (η βάση μένει στις Βάσεις)', 'Remove from the list (the database stays in Databases)')} aria-label={L('Αφαίρεση', 'Remove')}>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={() => setConfirmForget(true)} title={L('Αφαίρεση από τη λίστα (οι παρτίδες μένουν στις Βάσεις)', 'Remove from the list (the games stay in Databases)')} aria-label={L('Αφαίρεση', 'Remove')}>
             <Trash2 className="ic ic-sm" aria-hidden />
           </button>
         )}

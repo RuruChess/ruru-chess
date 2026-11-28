@@ -149,6 +149,13 @@ function cleanOtb(v: unknown): PrepOtb | undefined {
   return { name, ...(Number.isSafeInteger(id) && id > 0 ? { fideId: id } : {}), ...(extra.length ? { extra } : {}) };
 }
 
+/** Ίδιος αντίπαλος: ίδιο Lichess, ίδιο Chess.com και ίδιος παίκτης OTB (ή κανένα από αυτά), χωρίς διάκριση πεζών/κεφαλαίων. */
+export function sameOpponent(a: Pick<PrepInfo, 'lichess' | 'chesscom' | 'otb'>, b: Pick<PrepInfo, 'lichess' | 'chesscom' | 'otb'>): boolean {
+  const low = (s: string | undefined) => (s ?? '').trim().toLowerCase();
+  const otb = (o: PrepOtb | undefined) => (o?.fideId ? `#${o.fideId}` : low(o?.name));
+  return low(a.lichess) === low(b.lichess) && low(a.chesscom) === low(b.chesscom) && otb(a.otb) === otb(b.otb);
+}
+
 /** Παρτίδα έτοιμη να μπει στη βάση της προετοιμασίας. */
 interface Candidate extends GameId {
   /** για την ταξινόμηση από τη νεότερη */
@@ -562,9 +569,18 @@ export function registerPrep(r: Router, lib: Library): void {
       const otb = cleanOtb(b.otb);
       if (!lichess && !chesscom && !otb) throw new HttpError(400, 'Συμπλήρωσε ένα πεδίο: FIDE / OTB, Lichess ή Chess.com');
       const name = cleanPlayerName(otb?.name ?? '') || lichess || chesscom!;
-      // «άλλαξε φίλτρα» σε προετοιμασία χωρίς παρτίδες: η ίδια βάση, όχι «Αντίπαλος - … (2)», «(3)»
-      const prev = typeof b.replace === 'string' ? list().find((x) => x.id === b.replace) : undefined;
-      const reuse = prev && !running.has(prev.id) && !lib.handle(prev.dbId).db.search({ deleted: false }).length ? prev : undefined;
+      const opts = cleanOpts(b.opts);
+      const isEmpty = (x: Prep) => !lib.handle(x.dbId).db.search({ deleted: false }).length;
+      // ο ίδιος αντίπαλος (ίδιες πηγές) υπάρχει ήδη: με τα ίδια φίλτρα γίνεται ενημέρωση, όχι δεύτερη ίδια προετοιμασία
+      const same = list().find((x) => !running.has(x.id) && sameOpponent(x, { lichess, chesscom, otb }));
+      if (same && JSON.stringify(same.opts) === JSON.stringify(opts)) {
+        p = { ...same, counts: { ...same.counts } };
+        void run(p, new AbortController());
+        return { prep: p };
+      }
+      // «άλλαξε φίλτρα», ή ο ίδιος αντίπαλος χωρίς παρτίδες: η ίδια βάση, όχι «Αντίπαλος - … (2)», «(3)»
+      const prev = typeof b.replace === 'string' ? list().find((x) => x.id === b.replace) : same;
+      const reuse = prev && !running.has(prev.id) && isEmpty(prev) ? prev : undefined;
       const title = `Αντίπαλος - ${name}`;
       const entry = reuse ? lib.rename(reuse.dbId, title) : lib.create(title);
       p = {
@@ -574,7 +590,7 @@ export function registerPrep(r: Router, lib: Library): void {
         lichess,
         chesscom,
         otb,
-        opts: cleanOpts(b.opts),
+        opts,
         counts: { lichess: 0, chesscom: 0, local: 0 },
         at: 0,
         done: false,
@@ -625,10 +641,15 @@ export function registerPrep(r: Router, lib: Library): void {
     return data;
   });
 
-  /** Αφαίρεση από τον κατάλογο (η βάση μένει· σβήνεται από τις Βάσεις αν θέλει ο χρήστης). */
+  /**
+   * Αφαίρεση από τον κατάλογο (η βάση μένει· σβήνεται από τις Βάσεις αν θέλει ο χρήστης). `emptyDb`: η βάση της δεν
+   * έχει καμία παρτίδα, άρα τη σβήνει η σελίδα, για να μη μένει άδεια «Αντίπαλος - …» στις Βάσεις.
+   */
   r.post('/api/prep/:id/forget', (req) => {
     running.get(req.params.id)?.ac.abort();
+    const p = readAll().find((x) => x.id === req.params.id);
     writeAll(readAll().filter((x) => x.id !== req.params.id));
-    return { ok: true };
+    const empty = !!p && !running.has(p.id) && lib.entries.some((e) => e.id === p.dbId) && !lib.handle(p.dbId).db.search({ deleted: false }).length;
+    return { ok: true, emptyDb: empty ? p.dbId : null };
   });
 }

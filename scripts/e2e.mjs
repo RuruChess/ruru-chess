@@ -428,6 +428,30 @@ async function main() {
     assert((await ok('GET', '/api/settings')).showCoordinates === false, 'η «Αποθήκευση» δεν κράτησε τη ρύθμιση');
   });
 
+  await check('8 παράθυρα μαζί: όλα ανοίγουν και παίρνουν τα γεγονότα', async () => {
+    // ως τις 28/11 κάθε παράθυρο κρατούσε μία σύνδεση SSE, και ο browser ανοίγει ως 6 ανά server: από το 6ο παράθυρο
+    // και μετά κάθε αίτημα περίμενε για πάντα (το παράθυρο έμενε στο «Ruru…»)
+    const extra = [];
+    try {
+      for (let i = 0; i < 7; i++) {
+        const p = await context.newPage();
+        p.setDefaultTimeout(8000);
+        await p.goto(base + '/');
+        extra.push(p);
+      }
+      const last = extra.at(-1);
+      await last.getByRole('button', { name: 'Νέα βάση' }).waitFor();
+      const name = 'e2e οκτώ παράθυρα';
+      const file = path.join(docs, `${name}.pgn`);
+      fs.writeFileSync(file, PGN, 'utf8');
+      const id = (await ok('POST', '/api/library/open', { path: file })).opened[0].entry.id;
+      await waitJobs(id);
+      await last.locator('.db-card').filter({ hasText: name }).filter({ hasText: '4 παρτίδες' }).waitFor();
+    } finally {
+      for (const p of extra) await p.close();
+    }
+  });
+
   await check('Κανένα σφάλμα στην κονσόλα, στη σελίδα ή στον server', async () => {
     const serverErrors = serverErr
       .split(/\r?\n/)

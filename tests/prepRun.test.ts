@@ -403,3 +403,38 @@ describe('Lichess και Chess.com', () => {
     expect(gamesOf(fixed.prep)).toHaveLength(1);
   });
 });
+
+describe('ίδιος αντίπαλος ξανά', () => {
+  const ME = 'Doe, John';
+
+  it('ίδια φίλτρα: ενημέρωση της ίδιας προετοιμασίας, όχι δεύτερη', async () => {
+    add(makeDb('A'), { White: ME, Black: 'P, Q', Date: '2020.01.01' }, LINES[0]);
+    const first = await prepare({ otb: { name: ME } });
+    const again = await prepare({ otb: { name: 'doe, john' } });
+    expect(again.prep.id).toBe(first.prep.id);
+    expect(saved()).toHaveLength(1);
+    expect(gamesOf(again.prep)).toHaveLength(1);
+  });
+
+  it('χωρίς παρτίδες και άλλα φίλτρα: η ίδια βάση· με παρτίδες και άλλα φίλτρα: νέα προετοιμασία', async () => {
+    const empty = await prepare({ lichess: 'nobody' });
+    const retry = await prepare({ lichess: 'Nobody' }, { color: 'white' });
+    expect(retry.prep.dbId).toBe(empty.prep.dbId);
+    expect(saved()).toHaveLength(1);
+
+    add(makeDb('A'), { White: ME, Black: 'P, Q', Date: '2020.01.01' }, LINES[0]);
+    const full = await prepare({ otb: { name: ME } });
+    const other = await prepare({ otb: { name: ME } }, { color: 'white' });
+    expect(other.prep.id).not.toBe(full.prep.id);
+  });
+
+  it('αφαίρεση: η άδεια βάση δίνεται για σβήσιμο, η βάση με παρτίδες όχι', async () => {
+    const empty = await prepare({ lichess: 'nobody' });
+    add(makeDb('A'), { White: ME, Black: 'P, Q', Date: '2020.01.01' }, LINES[0]);
+    const full = await prepare({ otb: { name: ME } });
+    const forget = (id: string) => routes.get('POST /api/prep/:id/forget')!({ params: { id } });
+    expect((await forget(empty.prep.id)).emptyDb).toBe(empty.prep.dbId);
+    expect((await forget(full.prep.id)).emptyDb).toBe(null);
+    expect(saved()).toHaveLength(0);
+  });
+});

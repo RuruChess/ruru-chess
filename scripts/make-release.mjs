@@ -3,14 +3,15 @@
 // ρυθμίσεις, σημειώσεις ανάπτυξης ή το ιστορικό git. Τα ονόματα δεν έχουν έκδοση, ώστε οι σύνδεσμοι …/releases/latest/download/<όνομα> να
 // δείχνουν πάντα την τελευταία. Χωρίς συμπληρωμένο PRIVACY.md (υπεύθυνος, email) δεν βγαίνει έκδοση: μόνο
 // με --draft, για δοκιμή, σε release/ruru-draft.
-// Χρειάζονται: το Inno Setup 6 (ISCC.exe, στο .tools/innosetup ή εγκατεστημένο) και ο csc.exe του
-// .NET Framework 4 (υπάρχει στα Windows). Το Node κατεβαίνει μία φορά στο .tools/, με έλεγχο SHA-256.
+// Χρειάζεται: το Inno Setup 6 (ISCC.exe, στο .tools/innosetup ή εγκατεστημένο). Το Node κατεβαίνει μία φορά
+// στο .tools/, με έλεγχο SHA-256.
 // Χρήση: node scripts/make-release.mjs [--draft]
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { execFileSync, execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { rcedit } from 'rcedit';
 
 /** Το Node που συνοδεύει την εφαρμογή (LTS, ίδια κύρια έκδοση με το "engines" του package.json). */
 const NODE_VERSION = '24.22.1';
@@ -61,12 +62,6 @@ function findIscc() {
   ].find((p) => p && fs.existsSync(p));
 }
 
-/** csc.exe του .NET Framework 4 (υπάρχει σε κάθε Windows 10/11). */
-function findCsc() {
-  const win = process.env.WINDIR ?? 'C:\\Windows';
-  return ['Framework64', 'Framework'].map((f) => path.join(win, 'Microsoft.NET', f, 'v4.0.30319', 'csc.exe')).find((p) => fs.existsSync(p));
-}
-
 const readmeEl = [
   `Ruru Chess ${shown} — βάση δεδομένων και ανάλυση σκακιού (δωρεάν, GPL-3.0-or-later με μέρη AGPL-3.0)`,
   '',
@@ -74,7 +69,7 @@ const readmeEl = [
   '- Με τον εγκαταστάτη: το Ruru Chess είναι στο μενού Έναρξη (και στην επιφάνεια εργασίας, αν',
   '  το διάλεξες).',
   '- Φορητή έκδοση (ZIP): αποσυμπίεσε τον φάκελο Ruru όπου θέλεις και άνοιξε το Ruru.exe.',
-  'Ανοίγει στο δικό του αυτόνομο παράθυρο (Electron) χωρίς να χρειάζεται εξωτερικός browser (Ruru.exe --edge για fallback σε Edge).',
+  'Ανοίγει στο δικό του αυτόνομο παράθυρο (Electron) χωρίς να χρειάζεται εξωτερικός browser.',
   '',
   'ΠΡΩΤΗ ΦΟΡΑ',
   '- Μηχανή ανάλυσης: Ρυθμίσεις → Μηχανές → «Λήψη Stockfish» (ένα κλικ), ή δική σου μηχανή UCI (.exe).',
@@ -90,7 +85,7 @@ const readmeEl = [
   'ΑΔΕΙΕΣ',
   'Ruru Chess: GPL-3.0-or-later (LICENSE), με μέρη AGPL-3.0 (licenses\\AGPL-3.0.txt).',
   'Ο κώδικας είναι στον φάκελο src. Χωρίς καμία εγγύηση.',
-  'Node.js: node\\LICENSE. Electron: electron\\runtime\\LICENSE και electron\\runtime\\LICENSES.chromium.html.',
+  'Node.js: node\\LICENSE. Electron: LICENSE.electron.txt και LICENSES.chromium.html.',
   'Τα υπόλοιπα: CREDITS.md, THIRD-PARTY-LICENSES.txt και φάκελος licenses.',
   'Το Ruru Chess δεν σχετίζεται με την ChessBase GmbH, το Lichess, το Chess.com ή τη FIDE. Τα σήματα',
   'ανήκουν στους κατόχους τους.',
@@ -103,7 +98,7 @@ const readmeEn = [
   'STARTING',
   '- Installed: Ruru Chess is in the Start menu (and on the desktop, if you chose so).',
   '- Portable (ZIP): extract the Ruru folder anywhere and open Ruru.exe.',
-  'Opens in its own standalone desktop window (Electron), no external browser needed (Ruru.exe --edge for Edge fallback).',
+  'Opens in its own standalone desktop window (Electron), no external browser needed.',
   '',
   'FIRST TIME',
   '- Analysis engine: Settings → Engines → “Download Stockfish” (one click), or add your own UCI engine.',
@@ -119,15 +114,12 @@ const readmeEn = [
   'LICENSES',
   'Ruru Chess: GPL-3.0-or-later (LICENSE), with parts under AGPL-3.0 (licenses\\AGPL-3.0.txt).',
   'The source code is in the src folder. No warranty of any kind.',
-  'Node.js: node\\LICENSE. Electron: electron\\runtime\\LICENSE and electron\\runtime\\LICENSES.chromium.html.',
+  'Node.js: node\\LICENSE. Electron: LICENSE.electron.txt and LICENSES.chromium.html.',
   'Everything else: CREDITS.md, THIRD-PARTY-LICENSES.txt and the licenses folder.',
   'Ruru Chess is not affiliated with ChessBase GmbH, Lichess, Chess.com or FIDE. Trademarks belong to',
   'their owners.',
   '',
 ].join('\r\n');
-
-const csc = findCsc();
-if (!csc) throw new Error('Δεν βρέθηκε ο csc.exe του .NET Framework 4');
 
 console.log('Χτίσιμο περιβάλλοντος…');
 execSync('npm run build', { cwd: root, stdio: 'inherit' });
@@ -160,25 +152,24 @@ const visitDep = (name) => {
   for (const d of Object.keys(meta.dependencies ?? {})) visitDep(d);
 };
 for (const d of Object.keys(pkg.dependencies ?? {})) visitDep(d);
-// Electron runtime (MIT · το πλήρες κείμενο για Chromium/third-party είναι στο electron/runtime/LICENSES.chromium.html)
+// Electron runtime (MIT · το πλήρες κείμενο για Chromium/third-party είναι στο LICENSES.chromium.html)
 const electronDir = path.join(root, 'node_modules', 'electron');
 const electronDist = path.join(electronDir, 'dist');
 if (!fs.existsSync(path.join(electronDist, 'electron.exe'))) throw new Error('Λείπει το Electron runtime (τρέξε npm install).');
 const electronMeta = JSON.parse(fs.readFileSync(path.join(electronDir, 'package.json'), 'utf8'));
 const electronLic = fs.readFileSync(path.join(electronDist, 'LICENSE'), 'utf8').trim();
-notices.push(`== electron ${electronMeta.version} (${electronMeta.license ?? 'MIT'}) ==\n\n${electronLic}\n\nChromium & third-party notices: electron/runtime/LICENSES.chromium.html\n`);
+notices.push(`== electron ${electronMeta.version} (${electronMeta.license ?? 'MIT'}) ==\n\n${electronLic}\n\nChromium & third-party notices: LICENSES.chromium.html\n`);
 // μέσα στο dist/web ή στο πακέτο χωρίς να είναι dependencies: οι ειδοποιήσεις γράφονται με το χέρι
 notices.unshift(fs.readFileSync(path.join(root, 'licenses', 'NOTICES.txt'), 'utf8').replace(/\r\n/g, '\n'));
 fs.writeFileSync(path.join(stage, 'THIRD-PARTY-LICENSES.txt'), notices.join('\n'));
-// Electron wrapper + runtime (κρατάμε μόνο ελληνικά/αγγλικά locales για μικρότερο πακέτο)
+// Electron απευθείας στη ρίζα ως Ruru.exe με resources/app (χωρίς εξωτερικό .NET launcher stub)
 copy('electron/main.cjs');
 const KEEP_LOCALES = new Set(['el.pak', 'en-US.pak', 'en-GB.pak']);
-const runtimeDst = path.join(stage, 'electron', 'runtime');
-fs.mkdirSync(runtimeDst, { recursive: true });
 for (const entry of fs.readdirSync(electronDist, { withFileTypes: true })) {
   const srcPath = path.join(electronDist, entry.name);
-  const dstName = entry.name === 'electron.exe' ? 'RuruChess.exe' : entry.name;
-  const dstPath = path.join(runtimeDst, dstName);
+  if (entry.name === 'resources' && entry.isDirectory()) continue;
+  const dstName = entry.name === 'electron.exe' ? 'Ruru.exe' : entry.name === 'LICENSE' ? 'LICENSE.electron.txt' : entry.name;
+  const dstPath = path.join(stage, dstName);
   if (entry.name === 'locales' && entry.isDirectory()) {
     fs.mkdirSync(dstPath, { recursive: true });
     for (const loc of fs.readdirSync(srcPath)) if (KEEP_LOCALES.has(loc)) fs.copyFileSync(path.join(srcPath, loc), path.join(dstPath, loc));
@@ -186,6 +177,18 @@ for (const entry of fs.readdirSync(electronDist, { withFileTypes: true })) {
     fs.cpSync(srcPath, dstPath, { recursive: true });
   }
 }
+const appEntryDir = path.join(stage, 'resources', 'app');
+fs.mkdirSync(appEntryDir, { recursive: true });
+fs.writeFileSync(path.join(appEntryDir, 'package.json'), JSON.stringify({ name: 'ruru-chess', version: pkg.version, main: 'bootstrap.cjs' }, null, 2) + '\n');
+fs.writeFileSync(path.join(appEntryDir, 'bootstrap.cjs'), "'use strict';\nrequire('../../electron/main.cjs');\n");
+// όνομα και εικονίδιο μέσα στο Ruru.exe: η Διαχείριση Εργασιών και η γραμμή εργασιών δείχνουν «Ruru Chess», όχι «Electron»
+const v4 = `${pkg.version.split('-')[0]}.0`;
+await rcedit(path.join(stage, 'Ruru.exe'), {
+  icon: path.join(root, 'Ruru.ico'),
+  'file-version': v4,
+  'product-version': v4,
+  'version-string': { FileDescription: 'Ruru Chess', ProductName: 'Ruru Chess', InternalName: 'Ruru', OriginalFilename: 'Ruru.exe' },
+});
 // μόνο ό,τι χρειάζεται ο server στα Windows: το 7za για .7z / .zip / .gz …
 for (const f of ['index.js', 'index.d.ts', 'package.json', 'LICENSE.txt', 'win']) copy(`node_modules/7zip-bin/${f}`);
 // … και το ts-fsrs για τα διαστήματα επανάληψης της Τακτικής (χωρίς δικές του εξαρτήσεις)
@@ -198,29 +201,6 @@ fs.writeFileSync(path.join(stage, 'README.txt'), readmeEn);
 const nodeDir = await ensureNode();
 fs.mkdirSync(path.join(stage, 'node'));
 for (const f of ['node.exe', 'LICENSE']) fs.copyFileSync(path.join(nodeDir, f), path.join(stage, 'node', f));
-
-// Ruru.exe: εκκίνηση χωρίς κονσόλα (installer/launcher.cs), με εικονίδιο και έκδοση
-const obj = path.join(outDir, 'obj');
-fs.mkdirSync(obj, { recursive: true });
-const v4 = `${pkg.version.split('-')[0]}.0`;
-fs.writeFileSync(
-  path.join(obj, 'AssemblyInfo.cs'),
-  [
-    'using System.Reflection;',
-    '[assembly: AssemblyTitle("Ruru Chess")]',
-    '[assembly: AssemblyProduct("Ruru Chess")]',
-    '[assembly: AssemblyCopyright("GPL-3.0-or-later, with parts under AGPL-3.0")]',
-    `[assembly: AssemblyVersion("${v4}")]`,
-    `[assembly: AssemblyFileVersion("${v4}")]`,
-    `[assembly: AssemblyInformationalVersion("${pkg.version}")]`,
-    '',
-  ].join('\r\n'),
-);
-execFileSync(
-  csc,
-  ['/nologo', '/codepage:65001', '/target:winexe', '/optimize+', `/win32icon:${path.join(root, 'Ruru.ico')}`, `/out:${path.join(stage, 'Ruru.exe')}`, '/r:System.Windows.Forms.dll', path.join(root, 'installer', 'launcher.cs'), path.join(obj, 'AssemblyInfo.cs')],
-  { stdio: 'inherit' },
-);
 
 // έλεγχος: τίποτα προσωπικό στο πακέτο
 const banned = [/HANDOFF\.md$/i, /NEXT_CHAT_PROMPT\.md$/i, /\.(kbdb|skdb)$/i,/\.pos$/i, /\.tree$/i, /library\.json$/i, /settings\.json$/i, /preset\.json$/i];

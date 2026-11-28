@@ -1,8 +1,10 @@
-/** Μικρός HTTP router με JSON, Server-Sent Events και στατικά αρχεία. */
+/** Μικρός HTTP router με JSON, γεγονότα προς τα παράθυρα (WebSocket) και στατικά αρχεία. */
 import { logError } from './errlog.ts';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import http, { type IncomingMessage, type ServerResponse } from 'node:http';
 import path from 'node:path';
+import type { Duplex } from 'node:stream';
 import { HttpError } from './library.ts';
 import { isOwnRequest } from './guard.ts';
 import { DbFormatError } from './db/store.ts';
@@ -45,9 +47,22 @@ const MIME: Record<string, string> = {
   '.tsv': 'text/tab-separated-values; charset=utf-8',
 };
 
+/** Ένα πλαίσιο WebSocket από τον server (χωρίς μάσκα): 1 = κείμενο, 8 = κλείσιμο, 9 = ping. */
+function wsFrame(op: number, payload: Buffer = Buffer.alloc(0)): Buffer {
+  const n = payload.length;
+  let head: Buffer;
+  if (n < 126) head = Buffer.from([0x80 | op, n]);
+  else if (n < 65536) head = Buffer.from([0x80 | op, 126, n >> 8, n & 255]);
+  else {
+    head = Buffer.from([0x80 | op, 127, 0, 0, 0, 0, 0, 0, 0, 0]);
+    head.writeBigUInt64BE(BigInt(n), 2);
+  }
+  return Buffer.concat([head, payload]);
+}
+
 export class Router {
   private routes: Route[] = [];
-  private clients = new Set<ServerResponse>();
+  private clients = new Set<Duplex>();
   staticDir: string | null = null;
   /** σύνδεση / αποσύνδεση ενός παραθύρου (το `win` το στέλνει το ίδιο το παράθυρο) */
   onClientOpen: ((win: string) => void) | null = null;
@@ -86,26 +101,62 @@ export class Router {
 
   /** Αποστολή γεγονότος σε όλους τους συνδεδεμένους browsers. */
   broadcast(type: string, data: unknown): void {
-    const msg = `event: ${type}\ndata: ${JSON.stringify(data)}\n\n`;
-    for (const c of this.clients) c.write(msg);
+    const frame = wsFrame(1, Buffer.from(JSON.stringify({ type, data })));
+    for (const c of this.clients) c.write(frame);
   }
 
-  private sse(req: IncomingMessage, res: ServerResponse): void {
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream; charset=utf-8',
-      'Cache-Control': 'no-cache',
-      Connection: 'keep-alive',
-    });
-    res.write('retry: 2000\n\n');
-    this.clients.add(res);
-    const win = new URL(req.url ?? '/', 'http://x').searchParams.get('win') ?? '';
+  /**
+   * `/api/events`: ένα WebSocket ανά παράθυρο. Όχι Server-Sent Events: ο Chromium (και το Electron) ανοίγει ως 6 συνδέσεις
+   * HTTP ανά server, και με μία SSE ανοιχτή ανά παράθυρο, από το 6ο παράθυρο και μετά κάθε αίτημα περίμενε για πάντα
+   * (το παράθυρο έμενε στο «Ruru…»)· τα WebSocket δεν μετρούν σε αυτό το όριο.
+   */
+  private upgrade(req: IncomingMessage, socket: Duplex): void {
+    const url = new URL(req.url ?? '/', 'http://localhost');
+    const key = req.headers['sec-websocket-key'];
+    if (!isOwnRequest(req) || url.pathname !== '/api/events' || req.headers.upgrade?.toLowerCase() !== 'websocket' || typeof key !== 'string') {
+      // (destroy μετά την αποστολή: ο server του Node κρατά μισάνοιχτες τις συνδέσεις που κλείνουμε μόνο με end)
+      socket.end('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n', () => socket.destroy());
+      return;
+    }
+    const accept = crypto.createHash('sha1').update(key + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11').digest('base64');
+    socket.write(`HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ${accept}\r\n\r\n`);
+    this.clients.add(socket);
+    const win = url.searchParams.get('win') ?? '';
     if (win) this.onClientOpen?.(win);
-    const ping = setInterval(() => res.write(': ping\n\n'), 20000);
-    req.on('close', () => {
+    const ping = setInterval(() => socket.write(wsFrame(9)), 20000);
+    let gone = false;
+    const close = () => {
+      if (gone) return;
+      gone = true;
       clearInterval(ping);
-      this.clients.delete(res);
+      this.clients.delete(socket);
       if (win) this.onClientClose?.(win);
+    };
+    // ο browser στέλνει μόνο pong και close (με μάσκα)· στο close απαντάμε και κλείνουμε
+    let buf = Buffer.alloc(0);
+    socket.on('data', (chunk: Buffer) => {
+      buf = Buffer.concat([buf, chunk]);
+      while (buf.length >= 2) {
+        const len7 = buf[1] & 0x7f;
+        const ext = len7 === 126 ? 2 : len7 === 127 ? 8 : 0;
+        const mask = buf[1] & 0x80 ? 4 : 0;
+        if (buf.length < 2 + ext) return;
+        const len = ext === 2 ? buf.readUInt16BE(2) : ext === 8 ? Number(buf.readBigUInt64BE(2)) : len7;
+        const size = 2 + ext + mask + len;
+        if (buf.length < size) return;
+        const op = buf[0] & 0x0f;
+        buf = buf.subarray(size);
+        if (op === 8) {
+          socket.end(wsFrame(8), () => socket.destroy());
+          close();
+          return;
+        }
+      }
     });
+    // το παράθυρο έκλεισε απότομα (χωρίς close): ο server του Node κρατά μισάνοιχτη τη σύνδεση αν δεν την κλείσουμε εμείς
+    socket.on('end', () => socket.destroy());
+    socket.on('close', close);
+    socket.on('error', close);
   }
 
   private async readBody(req: IncomingMessage): Promise<any> {
@@ -133,7 +184,6 @@ export class Router {
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     const url = new URL(req.url ?? '/', 'http://localhost');
     const method = req.method ?? 'GET';
-    if (url.pathname === '/api/events') return this.sse(req, res);
     if (url.pathname.startsWith('/api/')) {
       for (const r of this.routes) {
         if (r.method !== method) continue;
@@ -194,6 +244,7 @@ export class Router {
 
   listen(port: number, host: string): Promise<http.Server> {
     const server = http.createServer((req, res) => void this.handle(req, res));
+    server.on('upgrade', (req, socket) => this.upgrade(req, socket));
     return new Promise((resolve, reject) => {
       server.once('error', reject);
       server.listen(port, host, () => resolve(server));

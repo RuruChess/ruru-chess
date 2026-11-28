@@ -30,6 +30,8 @@ export function DatabaseWindow({ tab }: { tab: DbTab }) {
   const [sort, setSort] = useState<{ col: string; desc: boolean }>({ col: 'id', desc: false });
   const [view, setView] = useState<{ key: string; count: number; posTotal?: number; limited?: boolean } | null>(null);
   const [selected, setSelected] = useState<Set<number>>(new Set());
+  // ← / → στη λίστα: κίνηση-κίνηση στην προεπισκόπηση
+  const previewStep = useRef<((dir: -1 | 1) => void) | null>(null);
   const [focus, setFocus] = useState<GameRow | null>(null);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(0);
@@ -132,6 +134,23 @@ export function DatabaseWindow({ tab }: { tab: DbTab }) {
     setRefresh((r) => r + 1);
   };
 
+  /** Delete / κάδος: οι επιλεγμένες σβήνονται για πάντα, μετά από ερώτηση. */
+  const erase = async () => {
+    const n = selected.size;
+    if (!n) return;
+    const q = n === 1 ? L('Να διαγραφεί αυτή η παρτίδα; Δεν αναιρείται.', 'Delete this game? This cannot be undone.') : L(`Να διαγραφούν ${n} παρτίδες; Δεν αναιρείται.`, `Delete ${n} games? This cannot be undone.`);
+    if (!window.confirm(q)) return;
+    try {
+      await api.post(`/api/db/${dbId}/erase`, { ids: ids() });
+      setSelected(new Set());
+      setFocus(null);
+      setRefresh((x) => x + 1);
+      void useApp.getState().refreshLibrary();
+    } catch (e) {
+      reportError(e);
+    }
+  };
+
   const purge = async () => {
     if (!window.confirm(L('Να σβηστούν για πάντα οι παρτίδες που σημάδεψες για διαγραφή; Δεν αναιρείται.', 'Erase every game you flagged for deletion? This cannot be undone.'))) return;
     try {
@@ -217,7 +236,7 @@ export function DatabaseWindow({ tab }: { tab: DbTab }) {
         { label: L('Εξαγωγή επιλεγμένων σε PGN…', 'Export selected to PGN…'), onClick: () => void exportPgn(true), disabled: importing },
         ...(SOCIAL ? [{ label: L('Αποστολή επιλεγμένων σε φίλο ή ομάδα…', 'Send selected to a friend or team…'), onClick: () => openSend({ dbId, ids: selected.size ? ids() : [row.id] }) }] : []),
         { separator: true, label: '' },
-        { label: L('Σήμανση για διαγραφή', 'Flag for deletion'), onClick: () => void markDeleted(true), danger: true, disabled: importing },
+        { label: L('Διαγραφή…', 'Delete…'), onClick: () => void erase(), danger: true, disabled: importing },
         { label: L('Επαναφορά', 'Undelete'), onClick: () => void markDeleted(false), disabled: importing },
       ],
     });
@@ -294,7 +313,7 @@ export function DatabaseWindow({ tab }: { tab: DbTab }) {
               <button disabled={importing} onClick={() => setDialog('copy')} title={L('Αντιγραφή σε άλλη βάση', 'Copy to another database')}>
                 <Copy size={16} />
               </button>
-              <button disabled={importing || !selected.size} onClick={() => void markDeleted(true)} title={L('Σήμανση για διαγραφή (Del)', 'Flag for deletion (Del)')}>
+              <button disabled={importing || !selected.size} onClick={() => void erase()} title={L('Διαγραφή (Del)', 'Delete (Del)')}>
                 <Trash2 size={16} />
               </button>
               <button disabled={importing || !selected.size} onClick={() => void markDeleted(false)} title={L('Επαναφορά', 'Undelete')}>
@@ -364,11 +383,12 @@ export function DatabaseWindow({ tab }: { tab: DbTab }) {
                 }}
                 onOpen={openGame}
                 onContext={rowMenu}
-                onDeleteKey={importing ? undefined : () => void markDeleted(true)}
+                onDeleteKey={importing ? undefined : () => void erase()}
+                onStep={(d) => previewStep.current?.(d)}
                 // κατά την εισαγωγή: νέες παρτίδες = οι σελίδες της λίστας ξαναφορτώνονται
                 refreshToken={importing ? `${refresh}:${view?.count ?? 0}` : refresh}
               />
-              <GamePreview dbId={dbId} row={focus} />
+              <GamePreview dbId={dbId} row={focus} stepRef={previewStep} />
             </div>
           </>
         )}

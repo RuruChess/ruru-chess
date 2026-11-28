@@ -5,9 +5,9 @@ export default {
   en: {
     locale: 'en_US',
     altLocale: 'el_GR',
-    title: 'Ruru Chess — Free Chess Database, Stockfish & Study App',
+    title: 'Ruru Chess — Free Chess Database, Analysis & Live Study App',
     description:
-      'Ruru Chess (Ruru) is a free, open-source chess desktop app for Windows. Manage game databases, analyze with Stockfish, turn PDF chess books into playable databases, prepare for opponents, and study live with friends.',
+      'Free, open-source chess workspace for Windows. Save & edit games locally (.pgn, .cbh, .cbv, .si4), explore opening reference stats, study live with friends & teams, convert PDF chess books, and prepare for opponents.',
     ogAlt: 'Ruru Chess desktop interface showing Stockfish multi-line game analysis on a chess board',
     schemaKeywords:
       'free chess database, open source chess database Windows, open cbh file, open cbv file, PDF chess book to PGN, Stockfish GUI Windows, Leela Chess Zero, Maia chess, chess opponent preparation, live chess analysis',
@@ -36,12 +36,13 @@ export default {
     hero: {
       kicker: 'v{version} · Windows 10 & 11 · Free & Open Source',
       title: 'Your complete chess workspace,<br>free for everyone.',
-      lead: '<strong>Ruru Chess</strong> brings Stockfish analysis, PDF chess book conversion, opponent preparation, friends &amp; teams, and live shared study into one fast Windows app. No subscriptions, no ads, and your games stay on your computer.',
+      lead: 'A <strong>clean, modern chess workspace</strong> for Windows — 100% free and open source. Create, save, and edit your games locally, explore Opening Reference stats and Stockfish analysis, open .cbh, .cbv, .si4 &amp; PGN databases, study live with friends &amp; teams (with built-in video), convert PDF chess books, and prepare for opponents. No subscriptions, no ads, and your files stay on your PC.',
       cta: 'Download for Windows',
       ctaMeta: '{setupMB} MB · Windows 10/11 (64-bit)',
       portable: 'Portable ZIP',
       checksums: 'SHA-256',
       source: 'GitHub',
+      demo: 'Watch demo',
       formats: 'Opens .pgn, .cbh, .cbv & .si4 · Stockfish optional on first start',
       zoom: 'Click to enlarge screenshot',
       tabs: [
@@ -49,12 +50,12 @@ export default {
           id: 'analysis',
           label: 'Analysis',
           caption: 'Multi-line Stockfish 19 analysis on Kasparov–Topalov (1999) with board arrows, evaluation bar, and figurine notation.',
-          alt: 'Ruru Chess 3.0 analyzing Kasparov vs Topalov 1999 with Stockfish 19, board arrows, and three engine lines',
+          alt: 'Ruru Chess analyzing Kasparov vs Topalov 1999 with Stockfish 19, board arrows, and three engine lines',
         },
         {
           id: 'share',
           label: 'Shared analysis & video',
-          caption: 'Analyze live on play.ruruchess.com with encrypted voice, shared engine, room chat, and embedded YouTube/Twitch/Kick video in Ruru.',
+          caption: 'Analyze live on play.ruruchess.com with encrypted voice, shared engine, room chat, and synced YouTube, Twitch & Kick video in Ruru.',
           alt: 'Ruru Chess Shared Live Analysis showing Kasparov vs Topalov with Stockfish 19, two participants, embedded video panel, voice controls, and room chat',
         },
         {
@@ -78,10 +79,10 @@ export default {
       ],
     },
     facts: [
-      ['Free and open source', 'GPL / AGPL. No subscriptions, no paywalls, no ads, and no telemetry.'],
-      ['Your formats, untouched', 'Opens PGN, ChessBase (.cbh, .cbv) and Scid (.si4), even inside .7z or .zip archives.'],
-      ['Built for big databases', 'Handles millions of games locally in fast SQLite indexes directly on your PC.'],
-      ['Offline first', 'Databases, engines, PDF books and tactics work offline. Online tools connect only when you ask.'],
+      ['Clean UI · Save & edit locally', 'Create databases, annotate with symbols, arrows & comments, and save or edit your games anytime on your PC.'],
+      ['Opening Reference & Stockfish', 'Instant move stats & master games from any reference database you add, plus multi-line Stockfish, Lc0 & Maia.'],
+      ['Your formats + Built-in video', 'Opens .pgn, .cbh, .cbv & .si4 (even inside .7z or .zip) untouched, plus YouTube, Twitch & Kick beside the board.'],
+      ['100% Free & Open Source', 'GPL / AGPL, offline-first, no subscriptions, no ads, no telemetry — with free live shared study & teams.'],
     ],
     ch1: {
       num: '01',
@@ -158,15 +159,15 @@ export default {
       num: '03',
       eyebrow: 'Prepare, Share & Watch',
       title: 'Prepare for opponents. Study live with friends.',
-      lead: 'Ruru Chess 3.0 connects local database power with practical online study tools—without forcing anyone into paid clouds or mandatory accounts.',
+      lead: 'Ruru Chess connects local database power with practical online study tools—without forcing anyone into paid clouds or mandatory accounts.',
       cards: [
         {
           tag: 'Live Collaboration',
           title: 'Shared analysis with voice, camera & video',
-          text: 'Send a link on play.ruruchess.com: your friend joins straight in their browser with no account, or inside Ruru. Talk over encrypted voice/camera, share your Stockfish lines, and open YouTube, Twitch, or Kick videos right inside Ruru (“For everyone” in Ruru or “Only for me”).',
+          text: 'Send a link on play.ruruchess.com: your friend joins straight in their browser with no account, or inside Ruru. Talk over encrypted voice/camera, share your Stockfish lines, and watch YouTube (with synced play, pause & seek), Twitch, or Kick right inside Ruru (“For everyone” in Ruru or “Only for me”).',
           points: [
             'Real-time shared board, variations, arrows, chat & host engine',
-            'YouTube, Twitch & Kick video panel inside Ruru (“For everyone” or “Only for me”)',
+            'Synced YouTube playback plus Twitch & Kick inside Ruru (“For everyone” or “Only for me”)',
             'End-to-end encrypted WebRTC voice & camera with Cloudflare TURN',
           ],
           img: 'share',
@@ -352,7 +353,7 @@ export default {
         ],
         [
           'Is there a Mac or Linux version?',
-          'Not yet—Ruru Chess 3.0.0 runs on Windows 10 and 11 (64-bit). Linux and macOS support are planned for future releases.',
+          'Not yet—Ruru Chess v{version} runs on Windows 10 and 11 (64-bit). Linux and macOS support are planned for future releases.',
         ],
         [
           'How do I uninstall it, or report a bug?',
@@ -388,9 +389,9 @@ export default {
   el: {
     locale: 'el_GR',
     altLocale: 'en_US',
-    title: 'Ruru Chess — Δωρεάν Πρόγραμμα Σκακιού, Βάσεις & Ανάλυση',
+    title: 'Ruru Chess — Δωρεάν Πρόγραμμα Σκακιού, Βάσεις & Κοινή Μελέτη',
     description:
-      'Το Ruru Chess (Ruru) είναι δωρεάν, ανοιχτού κώδικα πρόγραμμα σκακιού για Windows. Διαχείριση βάσεων, ανάλυση με Stockfish, μετατροπή βιβλίων PDF σε βάσεις, προετοιμασία αντιπάλου και ζωντανή κοινή μελέτη με φίλους.',
+      'Δωρεάν, ανοιχτού κώδικα πρόγραμμα σκακιού για Windows. Τοπικές βάσεις (.pgn, .cbh, .cbv, .si4), θεωρία ανοιγμάτων, ζωντανή κοινή ανάλυση με φίλους & ομάδες, βιβλία PDF και προετοιμασία αντιπάλου.',
     ogAlt: 'Το Ruru Chess σε ανάλυση παρτίδας με Stockfish, σκακιέρα με βέλη και σημειογραφία',
     schemaKeywords:
       'δωρεάν πρόγραμμα σκακιού, βάση σκακιού Windows, άνοιγμα cbh cbv, μετατροπή βιβλίου σκακιού PDF σε PGN, ανάλυση Stockfish, προετοιμασία αντιπάλου σκάκι, ζωντανή ανάλυση σκακιού',
@@ -419,12 +420,13 @@ export default {
     hero: {
       kicker: 'v{version} · Windows 10 & 11 · Δωρεάν & Ανοιχτός Κώδικας',
       title: 'Όλα για το σκάκι σου,<br>δωρεάν για όλους.',
-      lead: 'Το <strong>Ruru Chess</strong> συνδυάζει ανάλυση με Stockfish, μετατροπή σκακιστικών βιβλίων PDF σε βάσεις, προετοιμασία αντιπάλου, φίλους &amp; ομάδες και ζωντανή κοινή μελέτη σε μία γρήγορη εφαρμογή για Windows. Χωρίς συνδρομές, χωρίς διαφημίσεις — οι παρτίδες σου μένουν στον υπολογιστή σου.',
+      lead: 'Ένα <strong>καθαρό, μοντέρνο πρόγραμμα σκακιού</strong> για Windows — 100% δωρεάν και ανοιχτού κώδικα. Φτιάξε, αποθήκευσε και επεξεργάσου τις παρτίδες σου τοπικά, μελέτησε θεωρία ανοιγμάτων και Stockfish, άνοιξε βάσεις .cbh, .cbv, .si4 &amp; PGN, ανάλυσε ζωντανά με φίλους &amp; ομάδες (με ενσωματωμένο βίντεο), μετάτρεψε βιβλία PDF και προετοιμάσου για αντιπάλους. Χωρίς συνδρομές και διαφημίσεις — τα αρχεία σου μένουν στον υπολογιστή σου.',
       cta: 'Κατέβασε για Windows',
       ctaMeta: '{setupMB} MB · Windows 10/11 (64-bit)',
       portable: 'Φορητό ZIP',
       checksums: 'SHA-256',
       source: 'GitHub',
+      demo: 'Δες το demo',
       formats: 'Ανοίγει .pgn, .cbh, .cbv & .si4 · Stockfish προαιρετικά στην πρώτη εκκίνηση',
       zoom: 'Κλικ για μεγέθυνση',
       tabs: [
@@ -432,12 +434,12 @@ export default {
           id: 'analysis',
           label: 'Ανάλυση',
           caption: 'Ανάλυση Stockfish 19 σε πολλές γραμμές (Kasparov–Topalov 1999) με βέλη στη σκακιέρα, μπάρα αξιολόγησης και σύμβολα κομματιών.',
-          alt: 'Το Ruru Chess 3.0 αναλύει Kasparov εναντίον Topalov 1999 με Stockfish 19, βέλη και τρεις γραμμές μηχανής',
+          alt: 'Το Ruru Chess αναλύει Kasparov εναντίον Topalov 1999 με Stockfish 19, βέλη και τρεις γραμμές μηχανής',
         },
         {
           id: 'share',
           label: 'Κοινή ανάλυση & βίντεο',
-          caption: 'Αναλύστε ζωντανά στο play.ruruchess.com με κρυπτογραφημένη φωνή, κοινή μηχανή, chat και ενσωματωμένο βίντεο YouTube/Twitch/Kick μέσα στο Ruru.',
+          caption: 'Αναλύστε ζωντανά στο play.ruruchess.com με κρυπτογραφημένη φωνή, κοινή μηχανή, chat και συγχρονισμένο βίντεο YouTube/Twitch/Kick μέσα στο Ruru.',
           alt: 'Κοινή ανάλυση live στο Ruru Chess με Stockfish 19, ενσωματωμένο πάνελ βίντεο, δύο συμμετέχοντες, φωνή και συνομιλία',
         },
         {
@@ -461,10 +463,10 @@ export default {
       ],
     },
     facts: [
-      ['Πραγματικά δωρεάν', 'Ανοιχτός κώδικας (GPL / AGPL). Χωρίς συνδρομές, διαφημίσεις ή κρυφά όρια.'],
-      ['Όλα τα αρχεία σου', 'Ανοίγει PGN, ChessBase (.cbh, .cbv) και Scid (.si4), ακόμη και μέσα σε .7z ή .zip.'],
-      ['Φτιαγμένο για ταχύτητα', 'Διαχειρίζεται εκατομμύρια παρτίδες τοπικά με γρήγορα ευρετήρια SQLite στο PC σου.'],
-      ['Πρώτα offline', 'Βάσεις, μηχανές, βιβλία PDF και τακτικά δουλεύουν χωρίς internet. Online μόνο όποτε το ζητήσεις.'],
+      ['Καθαρό UI · Τοπική αποθήκευση', 'Δημιουργία βάσεων, σχολιασμός με σύμβολα, βέλη & κείμενο, και αποθήκευση ή επεξεργασία όποτε θες στο PC σου.'],
+      ['Θεωρία ανοιγμάτων & Stockfish', 'Στατιστικά κινήσεων & παρτίδες από όποια βάση αναφοράς βάλεις, συν multi-line Stockfish, Lc0 & Maia.'],
+      ['Όλα τα αρχεία σου + Βίντεο', 'Ανοίγει .pgn, .cbh, .cbv & .si4 (ακόμα και σε .7z ή .zip) χωρίς αλλοίωση, συν YouTube, Twitch & Kick δίπλα στη σκακιέρα.'],
+      ['100% Δωρεάν & Ανοιχτός Κώδικας', 'GPL / AGPL, offline-first, χωρίς συνδρομές, διαφημίσεις ή τηλεμετρία — με δωρεάν κοινή ανάλυση & ομάδες.'],
     ],
     ch1: {
       num: '01',
@@ -541,15 +543,15 @@ export default {
       num: '03',
       eyebrow: 'Προετοιμασία, Φίλοι & Live',
       title: 'Προετοιμάσου για αντιπάλους. Μελέτησε ζωντανά με φίλους.',
-      lead: 'Το Ruru Chess 3.0 ενώνει τη δύναμη των τοπικών βάσεων με πρακτικά online εργαλεία μελέτης — χωρίς πληρωμένα clouds και χωρίς υποχρεωτικούς λογαριασμούς.',
+      lead: 'Το Ruru Chess ενώνει τη δύναμη των τοπικών βάσεων με πρακτικά online εργαλεία μελέτης — χωρίς πληρωμένα clouds και χωρίς υποχρεωτικούς λογαριασμούς.',
       cards: [
         {
           tag: 'Ζωντανή Συνεργασία',
           title: 'Κοινή ανάλυση με φωνή, κάμερα & βίντεο',
-          text: 'Στείλε ένα link στο play.ruruchess.com: ο φίλος σου μπαίνει κατευθείαν από τον browser χωρίς λογαριασμό, ή από το Ruru. Μιλήστε με κρυπτογραφημένη φωνή/κάμερα, μοιραστείτε τη μηχανή Stockfish και ανοίξτε βίντεο YouTube, Twitch ή Kick μέσα στο Ruru («Για όλους» στο Ruru ή «Μόνο για μένα»).',
+          text: 'Στείλε ένα link στο play.ruruchess.com: ο φίλος σου μπαίνει κατευθείαν από τον browser χωρίς λογαριασμό, ή από το Ruru. Μιλήστε με κρυπτογραφημένη φωνή/κάμερα, μοιραστείτε τη μηχανή Stockfish και δείτε μαζί YouTube (με συγχρονισμένο play, pause & seek), Twitch ή Kick μέσα στο Ruru («Για όλους» στο Ruru ή «Μόνο για μένα»).',
           points: [
             'Κοινή σκακιέρα σε πραγματικό χρόνο, βαριάντες, βέλη, chat & μηχανή οικοδεσπότη',
-            'Πάνελ βίντεο YouTube, Twitch & Kick μέσα στο Ruru («Για όλους» ή «Μόνο για μένα»)',
+            'Συγχρονισμένο YouTube, καθώς και Twitch & Kick μέσα στο Ruru («Για όλους» ή «Μόνο για μένα»)',
             'Κρυπτογραφημένη φωνή & κάμερα WebRTC (end-to-end) με Cloudflare TURN',
           ],
           img: 'share',
@@ -735,7 +737,7 @@ export default {
         ],
         [
           'Υπάρχει για Mac ή Linux;',
-          'Όχι ακόμη — το Ruru Chess 3.0.0 τρέχει σε Windows 10 και 11 (64-bit). Υποστήριξη για Linux και macOS σχεδιάζεται για επόμενες εκδόσεις.',
+          'Όχι ακόμη — το Ruru Chess v{version} τρέχει σε Windows 10 και 11 (64-bit). Υποστήριξη για Linux και macOS σχεδιάζεται για επόμενες εκδόσεις.',
         ],
         [
           'Πώς το απεγκαθιστώ ή αναφέρω σφάλμα;',

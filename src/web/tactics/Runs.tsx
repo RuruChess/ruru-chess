@@ -1,6 +1,6 @@
 /** Γρήγοροι τρόποι: Storm (3 λεπτά, μπόνους χρόνου για σερί σωστών, −10″ για λάθος), Streak (ένα λάθος τελειώνει το σερί, μία παράλειψη) και Rush (3 λάθη, 3′ / 5′ / χωρίς χρόνο). Τα puzzles ελέγχονται στον browser (ίδιος έλεγχος με τον server) και ο γύρος γράφεται μία φορά στο τέλος. */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { CircleCheck, CircleStop, CircleX, Flame, Infinity as InfinityIcon, Play, RotateCcw, SkipForward, Timer, Trophy, Zap } from 'lucide-react';
+import { CircleCheck, CircleStop, CircleX, Flame, FlipVertical2, Infinity as InfinityIcon, Play, RotateCcw, SkipForward, Timer, Trophy, Zap } from 'lucide-react';
 import { checkAnswer } from '../../core/puzzle.ts';
 import { L, fmtNum } from '../i18n.ts';
 import { reportError } from '../store.ts';
@@ -69,7 +69,7 @@ function rules(mode: RunMode, variant: RushVariant): string {
   return L(`Όσο περισσότερα puzzles μπορείς (${t}). Τρία λάθη και τελειώνει.`, `As many puzzles as you can (${t}). Three mistakes and it is over.`);
 }
 
-export function RunView({ mode, variant, onVariant, active, commandsRef, onRetry }: { mode: RunMode; variant: RushVariant; onVariant: (v: RushVariant) => void; active: boolean; commandsRef: CommandsRef; onRetry: (ids: string[]) => void }) {
+export function RunView({ mode, variant, onVariant, active, commandsRef, onRetry, onLive }: { mode: RunMode; variant: RushVariant; onVariant: (v: RushVariant) => void; active: boolean; commandsRef: CommandsRef; onRetry: (ids: string[]) => void; onLive?: (mode: RunMode, playing: boolean) => void }) {
   const bs = useBoardSettings();
   const [run, setRun] = useState<Run | null>(null);
   const [loading, setLoading] = useState(true);
@@ -91,6 +91,7 @@ export function RunView({ mode, variant, onVariant, active, commandsRef, onRetry
     ref.current = r;
     setRun(r);
   };
+  const flip = () => setOrientation((o) => (o === 'white' ? 'black' : 'white'));
   const snd = (k: MoveSound) => bs.sounds && playSound(k);
   const sndMove = (san: string) => bs.sounds && playMoveSound(san);
 
@@ -117,7 +118,8 @@ export function RunView({ mode, variant, onVariant, active, commandsRef, onRetry
   useEffect(() => {
     void fetchRef.current();
     return clear;
-  }, [mode, variant]);
+    // ο χρόνος (variant) αφορά μόνο το «3 λάθη»: αλλαγή του δεν ξεκινά από την αρχή έναν κρυφό γύρο άλλου τρόπου
+  }, [mode, mode === 'rush' ? variant : null]);
 
   // ρολόι: ανανέωση της οθόνης και τέλος του χρόνου
   useEffect(() => {
@@ -131,6 +133,15 @@ export function RunView({ mode, variant, onVariant, active, commandsRef, onRetry
     return () => clearInterval(id);
   }, [run?.phase, run?.end === null]);
 
+  // όσο παίζεται ο γύρος, η οθόνη μένει ανοιχτή όταν πας σε άλλον τρόπο (βλ. TacticsWindow)· αν τελείωσε όσο ήταν
+  // κρυφός (τέλος χρόνου), μένει ανοιχτή ώσπου να δεις το αποτέλεσμα
+  const seenOver = useRef(false);
+  useEffect(() => {
+    if (run?.phase !== 'over') seenOver.current = false;
+    else if (active) seenOver.current = true;
+    onLive?.(mode, run?.phase === 'play' || (run?.phase === 'over' && !seenOver.current));
+  }, [run?.phase, active]);
+
   useEffect(() => {
     if (!active) return;
     if (run?.phase === 'ready' && !loading) startRef.current?.focus({ preventScroll: true });
@@ -142,6 +153,8 @@ export function RunView({ mode, variant, onVariant, active, commandsRef, onRetry
     const c = r.set.puzzles[index];
     if (!c) return finish(r);
     const p = fromCompact(c);
+    // κάθε puzzle από τη μεριά του χρώματος που παίζεις (το F γυρίζει μόνο το τρέχον)
+    setOrientation(p.color);
     const cur: Cur = { p, ply: p.pre ? 1 : 0, fen: p.fen, open: !p.pre, flash: null, at: Date.now() };
     const next: Run = { ...r, index, cur };
     if (p.pre) {
@@ -293,7 +306,7 @@ export function RunView({ mode, variant, onVariant, active, commandsRef, onRetry
     if (k === 'Enter' && r.phase === 'ready') start();
     else if (k === 'Enter' && r.phase === 'play') inputRef.current?.focus();
     else if ((k === 'Enter' || k === 'n') && r.phase === 'over') void fetchSet();
-    else if (k === 'f') setOrientation((o) => (o === 'white' ? 'black' : 'white'));
+    else if (k === 'f') flip();
     else return;
     return true;
   });
@@ -313,11 +326,15 @@ export function RunView({ mode, variant, onVariant, active, commandsRef, onRetry
       { id: 'tx.run.start', title: L(`Ξεκίνα ${RUN_TITLES[mode]()}`, `Start ${RUN_TITLES[mode]()}`), group: g, icon: Play, keys: 'Enter', disabled: r?.phase !== 'ready', run: start },
       { id: 'tx.run.again', title: L('Νέος γύρος', 'New run'), group: g, icon: RotateCcw, disabled: r?.phase === 'play', run: () => void fetchSet() },
       { id: 'tx.run.stop', title: L('Τέλος του γύρου τώρα', 'End the run now'), group: g, icon: CircleStop, disabled: r?.phase !== 'play', run: stop },
-      { id: 'tx.flip', title: L('Γύρισμα σκακιέρας', 'Flip board'), extra: ['Flip'], group: g, keys: 'F', run: () => setOrientation((o) => (o === 'white' ? 'black' : 'white')) },
+      { id: 'tx.flip', title: L('Γύρισμα σκακιέρας', 'Flip board'), extra: ['Flip'], group: g, icon: FlipVertical2, keys: 'F', run: flip },
     ];
   };
-  ownCommands.current = provider;
-  commandsRef.current = provider;
+  // κρυφός γύρος (σε άλλον τρόπο) δεν παίρνει τις εντολές της οθόνης που φαίνεται
+  if (active) commandsRef.current = ownCommands.current = provider;
+  // και όταν κρύβεται, οι εντολές του φεύγουν από την παλέτα (αν η οθόνη που φαίνεται δεν έβαλε δικές της)
+  useEffect(() => {
+    if (!active && commandsRef.current === ownCommands.current) commandsRef.current = () => [];
+  }, [active]);
 
   const stats = run?.set.stats;
   const now = Date.now();
@@ -438,6 +455,9 @@ export function RunView({ mode, variant, onVariant, active, commandsRef, onRetry
                   </button>
                 )}
                 <span style={{ flex: 1 }} />
+                <button type="button" className="btn btn-ghost btn-icon" onClick={flip} aria-label={L('Γύρισμα σκακιέρας', 'Flip board')} title={L('Γύρισμα σκακιέρας', 'Flip board')} data-keys="F">
+                  <FlipVertical2 className="ic" aria-hidden />
+                </button>
                 <button type="button" className="btn btn-ghost" onClick={stop}>
                   <CircleStop className="ic" aria-hidden />
                   {L('Τέλος', 'End')}

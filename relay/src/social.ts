@@ -56,6 +56,7 @@ import {
   type TeamRow,
 } from '../../src/core/social.ts';
 import { randomId } from '../../src/core/online.ts';
+import { FEEDBACK_DAYS, FEEDBACK_PER_HOUR, type FeedbackIn } from '../../src/core/feedback.ts';
 
 export interface SocialEnv {
   DIRECTORY: DurableObjectNamespace<Directory>;
@@ -124,23 +125,46 @@ export class Directory extends DurableObject<SocialEnv> {
     this.sql.exec(
       'CREATE TABLE IF NOT EXISTS reports (id TEXT PRIMARY KEY, at INTEGER NOT NULL, reporter TEXT NOT NULL, target TEXT NOT NULL, target_name TEXT NOT NULL, team TEXT NOT NULL, team_name TEXT NOT NULL, conv TEXT NOT NULL, mid INTEGER NOT NULL, reason TEXT NOT NULL, text TEXT NOT NULL, evidence TEXT NOT NULL)',
     );
+    this.sql.exec('CREATE TABLE IF NOT EXISTS feedback (id TEXT PRIMARY KEY, at INTEGER NOT NULL, kind TEXT NOT NULL, text TEXT NOT NULL, email TEXT NOT NULL, version TEXT NOT NULL, lang TEXT NOT NULL)');
+    this.sql.exec('CREATE TABLE IF NOT EXISTS fb_ips (ip TEXT NOT NULL, at INTEGER NOT NULL)');
     void ctx.blockConcurrencyWhile(() => this.schedule());
   }
 
-  /** Οι IP των εγγραφών σβήνουν σε μία ώρα και οι αναφορές σε REPORT_DAYS, ακόμη κι αν δεν ξαναγίνει τίποτα. */
+  /** Οι IP (εγγραφές, feedback) σβήνουν σε μία ώρα, οι αναφορές σε REPORT_DAYS και τα feedback σε FEEDBACK_DAYS. */
   private async schedule(): Promise<void> {
-    const reg = this.sql.exec<{ at: number | null }>('SELECT MIN(at) AS at FROM regs').one().at;
-    const rep = this.sql.exec<{ at: number | null }>('SELECT MIN(at) AS at FROM reports').one().at;
-    const due = [reg === null ? Infinity : reg + HOUR, rep === null ? Infinity : rep + REPORT_DAYS * DAY];
-    const next = Math.min(...due);
+    const min = (table: string) => this.sql.exec<{ at: number | null }>(`SELECT MIN(at) AS at FROM ${table}`).one().at ?? Infinity;
+    const next = Math.min(min('regs') + HOUR, min('fb_ips') + HOUR, min('reports') + REPORT_DAYS * DAY, min('feedback') + FEEDBACK_DAYS * DAY);
     if (next !== Infinity) await this.ctx.storage.setAlarm(Math.max(next, Date.now() + 1000));
   }
 
   async alarm(): Promise<void> {
     const now = Date.now();
     this.sql.exec('DELETE FROM regs WHERE at <= ?', now - HOUR);
+    this.sql.exec('DELETE FROM fb_ips WHERE at <= ?', now - HOUR);
     this.sql.exec('DELETE FROM reports WHERE at <= ?', now - REPORT_DAYS * DAY);
+    this.sql.exec('DELETE FROM feedback WHERE at <= ?', now - FEEDBACK_DAYS * DAY);
     await this.schedule();
+  }
+
+  /** Feedback από την εφαρμογή: ως FEEDBACK_PER_HOUR ανά IP την ώρα, ως 5.000 που δεν έχουν διαβαστεί. */
+  async addFeedback(f: FeedbackIn, ip: string): Promise<{ id: string } | { error: 'rate' | 'full' }> {
+    const now = Date.now();
+    if (this.sql.exec<{ n: number }>('SELECT COUNT(*) AS n FROM fb_ips WHERE ip = ? AND at > ?', ip, now - HOUR).one().n >= FEEDBACK_PER_HOUR) return { error: 'rate' };
+    if (this.sql.exec<{ n: number }>('SELECT COUNT(*) AS n FROM feedback').one().n >= 5000) return { error: 'full' };
+    const id = randomId(8);
+    this.sql.exec('INSERT INTO fb_ips (ip, at) VALUES (?, ?)', ip, now);
+    this.sql.exec('INSERT INTO feedback (id, at, kind, text, email, version, lang) VALUES (?, ?, ?, ?, ?, ?, ?)', id, now, f.kind, f.text, f.email, f.version, f.lang);
+    await this.schedule();
+    return { id };
+  }
+
+  async feedback(): Promise<Array<FeedbackIn & { id: string; at: number }>> {
+    type Row = { id: string; at: number; kind: string; text: string; email: string; version: string; lang: string };
+    return this.sql.exec<Row>('SELECT * FROM feedback ORDER BY at DESC LIMIT 500').toArray() as Array<FeedbackIn & { id: string; at: number }>;
+  }
+
+  async closeFeedback(id: string): Promise<boolean> {
+    return this.sql.exec('DELETE FROM feedback WHERE id = ? RETURNING id', id).toArray().length > 0;
   }
 
   async person(id: string): Promise<Person | null> {

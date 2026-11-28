@@ -65,7 +65,7 @@ export function render(lang, t, c, icon) {
       alternateName: 'Ruru',
       url: siteBase,
       ...(c.site ? { logo: `${c.site}assets/logo-256.png` } : {}),
-      ...(c.links.repo.startsWith('http') ? { sameAs: [c.links.repo] } : {}),
+      ...(c.links.repo.startsWith('http') ? { sameAs: [c.links.repo, 'https://www.youtube.com/@RuruChess'] } : {}),
     },
     {
       '@type': 'WebPage',
@@ -280,6 +280,8 @@ ${c.preview ? `<div class="preview-bar">${t.preview}</div>` : ''}
             <a href="#download">${t.hero.checksums}</a>
             <span aria-hidden="true">·</span>
             <a href="${c.links.repo}"${ext(c.links.repo)}>${t.hero.source}</a>
+            <span aria-hidden="true">·</span>
+            <a href="https://youtu.be/YMHT8N0o0So" rel="noopener" target="_blank">${t.hero.demo}</a>
           </p>
           <p class="hero-note">${t.hero.formats}</p>
         </div>

@@ -6,6 +6,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type PointerEven
 import { BLACK_BIT, F_C960, F_CASTLE, KING, PAWN, Position, QUEEN, ROOK, BISHOP, KNIGHT, castleRookSquare, moveFrom, moveTo, squareName } from '../../core/chess.ts';
 import type { Shape } from '../../core/game.ts';
 import { oneClickFroms, premoveTargets, type Premove } from './quickMove.ts';
+import { useApp } from '../store.ts';
 
 export interface BoardTheme {
   light: string;
@@ -167,6 +168,10 @@ export function Board(props: BoardProps) {
   const theme = BOARD_THEMES[props.theme ?? 'classic'] ?? BOARD_THEMES.classic;
   const pieceSet = props.pieceSet ?? 'cburnett';
   const flipped = orientation === 'black';
+  // Ρυθμίσεις → Σκακιέρα: χρώμα στην τελευταία κίνηση και κουκκίδες νόμιμων κινήσεων (για όλες τις σκακιέρες)
+  const ui = useApp((s) => s.settings?.ui) as Record<string, unknown> | undefined;
+  const showLast = ui?.lastMoveHighlight !== false;
+  const showDots = ui?.legalDots !== false;
   const svgRef = useRef<SVGSVGElement>(null);
   const [selected, setSelected] = useState<number | null>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
@@ -406,7 +411,7 @@ export function Board(props: BoardProps) {
   }
 
   const highlights = [];
-  if (lastMove) {
+  if (lastMove && showLast) {
     for (const sq of [moveFrom(lastMove), moveTo(lastMove)]) {
       const [x, y] = sqXY(sq, flipped);
       highlights.push(<rect key={`l${sq}`} x={x} y={y} width={1} height={1} fill={theme.lastFrom} />);
@@ -462,7 +467,7 @@ export function Board(props: BoardProps) {
   });
 
   const dotColor = selected !== null && canPre(board[selected]) ? PREMOVE_DOT : 'rgba(20,85,30,0.45)';
-  const dots = [...targets].map((sq) => {
+  const dots = [...(showDots ? targets : [])].map((sq) => {
     const [x, y] = sqXY(sq, flipped);
     const occupied = board[sq] !== 0;
     return occupied ? (

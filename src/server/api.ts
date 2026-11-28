@@ -441,6 +441,15 @@ export function registerApi(r: Router, lib: Library, analysis: AnalysisManager):
     return { ok: true };
   });
 
+  // οριστικό σβήσιμο των επιλεγμένων (με ερώτηση στο περιβάλλον), χωρίς το ενδιάμεσο «σημάδι»
+  r.post('/api/db/:id/erase', (req) => {
+    const ids: number[] = (req.body?.ids ?? []).map(Number).filter(Number.isInteger);
+    const n = db(req).deleteGames(ids);
+    lib.markChanged(req.params.id);
+    invalidateViews(req.params.id);
+    return { removed: n };
+  });
+
   r.post('/api/db/:id/purge', (req) => {
     const n = db(req).purgeDeleted();
     lib.markChanged(req.params.id);

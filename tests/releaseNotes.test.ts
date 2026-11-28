@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { RELEASE_NOTES, findReleaseNote, latestReleaseVersion, shouldAutoShowReleaseNotes } from '../src/core/releaseNotes.ts';
 
 describe('release notes data and auto-show logic', () => {
-  it('has complete bilingual (el & en) user-facing notes for 3.1.0 and 3.0.0', () => {
-    expect(RELEASE_NOTES.length).toBeGreaterThanOrEqual(2);
-    expect(latestReleaseVersion()).toBe('3.1.0');
+  it('has complete bilingual (el & en) user-facing notes for 3.2.0, 3.1.0 and 3.0.0', () => {
+    expect(RELEASE_NOTES.length).toBeGreaterThanOrEqual(3);
+    expect(latestReleaseVersion()).toBe('3.2.0');
     const seen = new Set<string>();
     for (const r of RELEASE_NOTES) {
       expect(seen.has(r.version)).toBe(false);
@@ -26,6 +26,8 @@ describe('release notes data and auto-show logic', () => {
         }
       }
     }
+    expect(findReleaseNote('3.2.0').version).toBe('3.2.0');
+    expect(findReleaseNote('3.2.0').sections.flatMap((s) => s.items).filter((i) => i.fromUsers).length).toBe(8);
     expect(findReleaseNote('3.1.0').version).toBe('3.1.0');
     expect(findReleaseNote('3.0.0').version).toBe('3.0.0');
     expect(findReleaseNote('3.1.0-rc1').version).toBe('3.1.0');

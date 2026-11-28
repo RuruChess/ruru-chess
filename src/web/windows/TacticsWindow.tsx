@@ -14,7 +14,9 @@ import { setTacticsPrefs, useTactics } from '../tactics/store.ts';
 import { DIFFICULTY_LEVELS, activeFilters, effectiveFilters, readTacticsPrefs, type TacticsMode, type TacticsPrefs } from '../tactics/prefs.ts';
 import { sectionModes, type Section } from '../tactics/sections.ts';
 import { SolverView, type Feed, type FeedItem } from '../tactics/Solver.tsx';
-import { RunView, type RushVariant } from '../tactics/Runs.tsx';
+import { RunView, type RunMode, type RushVariant } from '../tactics/Runs.tsx';
+
+const RUN_MODES: RunMode[] = ['storm', 'streak', 'rush'];
 import { WoodpeckerView } from '../tactics/Woodpecker.tsx';
 import { DashboardView } from '../tactics/Dashboard.tsx';
 import { ImportScreen } from '../tactics/ImportScreen.tsx';
@@ -60,6 +62,9 @@ export function TacticsWindow({ tab, active, section = 'tactics', slot }: { tab:
   // οι γρίφοι ξεκινούν μόνο με «Έναρξη»: ο τρόπος που ξεκίνησε (αλλαγή τρόπου = πάλι η οθόνη έναρξης)
   const [started, setStarted] = useState<TacticsMode | null>(null);
   const commandsRef = useRef<() => Command[]>(() => []);
+  // γύροι (3 λεπτά / Streak / 3 λάθη) που παίζονται τώρα
+  const [liveRuns, setLiveRuns] = useState<RunMode[]>([]);
+  const onLive = useCallback((m: RunMode, on: boolean) => setLiveRuns((l) => (on ? (l.includes(m) ? l : [...l, m]) : l.filter((x) => x !== m))), []);
   const filtersRef = useRef<PickFilters>(prefs.filters);
   // οι συλλογές αυτής της σελίδας που έχουν μπει στη βάση
   const secSources = sources.filter((s) => s.section === section && s.key !== 'lichess' && s.kind !== 'mine');
@@ -313,6 +318,7 @@ export function TacticsWindow({ tab, active, section = 'tactics', slot }: { tab:
   );
 
   let content: React.ReactNode;
+  let curRun: RunMode | null = null;
   if (view === 'sources') {
     content = <ImportScreen onReady={onImported} section={section} onOpen={openCollection} />;
   } else if (view === 'collection' && col) {
@@ -512,8 +518,14 @@ export function TacticsWindow({ tab, active, section = 'tactics', slot }: { tab:
   } else if (mode === 'woodpecker') {
     content = <WoodpeckerView active={active} commandsRef={commandsRef} deckPref={prefs.woodpecker} onDeckPref={(id) => setPrefs({ woodpecker: id })} themes={prefs.filters.themes} />;
   } else {
-    content = <RunView key={mode} mode={mode} variant={prefs.rush as RushVariant} onVariant={(v) => setPrefs({ rush: v })} active={active} commandsRef={commandsRef} onRetry={(ids) => startRetry({ kind: 'ids', ids })} />;
+    curRun = mode as RunMode;
   }
+  // οι γύροι που παίζονται μένουν ανοιχτοί (κρυφοί) όταν πας αλλού, για να συνεχίσεις από εκεί που έμειναν
+  const runs = RUN_MODES.filter((m) => m === curRun || liveRuns.includes(m)).map((m) => (
+    <div key={m} style={{ display: m === curRun ? 'contents' : 'none' }}>
+      <RunView mode={m} variant={prefs.rush as RushVariant} onVariant={(v) => setPrefs({ rush: v })} active={active && m === curRun} commandsRef={commandsRef} onRetry={(ids) => startRetry({ kind: 'ids', ids })} onLive={onLive} />
+    </div>
+  ));
 
   // μία σειρά πλοήγησης: τρόποι με υπογράμμιση και, δεξιά, τα εργαλεία (στη σειρά της «Βελτίωσης» ή, στα Φινάλε, δική της)
   const bar = (
@@ -611,6 +623,7 @@ export function TacticsWindow({ tab, active, section = 'tactics', slot }: { tab:
         slot && createPortal(bar, slot)
       )}
       {content}
+      {runs}
     </div>
   );
 }

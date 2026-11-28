@@ -1,5 +1,7 @@
 /** Σημειογραφία παρτίδας: κύρια γραμμή, βαριάντες σε εσοχές, σχόλια, σύμβολα. */
-import { Fragment, useEffect, useRef, type ReactNode } from 'react';
+import { Fragment, useEffect, useRef, useState, type ReactNode } from 'react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
+import { L } from '../i18n.ts';
 import type { GameNode } from '../../core/game.ts';
 import { isMoveNag, isPrefixNag, nagSymbol } from '../../core/nag.ts';
 import { type GameController, useController } from '../gameModel.ts';
@@ -31,6 +33,22 @@ export function Notation({ ctrl, style, onMoveContext, onEditComment, hideFuture
   const game = ctrl.game;
   const current = ctrl.node;
   const ref = useRef<HTMLDivElement>(null);
+  // κλειστές βαριάντες (▸): φαίνεται μόνο η πρώτη κίνηση· ανοίγει μόνη της όταν η τρέχουσα κίνηση είναι πιο μέσα
+  const [closed, setClosed] = useState<ReadonlySet<number>>(new Set());
+  const onPath = new Set<number>();
+  for (let n: GameNode | null = current; n; n = n.parent) onPath.add(n.id);
+  const inside = (alt: GameNode) => onPath.has(alt.id) && current !== alt;
+  // κλείσιμο με την τρέχουσα κίνηση μέσα: πάει στην πρώτη κίνηση της βαριάντας, που μένει ορατή
+  const toggle = (alt: GameNode, shut: boolean) => {
+    if (!shut && inside(alt)) ctrl.goTo(alt);
+    setClosed((s) => {
+      const next = new Set(s);
+      if (shut) next.delete(alt.id);
+      else next.add(alt.id);
+      return next;
+    });
+  };
+  const size = (n: GameNode): number => n.children.reduce((s, c) => s + size(c), 1);
 
   useEffect(() => {
     const el = ref.current?.querySelector('.move.current');
@@ -109,14 +127,29 @@ export function Notation({ ctrl, style, onMoveContext, onEditComment, hideFuture
       if (n.children.length > 1) {
         out.push(
           <div key={`v${main.id}`} className={`variations d${Math.min(depth + 1, 6)}`}>
-            {n.children.slice(1).map((alt) => (
-              <div key={alt.id} className="variation">
-                <span className="paren">(</span>
-                {moveSpan(alt, true)}
-                {line(alt, depth + 1, Boolean(alt.comment))}
-                <span className="paren">)</span>
-              </div>
-            ))}
+            {n.children.slice(1).map((alt) => {
+              const more = size(alt) - 1;
+              const shut = more > 0 && closed.has(alt.id) && !inside(alt);
+              return (
+                <div key={alt.id} className={`variation${shut ? ' closed' : ''}`}>
+                  {more > 0 && (
+                    <button type="button" className="var-fold" onClick={() => toggle(alt, shut)} title={shut ? L('Άνοιγμα της βαριάντας', 'Expand the variation') : L('Κλείσιμο της βαριάντας', 'Collapse the variation')} aria-expanded={!shut}>
+                      {shut ? <ChevronRight size={14} aria-hidden /> : <ChevronDown size={14} aria-hidden />}
+                    </button>
+                  )}
+                  <span className="paren">(</span>
+                  {moveSpan(alt, true)}
+                  {shut ? (
+                    <span className="var-more" onClick={() => toggle(alt, shut)}>
+                      … +{more}{' '}
+                    </span>
+                  ) : (
+                    line(alt, depth + 1, Boolean(alt.comment))
+                  )}
+                  <span className="paren">)</span>
+                </div>
+              );
+            })}
           </div>,
         );
         force = true;

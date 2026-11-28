@@ -17,11 +17,13 @@ import { Lc0Install } from '../components/Lc0Install.tsx';
 import { AboutSection, useAppInfo } from '../components/About.tsx';
 import { MyGamesSetting } from '../components/MyGamesSetting.tsx';
 import { previewSound, soundThemeName, soundThemeNote } from '../components/SoundControl.tsx';
-import { SOUND_THEMES, soundConfig } from '../sounds.ts';
+import { CUSTOM_SLOTS, SOUND_THEMES, playSound, soundConfig, type CustomSlot, type SoundConfig } from '../sounds.ts';
 
 const PREVIEW_FEN = 'r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4';
 
-const DRAFT_KEYS = ['language', 'boardTheme', 'pieceSet', 'showCoordinates', 'animationMs', 'onlineLookups', 'watchLive', 'myGames', 'updateCheck', 'ui', 'bookPath'] as const;
+// (το βιβλίο Polyglot, `bookPath`, επιλέγεται στην καρτέλα «Βιβλίο» του δέντρου: αν ήταν και εδώ, ένα ανοιχτό παράθυρο
+// Ρυθμίσεων θα έγραφε την παλιά τιμή πάνω από την καινούργια)
+const DRAFT_KEYS = ['language', 'boardTheme', 'pieceSet', 'showCoordinates', 'animationMs', 'onlineLookups', 'watchLive', 'myGames', 'updateCheck', 'ui'] as const;
 type Draft = Pick<Settings, (typeof DRAFT_KEYS)[number]>;
 const pickDraft = (s: Settings): Draft => JSON.parse(JSON.stringify(Object.fromEntries(DRAFT_KEYS.map((k) => [k, s[k]])))) as Draft;
 const same = (a: unknown, b: unknown) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
@@ -239,6 +241,14 @@ export function SettingsWindow() {
             {L('Κίνηση με ένα κλικ στον προορισμό (όταν πάει εκεί ένα μόνο κομμάτι)', 'One-click move on the target square (when only one piece can go there)')}
           </label>
           <label className="check">
+            <input type="checkbox" checked={ui.lastMoveHighlight !== false} onChange={(e) => setUi('lastMoveHighlight', e.target.checked)} />{' '}
+            {L('Χρώμα στην τελευταία κίνηση', 'Highlight the last move')}
+          </label>
+          <label className="check">
+            <input type="checkbox" checked={ui.legalDots !== false} onChange={(e) => setUi('legalDots', e.target.checked)} />{' '}
+            {L('Κουκκίδες στις νόμιμες κινήσεις', 'Dots on legal moves')}
+          </label>
+          <label className="check">
             <input type="checkbox" checked={ui.variationDialog !== false} onChange={(e) => setUi('variationDialog', e.target.checked)} />{' '}
             {L('Παράθυρο επιλογής βαριάντας (→ σε διακλάδωση)', 'Variation chooser (→ at a branch)')}
           </label>
@@ -282,24 +292,8 @@ export function SettingsWindow() {
             </button>
           ))}
         </div>
+        {snd.theme === 'custom' && <CustomSounds snd={snd} onChange={(custom) => setUi('sound', { ...snd, custom })} />}
         <p className="muted small">{L('Πάτα ένα σετ για να το ακούσεις. Την ένταση και το σετ τα αλλάζεις και από το ηχείο της πάνω γραμμής.', 'Click a set to hear it. You can also change the volume and the set from the speaker in the top bar.')}</p>
-      </section>
-
-      <section>
-        <h2>{L('Βιβλίο ανοιγμάτων', 'Opening book')}</h2>
-        <p className="muted small">{L('Βιβλίο Polyglot (.bin) για την καρτέλα «Βιβλίο» στο δέντρο ανοιγμάτων.', 'Polyglot book (.bin) for the “Book” tab of the opening tree.')}</p>
-        <div className="row gap wrap">
-          <code className="fen-small">{draft.bookPath || L('κανένα', 'none')}</code>
-          <button
-            onClick={async () => {
-              const p = (await pickFiles('book').catch(() => []))[0];
-              if (p) set({ bookPath: p });
-            }}
-          >
-            {L('Επιλογή βιβλίου…', 'Choose book…')}
-          </button>
-          {draft.bookPath && <button onClick={() => set({ bookPath: '' })}>{L('Αφαίρεση', 'Remove')}</button>}
-        </div>
       </section>
 
       <section>
@@ -390,6 +384,82 @@ export function SettingsWindow() {
           {L('Αποθήκευση', 'Save')}
         </button>
       </div>
+    </div>
+  );
+}
+
+/** «Δικοί μου ήχοι»: ένα αρχείο ήχου για κίνηση, αιχμαλωσία, σαχ και ματ (ό,τι λείπει παίζει από το Ξύλο). */
+function CustomSounds({ snd, onChange }: { snd: SoundConfig; onChange: (custom: Partial<Record<CustomSlot, number>>) => void }) {
+  const [busy, setBusy] = useState<CustomSlot | null>(null);
+  const input = useRef<HTMLInputElement>(null);
+  const target = useRef<CustomSlot>('move');
+  const custom = snd.custom ?? {};
+  const name = (k: CustomSlot) => ({ move: L('Κίνηση', 'Move'), capture: L('Αιχμαλωσία', 'Capture'), check: L('Σαχ', 'Check'), mate: L('Ματ', 'Checkmate') })[k];
+  const hear = (k: CustomSlot, c = custom) => playSound(k, { preview: { ...snd, on: true, custom: c } });
+
+  const upload = async (k: CustomSlot, file: File) => {
+    setBusy(k);
+    try {
+      const r = await fetch(`/api/sounds/custom/${k}`, { method: 'POST', headers: { 'Content-Type': file.type || 'audio/mpeg' }, body: file });
+      const out = (await r.json()) as { version?: number; error?: string };
+      if (!r.ok || !out.version) throw new Error(out.error || L('Δεν ανέβηκε ο ήχος', 'The sound was not uploaded'));
+      const next = { ...custom, [k]: out.version };
+      onChange(next);
+      hear(k, next);
+    } catch (e) {
+      reportError(e);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const remove = async (k: CustomSlot) => {
+    await api.del(`/api/sounds/custom/${k}`).catch(reportError);
+    const next = { ...custom };
+    delete next[k];
+    onChange(next);
+  };
+
+  return (
+    <div className="custom-sounds">
+      <input
+        ref={input}
+        type="file"
+        accept="audio/*"
+        hidden
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          e.target.value = '';
+          if (f) void upload(target.current, f);
+        }}
+      />
+      {CUSTOM_SLOTS.map((k) => (
+        <div key={k} className="row gap">
+          <span style={{ minWidth: 90 }}>{name(k)}</span>
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            disabled={busy !== null}
+            onClick={() => {
+              target.current = k;
+              input.current?.click();
+            }}
+          >
+            {busy === k ? L('Ανεβαίνει…', 'Uploading…') : custom[k] ? L('Άλλο αρχείο…', 'Other file…') : L('Διάλεξε αρχείο…', 'Choose file…')}
+          </button>
+          <button type="button" className="icon-btn" title={L('Άκουσέ το', 'Listen')} aria-label={L('Άκουσέ το', 'Listen')} onClick={() => hear(k)}>
+            <Volume2 size={14} />
+          </button>
+          {custom[k] ? (
+            <button type="button" className="icon-btn" title={L('Αφαίρεση (παίζει το Ξύλο)', 'Remove (Wood plays)')} aria-label={L('Αφαίρεση', 'Remove')} disabled={busy !== null} onClick={() => void remove(k)}>
+              <Trash2 size={14} />
+            </button>
+          ) : (
+            <span className="muted small">{k === 'mate' ? L('χωρίς: ο ήχος σαχ', 'none: the check sound') : k === 'check' ? L('χωρίς: ο ήχος κίνησης', 'none: the move sound') : L('χωρίς: Ξύλο', 'none: Wood')}</span>
+          )}
+        </div>
+      ))}
+      <p className="muted small">{L('Αρχεία mp3, wav ή ogg ως 2 MB. Καλύτερα σύντομα (κάτω από 1 δευτερόλεπτο).', 'mp3, wav or ogg files up to 2 MB. Short ones work best (under a second).')}</p>
     </div>
   );
 }

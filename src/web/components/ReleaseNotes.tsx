@@ -3,7 +3,7 @@
  * και αλλαγές κάθε έκδοσης σε Ελληνικά & Αγγλικά, με αυτόματο άνοιγμα 1 φορά μετά από αναβάθμιση.
  */
 import { useEffect, useState } from 'react';
-import { Database, GraduationCap, Monitor, Radio, Sparkles, Target, Users, type LucideIcon } from 'lucide-react';
+import { CirclePlay, Database, GraduationCap, Monitor, Radio, Sparkles, Star, Target, Users, type LucideIcon } from 'lucide-react';
 import {
   RELEASE_NOTES,
   findReleaseNote,
@@ -16,7 +16,7 @@ import {
 import { L, language } from '../i18n.ts';
 import { OPEN_KEY, useApp } from '../store.ts';
 import { setUiLater } from '../tactics/store.ts';
-import { useAppInfo } from './About.tsx';
+import { openLink, useAppInfo } from './About.tsx';
 import type { GuideState } from './Guide.tsx';
 import './releaseNotes.css';
 
@@ -86,6 +86,29 @@ export function ReleaseNotesWindow({ active }: { active: boolean }) {
           </div>
         )}
 
+        {note.devNote && note.devNote.length > 0 && (
+          <section className="kb-card rn-dev">
+            <h2 className="rn-dev-h">{L('Λίγα λόγια από μένα', 'A few words from me')}</h2>
+            {note.devNote.map((p, idx) => (
+              <p key={idx}>{t(p)}</p>
+            ))}
+            {(info?.links.repo || info?.links.youtube) && (
+              <div className="rn-dev-links">
+                {info.links.repo && (
+                  <button className="kb-btn sm" onClick={() => void openLink(info.links.repo!)}>
+                    <Star size={14} aria-hidden /> {L('Αστεράκι στο GitHub', 'Star on GitHub')}
+                  </button>
+                )}
+                {info.links.youtube && (
+                  <button className="kb-btn ghost sm" onClick={() => void openLink(info.links.youtube!)}>
+                    <CirclePlay size={14} aria-hidden /> {L('Κανάλι YouTube', 'YouTube channel')}
+                  </button>
+                )}
+              </div>
+            )}
+          </section>
+        )}
+
         {note.highlights.length > 0 && (
           <div className="rn-highlights">
             {note.highlights.map((h, idx) => {
@@ -119,7 +142,10 @@ export function ReleaseNotesWindow({ active }: { active: boolean }) {
                     <li key={idx} className="rn-item">
                       <span className={`rn-tag is-${item.kind}`}>{t(KIND_LABEL[item.kind])}</span>
                       <div className="rn-item-body">
-                        <b>{t(item.title)}</b>
+                        <b>
+                          {t(item.title)}
+                          {item.fromUsers && <span className="rn-from">{L('Από τα σχόλιά σας', 'From your feedback')}</span>}
+                        </b>
                         <p>{t(item.desc)}</p>
                       </div>
                     </li>
